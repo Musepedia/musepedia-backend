@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mgsbackend-common" />
+        <module name="mgsbackend-label" />
         <module name="mgsbackend-core" />
       </profile>
     </annotationProcessing>
@@ -23,6 +24,7 @@
       <module name="core" options="-parameters" />
       <module name="mgsbackend-common" options="-parameters" />
       <module name="mgsbackend-core" options="-parameters" />
+      <module name="mgsbackend-label" options="-parameters" />
     </option>
   </component>
 </project>

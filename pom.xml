@@ -10,6 +10,7 @@
     <modules>
         <module>mgsbackend-core</module>
         <module>mgsbackend-common</module>
+        <module>mgsbackend-label</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -133,7 +134,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.3</version>
+            <version>3.4.3.4</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

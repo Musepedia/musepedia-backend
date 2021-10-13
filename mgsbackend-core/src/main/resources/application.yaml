@@ -10,6 +10,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       validation-query: SELECT 1 FROM DUAL
+    initialization-mode: never
   jpa:
     show-sql: true
     hibernate:

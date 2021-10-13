@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.label.repository.ParagraphRepository">
+    <resultMap id="paragraphMapper" type="cn.abstractmgs.label.model.entity.Paragraph">
+        <id property="id" column="paragraph_id"/>
+        <result property="text" column="text"/>
+        <collection property="questions" column="question_id"
+                    ofType="cn.abstractmgs.label.model.entity.Question"
+                    javaType="ArrayList"
+                    select="cn.abstractmgs.label.repository.QuestionRepository.selectByParagraphId"/>
+    </resultMap>
+</mapper>

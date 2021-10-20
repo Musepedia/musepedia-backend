@@ -1,4 +1,6 @@
 package cn.abstractmgs.model.entity;
 
-public class User {
+import cn.abstractmgs.model.BaseEntity;
+
+public class User extends BaseEntity {
 }

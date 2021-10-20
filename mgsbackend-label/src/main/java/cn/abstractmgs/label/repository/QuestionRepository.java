@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface QuestionRepository extends BaseMapper<Question> {
 
-    @Select("SELECT question_id, text, paragraph_id FROM question WHERE paragraph_id = #{id}")
+    @Select("SELECT * FROM question WHERE paragraph_id = #{id}")
     @ResultMap("questionMapper")
     List<Question> selectByParagraphId(Long id);
 }

@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
-@TableName(value = "answer", resultMap = "answerMapper")
+@TableName(value = "answer"
+        , resultMap = "answerMapper"
+)
 public class Answer extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)

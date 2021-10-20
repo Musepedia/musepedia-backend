@@ -5,7 +5,7 @@
     <resultMap id="paragraphMapper" type="cn.abstractmgs.label.model.entity.Paragraph">
         <id property="id" column="paragraph_id"/>
         <result property="text" column="text"/>
-        <collection property="questions" column="question_id"
+        <collection property="questions" column="paragraph_id" fetchType="lazy"
                     ofType="cn.abstractmgs.label.model.entity.Question"
                     javaType="ArrayList"
                     select="cn.abstractmgs.label.repository.QuestionRepository.selectByParagraphId"/>

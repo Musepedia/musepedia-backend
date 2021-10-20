@@ -11,6 +11,4 @@ import java.util.List;
 @Mapper
 public interface AnswerRepository extends BaseMapper<Answer> {
 
-    @Select("SELECT answer_id, text, question_id FROM question WHERE question_id = #{id}")
-    List<Answer> selectedByQuestionId(Long id);
 }

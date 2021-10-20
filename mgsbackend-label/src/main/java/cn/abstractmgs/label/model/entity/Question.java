@@ -17,7 +17,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
-@TableName(value = "question", resultMap = "questionMapper")
+@TableName(value = "question"
+        , resultMap = "questionMapper"
+)
 public class Question extends BaseEntity {
 
     @TableId(value = "question_id", type = IdType.AUTO)

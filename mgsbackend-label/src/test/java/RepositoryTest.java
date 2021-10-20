@@ -44,7 +44,11 @@ public class RepositoryTest {
     @Test
     public void selectParagraph(){
         Paragraph paragraph = paragraphService.getById(1L);
-        List<Question> questions = questionService.selectByParagraphId(1L);
+        System.out.println(paragraph.getText());
+        List<Question> qs = paragraph.getQuestions();
+        for (Question q : qs) {
+            System.out.println(q.getText());
+        }
 
     }
 }

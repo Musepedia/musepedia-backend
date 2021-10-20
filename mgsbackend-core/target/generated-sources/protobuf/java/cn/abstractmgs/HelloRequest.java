@@ -20,7 +20,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private HelloRequest() {
-    name_ = "";
+    question_ = "";
+    text_ = "";
   }
 
   @java.lang.Override
@@ -56,7 +57,13 @@ private static final long serialVersionUID = 0L;
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            name_ = s;
+            question_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            text_ = s;
             break;
           }
           default: {
@@ -91,38 +98,76 @@ private static final long serialVersionUID = 0L;
             cn.abstractmgs.HelloRequest.class, cn.abstractmgs.HelloRequest.Builder.class);
   }
 
-  public static final int NAME_FIELD_NUMBER = 1;
-  private volatile java.lang.Object name_;
+  public static final int QUESTION_FIELD_NUMBER = 1;
+  private volatile java.lang.Object question_;
   /**
-   * <code>string name = 1;</code>
-   * @return The name.
+   * <code>string question = 1;</code>
+   * @return The question.
    */
   @java.lang.Override
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
+  public java.lang.String getQuestion() {
+    java.lang.Object ref = question_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      name_ = s;
+      question_ = s;
       return s;
     }
   }
   /**
-   * <code>string name = 1;</code>
-   * @return The bytes for name.
+   * <code>string question = 1;</code>
+   * @return The bytes for question.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
+      getQuestionBytes() {
+    java.lang.Object ref = question_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      name_ = b;
+      question_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TEXT_FIELD_NUMBER = 2;
+  private volatile java.lang.Object text_;
+  /**
+   * <code>string text = 2;</code>
+   * @return The text.
+   */
+  @java.lang.Override
+  public java.lang.String getText() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      text_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string text = 2;</code>
+   * @return The bytes for text.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getTextBytes() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      text_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -143,8 +188,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+    if (!getQuestionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, question_);
+    }
+    if (!getTextBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, text_);
     }
     unknownFields.writeTo(output);
   }
@@ -155,8 +203,11 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+    if (!getQuestionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, question_);
+    }
+    if (!getTextBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, text_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -173,8 +224,10 @@ private static final long serialVersionUID = 0L;
     }
     cn.abstractmgs.HelloRequest other = (cn.abstractmgs.HelloRequest) obj;
 
-    if (!getName()
-        .equals(other.getName())) return false;
+    if (!getQuestion()
+        .equals(other.getQuestion())) return false;
+    if (!getText()
+        .equals(other.getText())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -186,8 +239,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + QUESTION_FIELD_NUMBER;
+    hash = (53 * hash) + getQuestion().hashCode();
+    hash = (37 * hash) + TEXT_FIELD_NUMBER;
+    hash = (53 * hash) + getText().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -325,7 +380,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      name_ = "";
+      question_ = "";
+
+      text_ = "";
 
       return this;
     }
@@ -353,7 +410,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public cn.abstractmgs.HelloRequest buildPartial() {
       cn.abstractmgs.HelloRequest result = new cn.abstractmgs.HelloRequest(this);
-      result.name_ = name_;
+      result.question_ = question_;
+      result.text_ = text_;
       onBuilt();
       return result;
     }
@@ -402,8 +460,12 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(cn.abstractmgs.HelloRequest other) {
       if (other == cn.abstractmgs.HelloRequest.getDefaultInstance()) return this;
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
+      if (!other.getQuestion().isEmpty()) {
+        question_ = other.question_;
+        onChanged();
+      }
+      if (!other.getText().isEmpty()) {
+        text_ = other.text_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -435,78 +497,154 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object name_ = "";
+    private java.lang.Object question_ = "";
     /**
-     * <code>string name = 1;</code>
-     * @return The name.
+     * <code>string question = 1;</code>
+     * @return The question.
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getQuestion() {
+      java.lang.Object ref = question_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        name_ = s;
+        question_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string name = 1;</code>
-     * @return The bytes for name.
+     * <code>string question = 1;</code>
+     * @return The bytes for question.
      */
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getQuestionBytes() {
+      java.lang.Object ref = question_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        question_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string name = 1;</code>
-     * @param value The name to set.
+     * <code>string question = 1;</code>
+     * @param value The question to set.
      * @return This builder for chaining.
      */
-    public Builder setName(
+    public Builder setQuestion(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      name_ = value;
+      question_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string name = 1;</code>
+     * <code>string question = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearName() {
+    public Builder clearQuestion() {
       
-      name_ = getDefaultInstance().getName();
+      question_ = getDefaultInstance().getQuestion();
       onChanged();
       return this;
     }
     /**
-     * <code>string name = 1;</code>
-     * @param value The bytes for name to set.
+     * <code>string question = 1;</code>
+     * @param value The bytes for question to set.
      * @return This builder for chaining.
      */
-    public Builder setNameBytes(
+    public Builder setQuestionBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      name_ = value;
+      question_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object text_ = "";
+    /**
+     * <code>string text = 2;</code>
+     * @return The text.
+     */
+    public java.lang.String getText() {
+      java.lang.Object ref = text_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        text_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string text = 2;</code>
+     * @return The bytes for text.
+     */
+    public com.google.protobuf.ByteString
+        getTextBytes() {
+      java.lang.Object ref = text_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        text_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string text = 2;</code>
+     * @param value The text to set.
+     * @return This builder for chaining.
+     */
+    public Builder setText(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      text_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string text = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearText() {
+      
+      text_ = getDefaultInstance().getText();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string text = 2;</code>
+     * @param value The bytes for text to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTextBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      text_ = value;
       onChanged();
       return this;
     }

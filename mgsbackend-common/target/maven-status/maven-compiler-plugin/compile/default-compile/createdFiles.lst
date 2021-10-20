@@ -1,0 +1,12 @@
+cn/abstractmgs/controller/AnotherHello.class
+cn/abstractmgs/model/BaseEntity.class
+cn/abstractmgs/exception/BadRequestException.class
+cn/abstractmgs/exception/UnauthenticatedException.class
+cn/abstractmgs/exception/handler/ControllerExceptionHandlerAdvice.class
+cn/abstractmgs/annotation/AnonymousAccess.class
+cn/abstractmgs/exception/InternalException.class
+cn/abstractmgs/exception/ResourceNotFoundException.class
+cn/abstractmgs/exception/ForbiddenException.class
+cn/abstractmgs/model/BaseResponse.class
+cn/abstractmgs/exception/UploadFailureException.class
+cn/abstractmgs/service/mapstruct/BaseMapper.class

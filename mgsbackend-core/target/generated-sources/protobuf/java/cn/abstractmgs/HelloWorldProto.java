@@ -33,11 +33,11 @@ public final class HelloWorldProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\006.proto\"\034\n\014HelloRequest\022\014\n\004name\030\001 \001(\t\"\035" +
-      "\n\nHelloReply\022\017\n\007message\030\001 \001(\t25\n\tMyServi" +
-      "ce\022(\n\010SayHello\022\r.HelloRequest\032\013.HelloRep" +
-      "ly\"\000B#\n\016cn.abstractmgsB\017HelloWorldProtoP" +
-      "\001b\006proto3"
+      "\n\006.proto\".\n\014HelloRequest\022\020\n\010question\030\001 \001" +
+      "(\t\022\014\n\004text\030\002 \001(\t\"\034\n\nHelloReply\022\016\n\006answer" +
+      "\030\001 \001(\t25\n\tMyService\022(\n\010SayHello\022\r.HelloR" +
+      "equest\032\013.HelloReply\"\000B#\n\016cn.abstractmgsB" +
+      "\017HelloWorldProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -48,13 +48,13 @@ public final class HelloWorldProto {
     internal_static_HelloRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_HelloRequest_descriptor,
-        new java.lang.String[] { "Name", });
+        new java.lang.String[] { "Question", "Text", });
     internal_static_HelloReply_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_HelloReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_HelloReply_descriptor,
-        new java.lang.String[] { "Message", });
+        new java.lang.String[] { "Answer", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

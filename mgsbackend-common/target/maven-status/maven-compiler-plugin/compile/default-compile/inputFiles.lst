@@ -1,0 +1,12 @@
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/UnauthenticatedException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/UploadFailureException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/model/BaseResponse.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/handler/ControllerExceptionHandlerAdvice.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/ForbiddenException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/InternalException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/service/mapstruct/BaseMapper.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/annotation/AnonymousAccess.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/ResourceNotFoundException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/exception/BadRequestException.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/controller/AnotherHello.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-common/src/main/java/cn/abstractmgs/model/BaseEntity.java

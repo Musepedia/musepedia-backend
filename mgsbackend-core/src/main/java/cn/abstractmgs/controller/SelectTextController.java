@@ -2,6 +2,8 @@ package cn.abstractmgs.controller;
 
 import cn.abstractmgs.model.entity.Text;
 import cn.abstractmgs.repository.TextRepository;
+import cn.abstractmgs.service.TextService;
+import cn.abstractmgs.service.impl.TextServiceImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -14,15 +16,15 @@ import java.util.List;
 
 @RestController
 public class SelectTextController {
+    /*
+     * 仅测试用
+     */
+
     @Autowired
-    private TextRepository textRepository;
+    private TextService service;
 
     @GetMapping("api/select/text")
-    public String selectText(@RequestParam(value = "label") String label) {
-        List<Text> textList = textRepository.selectByLabel(label);
-
-        if (textList.size() == 0)
-            return "暂时无法回答这个问题";
-        return textList.get(0).getText();
+    public String selectText(@RequestParam(value = "question") String question) {
+        return service.getText(question);
     }
 }

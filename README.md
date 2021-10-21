@@ -11,3 +11,4 @@
 ### Usage
 - 编译grpc类 maven: mgsbackend-core->protobuf->compile, compile-custom
 - GET请求`localhost:80/api/qa?question=xxx&text=xxx`，实现Java与Python的通信，并接受来自Python调用模型后的结果
+- GET请求`localhost:80/api/select/text?label=xxx`，实现根据给定的label查询对应的文章（Demo期间，label与text一一对应）

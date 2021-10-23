@@ -1,7 +1,9 @@
 package cn.abstractmgs.controller;
 
 import cn.abstractmgs.model.entity.Text;
+import cn.abstractmgs.repository.RecommendQuestionRepository;
 import cn.abstractmgs.repository.TextRepository;
+import cn.abstractmgs.service.RecommendQuestionService;
 import cn.abstractmgs.service.TextService;
 import cn.abstractmgs.service.impl.TextServiceImpl;
 import org.apache.ibatis.session.SqlSession;
@@ -23,8 +25,16 @@ public class SelectTextController {
     @Autowired
     private TextService service;
 
+    @Autowired
+    private RecommendQuestionService recommendQuestionService;
+
     @GetMapping("api/select/text")
     public String selectText(@RequestParam(value = "question") String question) {
         return service.getText(question);
+    }
+
+    @GetMapping("api/select/question")
+    public List<String> selectQuestion() {
+        return recommendQuestionService.getRandomQuestions(2);
     }
 }

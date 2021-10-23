@@ -28,3 +28,7 @@ grpc:
     myService:
       address: static://localhost:5555
       negotiationType=: PLAINTEXT
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: cn.abstactmgs.repository.TextRepository

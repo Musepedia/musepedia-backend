@@ -1,6 +1,6 @@
 package cn.abstractmgs.label.model.entity;
 
-import cn.abstractmgs.model.BaseEntity;
+import cn.abstractmgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.ResultMap;
 
 import java.util.List;
 
@@ -17,9 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
-@TableName(value = "question"
-        , resultMap = "questionMapper"
-)
+@TableName(value = "question", resultMap = "questionMapper")
 public class Question extends BaseEntity {
 
     @TableId(value = "question_id", type = IdType.AUTO)

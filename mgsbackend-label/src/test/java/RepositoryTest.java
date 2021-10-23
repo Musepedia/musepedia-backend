@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(classes = App.class)
@@ -27,14 +29,26 @@ public class RepositoryTest {
     @Test
     public void insertParagraph(){
         Paragraph p = new Paragraph();
+
+        Date date = new Date(System.currentTimeMillis() - 10000_000);
+        p.setCreateTime(date);
+
         p.setText("NIHAO");
+
+        List<Question> questions = new ArrayList<>();
+        Question q = new Question();
+        q.setId(2L);
+        questions.add(q);
+        p.setQuestions(questions);
+
         paragraphService.save(p);
         System.out.println(p);
     }
 
     @Test
     public void insertQuestion(){
-        Paragraph paragraph = paragraphService.getById(1L);
+        Paragraph paragraph = new Paragraph();
+        paragraph.setId(1L);
         Question question = new Question();
         question.setText("你好吗？");
         question.setParagraph(paragraph);

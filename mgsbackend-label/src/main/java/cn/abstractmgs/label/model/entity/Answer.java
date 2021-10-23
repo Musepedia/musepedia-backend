@@ -1,6 +1,6 @@
 package cn.abstractmgs.label.model.entity;
 
-import cn.abstractmgs.model.BaseEntity;
+import cn.abstractmgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,12 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
-@TableName(value = "answer"
-        , resultMap = "answerMapper"
-)
+@TableName(value = "answer", resultMap = "answerMapper")
 public class Answer extends BaseEntity {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "answer_id", type = IdType.AUTO)
     private Long id;
 
     @TableField("text")

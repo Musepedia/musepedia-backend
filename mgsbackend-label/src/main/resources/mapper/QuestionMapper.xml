@@ -2,7 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.abstractmgs.label.repository.QuestionRepository">
-    <resultMap id="questionMapper" type="cn.abstractmgs.label.model.entity.Question">
+    <resultMap id="questionMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.label.model.entity.Question">
         <id property="id" column="question_id"/>
         <result property="text" column="text"/>
         <association property="paragraph" column="paragraph_id"
@@ -12,5 +14,4 @@
                     javaType="ArrayList"
                     select="cn.abstractmgs.label.repository.AnswerRepository.selectByQuestionId"/>
     </resultMap>
-
 </mapper>

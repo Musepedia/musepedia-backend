@@ -9,7 +9,7 @@
 - MySQL端口: 3306
 
 ### Usage
-- 编译grpc类 maven: mgsbackend-core->protobuf->compile, compile-custom
+- 编译grpc类 maven: mgsbackend(root)->lifecycle->compile
 - GET请求`localhost:80/api/qa?question=xxx`，在数据库中匹配合适的文本，实现Java与Python的通信（传输question+text），并接受来自Python调用模型后的结果，同时能够返回若干推荐问题
 对于问题`银杏的寿命有多长`
 ```json

@@ -33,7 +33,7 @@ public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implement
         }
 
         if (texts.size() != 1)
-            return "暂时无法回答这个问题";
+            return null;
         else
             return texts.get(0).getText();
     }

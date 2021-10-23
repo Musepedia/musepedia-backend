@@ -21,6 +21,9 @@ public class QAController {
     public String getAnswer(@RequestParam(value = "question") String question) {
         String text = service.getText(question);
 
+        if (text == null)
+            return "暂时无法回答这个问题";
+
         HelloRequest helloRequest = HelloRequest
                 .newBuilder()
                 .setQuestion(question)

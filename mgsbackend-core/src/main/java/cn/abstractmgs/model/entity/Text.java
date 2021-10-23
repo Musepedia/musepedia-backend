@@ -2,12 +2,16 @@ package cn.abstractmgs.model.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
+@TableName("tblDemo")
 public class Text {
+    @TableField(value = "exhibits_label", property = "label")
     private String label;
+
+    @TableField(value = "exhibits_text", property = "text")
     private String text;
 
     public void setLabel(String label) {

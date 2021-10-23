@@ -10,6 +10,9 @@ import java.util.List;
 @Mapper
 public interface TextRepository extends BaseMapper<Text> {
     @Select("select exhibits_text from tblDemo where exhibits_label = #{label}")
-    @ResultMap("textMap")
+    @Results(id = "textMap", value = {
+            @Result(property = "label", column = "exhibits_label"),
+            @Result(property = "text", column = "exhibits_text")
+    })
     List<Text> selectByLabel(@Param("label") String label);
 }

@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface TextService extends IService<Text> {
 
-    List<Text> selectByLabel(String label);
+    List<String> selectByLabel(String label);
 
     String getText(String question);
+
+    String modifyAnswer(String answer);
 }

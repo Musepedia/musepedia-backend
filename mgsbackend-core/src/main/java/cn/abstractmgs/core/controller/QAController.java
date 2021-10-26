@@ -37,13 +37,13 @@ public class QAController {
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
-//        String text = textService.getText(question);
-        String text = "try timeout";
+        String text = textService.getText(question);
+        // String text = "try timeout";
         String answer = null;
         int status = 0;
 
         if (text == null){
-            answer = "暂时无法回答这个问题";
+            answer = textService.modifyAnswer(answer);
         } else {
             HelloRequest helloRequest = HelloRequest
                     .newBuilder()
@@ -55,6 +55,7 @@ public class QAController {
                 answer = myServiceBlockingStub
                         .sayHello(helloRequest)
                         .getAnswer();
+                answer = textService.modifyAnswer(answer);
             } catch (Exception e){
 //                e.printStackTrace();
                 log.error("Rpc error: ",e);

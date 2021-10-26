@@ -1,0 +1,11 @@
+cn/abstractmgs/label/repository/ParagraphRepository.class
+cn/abstractmgs/label/service/impl/ParagraphServiceImpl.class
+cn/abstractmgs/label/service/impl/QuestionServiceImpl.class
+cn/abstractmgs/label/repository/AnswerRepository.class
+cn/abstractmgs/label/model/entity/Answer.class
+cn/abstractmgs/label/repository/QuestionRepository.class
+cn/abstractmgs/label/model/entity/Paragraph.class
+cn/abstractmgs/label/model/entity/Question.class
+cn/abstractmgs/label/service/QuestionService.class
+cn/abstractmgs/label/service/ParagraphService.class
+cn/abstractmgs/label/App.class

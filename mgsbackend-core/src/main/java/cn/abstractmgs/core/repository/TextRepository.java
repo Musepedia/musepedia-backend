@@ -10,5 +10,5 @@ import java.util.List;
 public interface TextRepository extends BaseMapper<Text> {
 
     @Select("select exhibits_text from text where exhibits_label = #{label}")
-    List<Text> selectByLabel(@Param("label") String label);
+    List<String> selectByLabel(@Param("label") String label);
 }

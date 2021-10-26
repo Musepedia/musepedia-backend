@@ -31,7 +31,7 @@ public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implement
         Matcher matcher = pattern.matcher(answer);
 
         String modifiedAnswer = matcher.replaceAll("");
-        return modifiedAnswer == null
+        return modifiedAnswer.length() == 0
                 ? FAILURE_ANSWER
                 : modifiedAnswer;
     }

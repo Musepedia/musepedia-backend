@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,9 +19,9 @@ import java.util.Arrays;
 public class ControllerExceptionHandlerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BindException.class)
-    public BaseResponse<?> validExceptionHandler(BindException exception) {
-        return BaseResponse.error(exception.getAllErrors().get(0).getDefaultMessage());
+    @ExceptionHandler({BindException.class, MissingServletRequestParameterException.class})
+    public BaseResponse<?> validExceptionHandler(Exception exception) {
+        return BaseResponse.error(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

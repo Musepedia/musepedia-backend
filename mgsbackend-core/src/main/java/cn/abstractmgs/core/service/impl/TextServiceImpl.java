@@ -19,16 +19,17 @@ public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implement
     }
 
     @Override
-    public List<Text> selectByLabel(String label) {
+    public List<String> selectByLabel(String label) {
         return baseMapper.selectByLabel(label);
     }
 
+    @Override
     public String getText(String question) {
         List<String> labels = getLabel(question);
 
-        ArrayList<Text> texts = new ArrayList<>();
+        ArrayList<String> texts = new ArrayList<>();
         for (String label : labels) {
-            List<Text> possibleTexts = selectByLabel(label);
+            List<String> possibleTexts = selectByLabel(label);
             if (!possibleTexts.isEmpty()){
                 texts.add(possibleTexts.get(0));
             }
@@ -36,6 +37,6 @@ public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implement
 
         return texts.size() != 1
                 ? null
-                : texts.get(0).getText();
+                : texts.get(0);
     }
 }

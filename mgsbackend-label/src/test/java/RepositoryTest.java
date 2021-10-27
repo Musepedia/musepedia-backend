@@ -49,10 +49,10 @@ public class RepositoryTest {
     public void insertQuestion(){
         Paragraph paragraph = new Paragraph();
         paragraph.setId(1L);
-        Question question = new Question();
-        question.setText("你好吗？");
-        question.setParagraph(paragraph);
-        questionService.save(question);
+        Question q1 = new Question(null, "问题1", paragraph, null);
+        Question q2 = new Question(null, "问题2", paragraph, null);
+        questionService.save(q1);
+        questionService.save(q2);
     }
 
     @Test

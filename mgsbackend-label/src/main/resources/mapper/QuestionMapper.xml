@@ -7,9 +7,9 @@
                type="cn.abstractmgs.label.model.entity.Question">
         <id property="id" column="question_id"/>
         <result property="text" column="text"/>
-        <association property="paragraph" column="paragraph_id"
+        <association property="paragraph" column="paragraph_id" fetchType="lazy"
                      select="cn.abstractmgs.label.repository.ParagraphRepository.selectById"/>
-        <collection property="answers" column="answer_id"
+        <collection property="answers" column="answer_id" fetchType="lazy"
                     ofType="cn.abstractmgs.label.model.entity.Answer"
                     javaType="ArrayList"
                     select="cn.abstractmgs.label.repository.AnswerRepository.selectByQuestionId"/>

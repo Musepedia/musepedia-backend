@@ -37,9 +37,9 @@ public class QAController {
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
-//        String text = textService.getText(question);
-        String text = "try timeout";
-        String answer = null;
+        String text = textService.getText(question);
+//        String text = "try timeout";
+        String answer;
         int status = 0;
 
         if (text == null){
@@ -55,13 +55,12 @@ public class QAController {
                 answer = myServiceBlockingStub
                         .sayHello(helloRequest)
                         .getAnswer();
+                status = 1;
             } catch (Exception e){
-//                e.printStackTrace();
+                // rpc error
                 log.error("Rpc error: ",e);
-                throw new InternalException(""+e.getMessage());
+                answer = "暂时无法回答这个问题";
             }
-
-            status = 1;
         }
         int countOfRecommendation = 2;
         List<String> recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);

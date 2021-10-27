@@ -8,6 +8,7 @@
         <id property="id" column="answer_id"/>
         <result property="text" column="text"/>
         <result property="startIndex" column="start_index"/>
-        <association property="question.id" column="question_id" select="cn.abstractmgs.label.repository.QuestionRepository.selectById"/>
+        <association property="question.id" column="question_id" fetchType="lazy"
+                     select="cn.abstractmgs.label.repository.QuestionRepository.selectById"/>
     </resultMap>
 </mapper>

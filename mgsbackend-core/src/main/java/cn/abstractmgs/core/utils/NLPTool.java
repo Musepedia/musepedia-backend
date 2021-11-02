@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.utils;
 
+import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 
@@ -22,5 +23,17 @@ public class NLPTool {
             }
         }
         return res;
+    }
+
+    public void updateCustomDictionary(List<String> labels) {
+        for (String label : labels) {
+            CustomDictionary.add(label);
+        }
+    }
+
+    public static void main(String[] args) {
+        NLPTool tool = new NLPTool("金樱子原产于哪里");
+        System.out.println(tool.getNoun());
+
     }
 }

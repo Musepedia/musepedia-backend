@@ -11,4 +11,7 @@ public interface TextRepository extends BaseMapper<Text> {
 
     @Select("select exhibits_text from text where exhibits_label = #{label};")
     List<String> selectByLabel(@Param("label") String label);
+
+    @Select("select exhibits_label from text;")
+    List<String> selectAllLabels();
 }

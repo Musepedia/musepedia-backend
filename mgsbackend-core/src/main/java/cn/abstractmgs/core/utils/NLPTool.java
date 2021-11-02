@@ -30,10 +30,4 @@ public class NLPTool {
             CustomDictionary.add(label);
         }
     }
-
-    public static void main(String[] args) {
-        NLPTool tool = new NLPTool("金樱子原产于哪里");
-        System.out.println(tool.getNoun());
-
-    }
 }

@@ -14,8 +14,10 @@ import java.util.regex.Pattern;
 @Service("textServiceImpl")
 public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implements TextService {
 
-    private List<String> getLabel(String question) {
+    private List<String> getLabel(List<String> labels, String question) {
         NLPTool nlpTool = new NLPTool(question);
+        nlpTool.updateCustomDictionary(labels);
+
         return nlpTool.getNoun();
     }
 
@@ -25,8 +27,15 @@ public class TextServiceImpl extends ServiceImpl<TextRepository, Text> implement
     }
 
     @Override
+    public List<String> selectAllLabels() {
+        return baseMapper.selectAllLabels();
+    }
+
+    @Override
     public String getText(String question) {
-        List<String> labels = getLabel(question);
+        List<String> storedLabels = selectAllLabels();
+
+        List<String> labels = getLabel(storedLabels, question);
 
         ArrayList<String> texts = new ArrayList<>();
         for (String label : labels) {

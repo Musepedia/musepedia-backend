@@ -10,4 +10,6 @@ public interface TextService extends IService<Text> {
     List<String> selectByLabel(String label);
 
     String getText(String question);
+
+    List<String> selectAllLabels();
 }

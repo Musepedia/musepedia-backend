@@ -2,6 +2,7 @@
 
 ### QA-RS-Based-Museum-Guide-System
 - 本仓库包含项目的后端
+- Version Beta 0.2.0
 
 ### Notices
 - Spring Boot端口: 80

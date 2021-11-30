@@ -14,12 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName("tbl_recommend_question")
-public class RecommendQuestion extends BaseEntity {
+@TableName("tbl_exhibit")
+public class Exhibit extends BaseEntity {
 
-    @TableId(value = "question_id", type = IdType.AUTO)
+    @TableId(value = "exhibit_id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("question_text")
-    private String questionText;
+    @TableField("exhibit_label")
+    private String label;
+
+    @TableField("exhibit_category")
+    private String category;
 }

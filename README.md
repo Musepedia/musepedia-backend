@@ -8,6 +8,7 @@
 - Spring Boot端口: 80
 - gRPC端口: 5555
 - MySQL端口: 3306
+- <span style="color: sandybrown"> v0.2+ maven打包方式已更改，第三方依赖在target/lib下<br>第一次上传请上传lib目录以及mgsbackend-core.jar，之后如果依赖没有变更只需上传mgsbackend-core.jar</span>
 
 ### Usage(mgsbackend-core)
 - 编译grpc类 maven: mgsbackend(root)->lifecycle->compile

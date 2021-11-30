@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName("text")
-public class Text extends BaseEntity {
+@TableName("tbl_exhibit_text")
+public class ExhibitText extends BaseEntity {
 
     @TableId(value = "text_id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("exhibits_label")
-    private String label;
+    @TableField("exhibit_id")
+    private Long exhibitId;
 
-    @TableField("exhibits_text")
+    @TableField("exhibit_text")
     private String text;
 }

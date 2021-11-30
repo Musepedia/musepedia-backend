@@ -20,7 +20,7 @@ CREATE TABLE tbl_exhibit_text(
 
 DROP TABLE IF EXISTS tbl_exhibit;
 
-CREATE TABLE tbl_exhibit_text(
+CREATE TABLE tbl_exhibit(
     exhibit_id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     exhibit_category VARCHAR(255) NOT NULL,
     exhibit_label VARCHAR(255) NOT NULL,

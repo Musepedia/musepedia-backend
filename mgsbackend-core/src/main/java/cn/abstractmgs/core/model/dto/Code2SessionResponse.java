@@ -3,7 +3,7 @@ package cn.abstractmgs.core.model.dto;
 import lombok.Data;
 
 @Data
-public class WxUser {
+public class Code2SessionResponse {
 
     String openid;
 

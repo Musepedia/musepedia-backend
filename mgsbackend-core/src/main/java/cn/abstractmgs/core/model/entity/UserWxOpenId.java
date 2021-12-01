@@ -1,6 +1,5 @@
 package cn.abstractmgs.core.model.entity;
 
-
 import cn.abstractmgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -15,15 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName("tbl_exhibit_text")
-public class ExhibitText extends BaseEntity {
+@TableName("tbl_user_wx_openid")
+public class UserWxOpenId extends BaseEntity {
 
-    @TableId(value = "exhibit_text_id", type = IdType.AUTO)
+    @TableId(value = "user_wx_openid_id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("exhibit_id")
-    private Long exhibitId;
+    @TableField("user_id")
+    private Long userId;
 
-    @TableField("exhibit_text")
-    private String text;
+    @TableField("wx_openid")
+    private String wxOpenId;
 }

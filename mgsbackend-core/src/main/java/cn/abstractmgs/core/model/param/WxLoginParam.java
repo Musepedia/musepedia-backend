@@ -2,18 +2,23 @@ package cn.abstractmgs.core.model.param;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 public class WxLoginParam {
 
+    @NotNull
     String code;
 
-    String authorizationCode;
-
+    @NotNull
     String encryptedData;
 
+    @NotNull
     String iv;
 
+    @NotNull
     String nickname;
 
-    String avatar;
+    @NotNull
+    String avatarUrl;
 }

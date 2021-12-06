@@ -14,14 +14,14 @@ public class ExampleStepDefs {
     @Resource
     RecommendQuestionService recommendQuestionService;
 
-    @And("I click the {string} button")
-    public void iClickTheButton(String arg0) {
-        log.info("Inject test: " + (recommendQuestionService != null));
-    }
-
     @Given("I am on the {string} page")
     public void iAmOnThePage(String arg0) {
 
+    }
+
+    @And("I click the {string} button")
+    public void iClickTheButton(String arg0) {
+        log.info("Inject test: " + (recommendQuestionService != null));
     }
 
     @Then("I should go to the {string} page")

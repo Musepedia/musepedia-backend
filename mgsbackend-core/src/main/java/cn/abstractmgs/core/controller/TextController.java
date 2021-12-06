@@ -1,7 +1,7 @@
 package cn.abstractmgs.core.controller;
 
 import cn.abstractmgs.core.service.RecommendQuestionService;
-import cn.abstractmgs.core.service.TextService;
+import cn.abstractmgs.core.service.ExhibitTextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class TextController {
      */
 
     @Autowired
-    private TextService service;
+    private ExhibitTextService service;
 
     @Autowired
     private RecommendQuestionService recommendQuestionService;

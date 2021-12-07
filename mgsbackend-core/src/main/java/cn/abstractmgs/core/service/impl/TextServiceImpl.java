@@ -2,7 +2,7 @@ package cn.abstractmgs.core.service.impl;
 
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import cn.abstractmgs.core.repository.ExhibitTextRepository;
-import cn.abstractmgs.core.service.ExhibitTextService;
+import cn.abstractmgs.core.service.TextService;
 import cn.abstractmgs.core.utils.NLPTool;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("exhibitTextService")
-public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements ExhibitTextService {
+@Service("textServiceImpl")
+public class TextServiceImpl extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements TextService {
 
     private List<String> getLabel(List<String> labels, String question) {
         NLPTool nlpTool = new NLPTool(question);

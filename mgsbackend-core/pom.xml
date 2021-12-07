@@ -24,10 +24,6 @@
             <groupId>cn.abstractmgs</groupId>
             <artifactId>mgsbackend-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
         <!-- api docs -->
         <dependency>
             <groupId>io.springfox</groupId>

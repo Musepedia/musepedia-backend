@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @TableName("tbl_exhibit_text")
 public class ExhibitText extends BaseEntity {
 
-    @TableId(value = "exhibit_text_id", type = IdType.AUTO)
+    @TableId(value = "text_id", type = IdType.AUTO)
     private Long id;
 
     @TableField("exhibit_id")

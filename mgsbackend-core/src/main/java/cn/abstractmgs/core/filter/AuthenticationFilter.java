@@ -1,12 +1,9 @@
 package cn.abstractmgs.core.filter;
 
-import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -26,9 +23,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute("user");
-        if(user != null){
-            SecurityUtil.setCurrentUser(user);
+        Long userId = (Long) session.getAttribute("userId");
+        if(userId != null){
+            SecurityUtil.setCurrentUserId(userId);
         }
 
         filterChain.doFilter(httpServletRequest,httpServletResponse);

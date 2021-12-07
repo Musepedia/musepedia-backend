@@ -14,18 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_user", autoResultMap = true)
-public class User extends BaseEntity {
+@TableName(value = "tbl_exhibit",autoResultMap = true)
+public class Exhibit extends BaseEntity {
 
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "exhibit_id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("nickname")
-    private String nickname;
+    @TableField("exhibit_label")
+    private String label;
 
-    @TableField("phone_number")
-    private String phoneNumber;
-
-    @TableField("avatar_url")
-    private String avatarUrl;
+    @TableField("exhibit_category")
+    private String category;
 }

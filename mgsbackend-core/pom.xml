@@ -24,6 +24,10 @@
             <groupId>cn.abstractmgs</groupId>
             <artifactId>mgsbackend-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
         <!-- api docs -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -86,6 +90,22 @@
         <!-- hanlp -->
         <!-- utils -->
         <!-- utils -->
+        <!-- test -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- test -->
     </dependencies>
 
     <build>
@@ -98,6 +118,38 @@
         </extensions>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- 复制第三方 jar 到项目目录下的 target/lib/ 下 -->
+                    <execution>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeScope>provided</excludeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- 指定 Spring Boot 启动类，实际测试中必须 -->
+                            <mainClass>cn.abstractmgs.core.App</mainClass>
+                            <!-- 将所有第三方 jar 添加到项目 jar 的 MANIFEST.MF 文件中，这样运行 jar 时依赖包才能被加载 -->
+                            <addClasspath>true</addClasspath>
+                            <!-- 指定复制第三方 jar 的目标目录为 target/lib/-->
+                            <classpathPrefix>./lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.3</version>
@@ -108,6 +160,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <includes>
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>

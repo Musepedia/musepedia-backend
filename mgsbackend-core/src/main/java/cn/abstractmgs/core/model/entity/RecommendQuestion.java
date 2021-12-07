@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName("tbl_recommend_question")
+@TableName("recommend_question")
 public class RecommendQuestion extends BaseEntity {
 
     @TableId(value = "question_id", type = IdType.AUTO)

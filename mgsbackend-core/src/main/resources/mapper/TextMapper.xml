@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.core.repository.TextRepository">
+    <resultMap id="textMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.core.model.entity.Text">
+        <id property="id" column="text_id"/>
+        <result property="label" column="exhibits_label"/>
+        <result property="text" column="exhibits_text"/>
+    </resultMap>
+</mapper>

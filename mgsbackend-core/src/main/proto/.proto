@@ -11,7 +11,7 @@ service MyService {
     }
 }
 
-// The request message containing the example's name.
+// The request message containing the user's name.
 message HelloRequest {
     string question = 1;
     string text = 2;

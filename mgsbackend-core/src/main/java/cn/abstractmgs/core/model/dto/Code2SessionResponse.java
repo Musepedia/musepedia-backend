@@ -1,4 +1,4 @@
-package cn.abstractmgs.core.model.response;
+package cn.abstractmgs.core.model.dto;
 
 import lombok.Data;
 

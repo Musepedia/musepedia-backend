@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @TableName("tbl_user_wx_openid")
-public class UserWxOpenid extends BaseEntity {
+public class UserWxOpenId extends BaseEntity {
 
     @TableId(value = "user_wx_openid_id", type = IdType.AUTO)
     private Long id;

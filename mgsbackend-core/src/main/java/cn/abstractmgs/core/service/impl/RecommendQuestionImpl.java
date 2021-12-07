@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service("recommendQuestionService")
+@Service("recommendQuestionServiceImpl")
 public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionRepository, RecommendQuestion> implements RecommendQuestionService {
 
     private List<String> cachedQuestions;

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-public interface ExhibitTextService extends IService<ExhibitText> {
+public interface TextService extends IService<ExhibitText> {
 
     List<String> selectByLabel(String label);
 

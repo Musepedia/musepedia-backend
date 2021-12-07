@@ -39,13 +39,6 @@
                 <version>0.1-SNAPSHOT</version>
             </dependency>
             <!-- other modules -->
-            <dependency>
-                <groupId>org.springframework.session</groupId>
-                <artifactId>spring-session-bom</artifactId>
-                <version>2021.0.2</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <!-- api docs -->
             <dependency>
                 <groupId>io.springfox</groupId>

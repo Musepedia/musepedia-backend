@@ -2,7 +2,7 @@
 
 ### QA-RS-Based-Museum-Guide-System
 - 本仓库包含项目的后端
-- **Version Beta 0.2.1**
+- Version Beta 0.2.0
 
 ### Notices
 - Spring Boot端口: 80
@@ -45,4 +45,3 @@
 ### Update Logs
 - 2021/10/23 支持QA（调用Python模型）和RS（伪推荐）
 - 2021/11/03 修复部分推荐的问题无法被回答的情况，现在仅少部分问题无法回答
-- 2021/11/30 数据库整理，级联查询效率问题待讨论

@@ -4,21 +4,21 @@ import cn.abstractmgs.core.model.entity.User;
 
 public class SecurityUtil {
 
-    private final static ThreadLocal<Long> currentUserId = new ThreadLocal<>();
+    private final static ThreadLocal<User> currentUser = new ThreadLocal<>();
 
-    public static Long getCurrentUserId(){
-        return currentUserId.get();
+    public static User getCurrentUser(){
+        return currentUser.get();
     }
 
-    public static void setCurrentUserId(Long id){
-        currentUserId.set(id);
+    public static void setCurrentUser(User user){
+        currentUser.set(user);
     }
 
     public static void removeCurrentUser(){
-        currentUserId.remove();
+        currentUser.remove();
     }
 
     public static boolean isLogin(){
-        return currentUserId.get() != null;
+        return currentUser.get() != null;
     }
 }

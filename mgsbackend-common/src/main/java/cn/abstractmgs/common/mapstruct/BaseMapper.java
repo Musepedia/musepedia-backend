@@ -2,7 +2,7 @@ package cn.abstractmgs.common.mapstruct;
 
 import java.util.List;
 
-public interface BaseDTOMapper<D, E> {
+public interface BaseMapper<D, E> {
 
     E toEntity(D dto);
 

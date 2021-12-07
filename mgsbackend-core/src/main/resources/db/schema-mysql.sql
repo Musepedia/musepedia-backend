@@ -59,12 +59,12 @@ DROP TABLE IF EXISTS tbl_user;
 
 CREATE TABLE tbl_user
 (
-    user_id      BIGINT(20)    NOT NULL AUTO_INCREMENT,
-    nickname     VARCHAR(255)  NOT NULL DEFAULT '',
-    avatar_url   VARCHAR(1023) NOT NULL DEFAULT '',
-    phone_number VARCHAR(15)            DEFAULT NULL UNIQUE,
-    create_time  DATETIME               DEFAULT CURRENT_TIMESTAMP,
-    update_time  DATETIME               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id      BIGINT(20)   NOT NULL AUTO_INCREMENT,
+    nickname     VARCHAR(255) NOT NULL DEFAULT '',
+    avatar_url   VARCHAR(1023)         DEFAULT NULL UNIQUE,
+    phone_number VARCHAR(15)  NOT NULL DEFAULT '',
+    create_time  DATETIME              DEFAULT CURRENT_TIMESTAMP,
+    update_time  DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 10000

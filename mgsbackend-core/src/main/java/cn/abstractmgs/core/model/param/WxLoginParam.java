@@ -10,15 +10,11 @@ public class WxLoginParam {
     @NotNull
     String code;
 
-    @NotNull
     String encryptedData;
 
-    @NotNull
     String iv;
 
-    @NotNull
     String nickname;
 
-    @NotNull
     String avatarUrl;
 }

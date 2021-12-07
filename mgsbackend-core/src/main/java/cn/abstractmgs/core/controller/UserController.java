@@ -1,16 +1,17 @@
 package cn.abstractmgs.core.controller;
 
+import cn.abstractmgs.common.annotation.AnonymousAccess;
 import cn.abstractmgs.common.model.BaseResponse;
+import cn.abstractmgs.core.model.dto.UserDTO;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.param.WxLoginParam;
 import cn.abstractmgs.core.service.UserService;
+import cn.abstractmgs.core.service.mapstruct.UserDTOMapper;
+import cn.abstractmgs.core.utils.SecurityUtil;
 import cn.abstractmgs.core.utils.WxUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,17 +20,26 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final WxUtil wxUtil;
-
     private final UserService userService;
 
+    private final UserDTOMapper userDTOMapper;
+
+    @AnonymousAccess
+    @GetMapping("/info")
+    public BaseResponse<UserDTO> getUserInfo(){
+        Long userId = SecurityUtil.getCurrentUserId();
+        UserDTO dto = userId == null ? null : userDTOMapper.toDto(userService.getById(userId));
+        return BaseResponse.ok("ok", dto);
+    }
+
+    @AnonymousAccess
     @PostMapping("/login-wx")
-    public BaseResponse<?> login(@Validated @RequestBody WxLoginParam param, HttpServletRequest request){
+    public BaseResponse<UserDTO> login(@Validated @RequestBody WxLoginParam param, HttpServletRequest request){
         User user = userService.loginWx(param);
         if(user != null){
-            request.getSession().setAttribute("user", user);
+            request.getSession().setAttribute("userId", user.getId());
         }
-        return BaseResponse.ok("ok");
+        return BaseResponse.ok("登陆成功", userDTOMapper.toDto(user));
     }
 
 }

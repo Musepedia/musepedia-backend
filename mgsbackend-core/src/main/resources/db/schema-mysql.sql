@@ -1,43 +1,19 @@
-DROP TABLE IF EXISTS tbl_recommend_question;
+DROP TABLE IF EXISTS recommend_question;
 
-CREATE TABLE tbl_recommend_question(
+CREATE TABLE recommend_question(
     question_id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     question_text VARCHAR(255) NOT NULL,
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS tbl_exhibit_text;
+DROP TABLE IF EXISTS text;
 
-CREATE TABLE tbl_exhibit_text(
+CREATE TABLE text(
     text_id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    exhibit_text VARCHAR(4095) NOT NULL,
-    exhibit_id BIGINT(20) NOT NULL,
+    exhibits_text VARCHAR(4095) NOT NULL,
+    exhibits_label VARCHAR(127) NOT NULL,
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_exhibits_id (exhibit_id)
+    INDEX idx_exhibits_label (exhibits_label)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE IF EXISTS tbl_exhibit;
-
-CREATE TABLE tbl_exhibit_text(
-    exhibit_id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    exhibit_category VARCHAR(255) NOT NULL,
-    exhibit_label VARCHAR(255) NOT NULL,
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_exhibits_label (exhibit_label)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE IF EXISTS tbl_exhibit_alias;
-
-CREATE TABLE tbl_exhibit_alias(
-    exhibit_alias_id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-    exhibit_id BIGINT(20) NOT NULL,
-    exhibit_alias VARCHAR(255) NOT NULL,
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_exhibits_alias (exhibit_alias)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE IF EXISTS tbl_museum;

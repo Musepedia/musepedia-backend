@@ -5,6 +5,7 @@ import cn.abstractmgs.core.repository.ExhibitTextRepository;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.utils.NLPTool;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,21 +32,29 @@ public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, E
     }
 
     @Override
-    public String getText(String question) {
+    public Integer selectExhibitIdByLabel(String label) {
+        return baseMapper.selectExhibitIdByLabel(label);
+    }
+
+    @Override
+    public List<String> selectExhibitTextByExhibitId(int id) {
+        return baseMapper.selectExhibitTextByExhibitId(id);
+    }
+
+    @Override
+    public List<String> getAllTexts(String question) {
         List<String> storedLabels = selectAllLabels();
 
         List<String> labels = getLabel(storedLabels, question);
-
-        ArrayList<String> texts = new ArrayList<>();
+        List<Integer> exhibitIds = new ArrayList<>();
         for (String label : labels) {
-            List<String> possibleTexts = selectByLabel(label);
-            if (!possibleTexts.isEmpty()){
-                texts.add(possibleTexts.get(0));
-            }
+            Integer exhibitId = selectExhibitIdByLabel(label);
+            if (exhibitId != null)
+                exhibitIds.add(exhibitId);
         }
 
-        return texts.size() != 1
+        return exhibitIds.size() != 1
                 ? null
-                : texts.get(0);
+                : selectExhibitTextByExhibitId(exhibitIds.get(0));
     }
 }

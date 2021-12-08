@@ -6,6 +6,7 @@ import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.service.ExhibitTextService;
+import com.google.protobuf.Message;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,15 @@ public class QAController {
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
-        String text = exhibitTextService.getText(question);
+        List<String> texts = exhibitTextService.getAllTexts(question);
         String answer = "暂时无法回答这个问题";
         int status = 0;
-
-        if (text != null) {
+        System.out.println(texts);
+        if (texts != null) {
             HelloRequest helloRequest = HelloRequest
                     .newBuilder()
                     .setQuestion(question)
-                    .setText(text)
+                    .addAllTexts(texts)
                     .build();
 
             try {

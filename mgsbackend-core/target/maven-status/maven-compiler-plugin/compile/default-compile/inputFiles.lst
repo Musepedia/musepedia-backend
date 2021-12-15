@@ -4,9 +4,11 @@
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/entity/ExhibitAlias.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/config/RestTemplateConfig.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/utils/NLPTool.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/service/mapstruct/ExhibitDTOMapper.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/interceptor/AuthenticationInterceptor.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/service/impl/UserServiceImpl.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/entity/Museum.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/controller/ExhibitController.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/controller/UserController.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/response/Code2SessionResponse.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/service/UserService.java
@@ -20,6 +22,7 @@
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/dto/AnswerDTO.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/entity/User.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/service/mapstruct/UserDTOMapper.java
+/Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/model/dto/ExhibitDTO.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/target/generated-sources/protobuf/java/cn/abstractmgs/core/HelloWorldProto.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/service/ExhibitTextService.java
 /Users/sornk/IdeaProjects/MGS/mgsbackend-core/src/main/java/cn/abstractmgs/core/repository/RecommendQuestionRepository.java

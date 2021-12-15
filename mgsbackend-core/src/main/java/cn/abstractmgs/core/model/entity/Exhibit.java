@@ -20,9 +20,15 @@ public class Exhibit extends BaseEntity {
     @TableId(value = "exhibit_id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("exhibit_label")
+    @TableField(value = "exhibit_label")
     private String label;
 
-    @TableField("exhibit_category")
+    @TableField(value = "exhibit_category")
     private String category;
+
+    @TableField(value = "exhibit_description")
+    private String description;
+
+    @TableField(value = "exhibit_url")
+    private String url;
 }

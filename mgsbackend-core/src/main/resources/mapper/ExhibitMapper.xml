@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.core.repository.ExhibitRepository">
+    <resultMap id="exhibitMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.core.model.entity.Exhibit">
+        <id property="id" column="exhibit_id"/>
+        <result property="label" column="exhibit_label"/>
+        <result property="category" column="exhibit_category"/>
+        <result property="description" column="exhibit_description"/>
+        <result property="url" column="exhibit_url"/>
+    </resultMap>
+</mapper>

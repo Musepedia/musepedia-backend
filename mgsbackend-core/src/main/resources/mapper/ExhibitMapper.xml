@@ -7,7 +7,7 @@
                type="cn.abstractmgs.core.model.entity.Exhibit">
         <id property="id" column="exhibit_id"/>
         <result property="label" column="exhibit_label"/>
-        <result property="category" column="exhibit_category"/>
+        <result property="hallId" column="exhibition_hall_id"/>
         <result property="description" column="exhibit_description"/>
         <result property="url" column="exhibit_url"/>
     </resultMap>

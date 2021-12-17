@@ -17,7 +17,8 @@ DROP TABLE IF EXISTS tbl_exhibit;
 CREATE TABLE tbl_exhibit
 (
     exhibit_id       BIGINT(20)   NOT NULL AUTO_INCREMENT,
-    exhibit_category VARCHAR(255) NOT NULL,
+    exhibition_hall_id VARCHAR(255) NOT NULL,
+    exhibit_figure_url varchar(255),
     exhibit_label    VARCHAR(255) NOT NULL,
     exhibit_description VARCHAR(512),
     exhibit_url VARCHAR(255) DEFAULT '',
@@ -82,12 +83,50 @@ CREATE TABLE tbl_user_wx_openid
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_wx_openid_id`) USING BTREE,
-    FOREIGN KEY fk_exhibit_id (user_id) REFERENCES tbl_user (user_id)
+    FOREIGN KEY fk_user_id (user_id) REFERENCES tbl_user (user_id)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 10000
   DEFAULT CHARSET = utf8mb4;
 
 DROP TABLE IF EXISTS tbl_museum;
+CREATE TABLE tbl_museum
+(
+    museum_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    museum_name varchar(255) NOT NULL,
+    museum_description varchar(512) not null,
+    museum_floor_plan_filepath varchar(255) not null,
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`museum_id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
+DROP TABLE IF EXISTS tbl_exhibition_hall;
+CREATE TABLE tbl_exhibition_hall
+(
+    exhibition_hall_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    exhibition_hall_name varchar(255) NOT NULL,
+    exhibition_hall_description varchar(512) NOT NULL,
+    museum_id BIGINT(20) NOT NULL,
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`exhibition_hall_id`) USING BTREE,
+    FOREIGN KEY fk_museum_id (museum_id) REFERENCES tbl_museum (museum_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS tbl_user_preference;
+CREATE TABLE tbl_user_preference
+(
+    user_preference_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    user_id BIGINT(20) NOT NULL,
+    exhibition_hall_id BIGINT(20) NOT NULL,
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_preference_id`) USING BTREE,
+    FOREIGN KEY fk_user_id (`user_id`) REFERENCES tbl_user (`user_id`),
+    FOREIGN KEY fk_exhibition_hall_id (`exhibition_hall_id`) REFERENCES tbl_exhibition_hall (`exhibition_hall_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

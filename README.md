@@ -51,9 +51,32 @@
   }
 }
 ```
+- GET请求`localhost:80/api/exhibit/preference`随机从每个展区获取至多N个展品（N固定，现在N=4）
+```json
+{
+  "status": 200,
+  "message": "ok",
+  "data": [
+    {
+      "label": "打碗花",
+      "exhibitionHall": {
+        "createTime": null,
+        "updateTime": null,
+        "id": null,
+        "name": "植物",
+        "description": "这是植物展区的介绍 Botany",
+        "museumId": null
+      },
+      "figureUrl": null,
+      "hot": false
+    }
+  ]
+}
+```
 
 ### Bug Reports
 - 目前为了实现label的分词，每次在分词前都会动态获取数据库中所有的label并添加至自定义词典中用以分词，这个方法可能会影响性能，后续更新中可以改为永久加入词典
+- 随机获取展品时使用了`ORDER BY RAND()`，可能会随着数据规模扩大而影响性能
 
 ### Update Logs
 - 2021/10/23 支持QA（调用Python模型）和RS（伪推荐）
@@ -62,3 +85,4 @@
 - 2021/12/07 0.2.1 支持微信登录
 - 2021/12/08 0.2.2 支持label-text一对多抽取，Python端（v1.0.7+）兼容原先的一对一抽取方法，因此getText()方法已停止使用
 - 2021/12/15 0.2.3 支持展示展品信息
+- 2022/01/11 0.2.4 支持随机获取展品/展区信息（用户偏好）供问卷使用（todo: 偏好信息更新）

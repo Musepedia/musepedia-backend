@@ -22,6 +22,7 @@ CREATE TABLE tbl_exhibit
     exhibit_label    VARCHAR(255) NOT NULL,
     exhibit_description VARCHAR(512),
     exhibit_url VARCHAR(255) DEFAULT '',
+    exhibit_is_hot BOOL DEFAULT FALSE,
     create_time      DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`exhibit_id`) USING BTREE,

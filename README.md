@@ -2,7 +2,7 @@
 
 ### QA-RS-Based-Museum-Guide-System
 - 本仓库包含项目的后端
-- **Version Beta 0.2.3**
+- **Version Beta 0.2.4**
 
 ### Notices
 - Spring Boot端口: 80
@@ -39,7 +39,7 @@
   ]
 }
 ```
-- GET请求`localhost:80/api/exhibit?id=xxx`请求展品信息，包括展品标签、展品介绍和相关资料链接
+- GET请求`localhost:80/api/exhibit/info?id=xxx`请求展品信息，包括展品标签、展品介绍和相关资料链接
 ```json
 {
   "status": 200,
@@ -68,7 +68,7 @@
         "museumId": null
       },
       "figureUrl": null,
-      "hot": false
+      "isHot": false
     }
   ]
 }
@@ -85,4 +85,5 @@
 - 2021/12/07 0.2.1 支持微信登录
 - 2021/12/08 0.2.2 支持label-text一对多抽取，Python端（v1.0.7+）兼容原先的一对一抽取方法，因此getText()方法已停止使用
 - 2021/12/15 0.2.3 支持展示展品信息
-- 2022/01/11 0.2.4 支持随机获取展品/展区信息（用户偏好）供问卷使用（todo: 偏好信息更新）
+- 2022/01/11 0.2.4 支持随机获取展品/展区信息（用户偏好）供问卷使用
+- 2022/01/12 0.2.4 新增展品`exhibit_is_hot`字段（todo: 偏好信息更新）

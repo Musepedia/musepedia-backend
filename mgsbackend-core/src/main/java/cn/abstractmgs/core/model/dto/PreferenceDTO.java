@@ -12,5 +12,5 @@ public class PreferenceDTO {
 
     private String figureUrl;
 
-    private boolean isHot = false;  // 是否是当前博物馆热门展品，数据库中暂无此项
+    private Boolean isHot;
 }

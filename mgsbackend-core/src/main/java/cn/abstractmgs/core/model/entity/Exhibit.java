@@ -36,4 +36,7 @@ public class Exhibit extends BaseEntity {
 
     @TableField(value = "exhibit_url")
     private String url;
+
+    @TableField(value = "exhibit_is_hot")
+    private Boolean isHot;
 }

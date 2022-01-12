@@ -31,7 +31,7 @@ public class ExhibitController {
     @Autowired
     private PreferenceDTOMapper preferenceDTOMapper;
 
-    @GetMapping
+    @GetMapping("/info")
     public BaseResponse<ExhibitDTO> getExhibitInfo(@RequestParam Long id) {
         Exhibit exhibit = exhibitService.selectInfoById(id);
         ExhibitDTO dto = exhibitDTOMapper.toDto(exhibit);

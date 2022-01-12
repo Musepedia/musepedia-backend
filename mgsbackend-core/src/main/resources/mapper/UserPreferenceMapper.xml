@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.core.repository.UserPreferenceRepository">
+    <resultMap id="userPreferenceMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.core.model.entity.UserPreference">
+        <id property="id" column="user_preference_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="exhibitionHallId" column="exhibition_hall_id"/>
+    </resultMap>
+
+    <insert id="insertUserPreferenceById">
+        insert into tbl_user_preference
+        (user_id, exhibition_hall_id)
+        values
+        <foreach collection="hallIds" item="hallId" index="index" separator=",">
+            (#{id}, #{hallId})
+        </foreach>
+    </insert>
+</mapper>

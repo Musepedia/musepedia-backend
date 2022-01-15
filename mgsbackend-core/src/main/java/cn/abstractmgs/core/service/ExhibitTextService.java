@@ -8,13 +8,11 @@ import java.util.List;
 
 public interface ExhibitTextService extends IService<ExhibitText> {
 
-    List<String> selectByLabel(String label);
+    int MAX_TEXTS_COUNT = 15;  // 允许至多抽取的text数量
 
-    Integer selectExhibitIdByLabel(String label);
-
-    List<String> selectExhibitTextByExhibitId(int id);
+    List<String> selectByLabel(List<String> labels);
 
     List<String> getAllTexts(String question);
 
-    List<String> selectAllLabels();
+    List<String> selectAllLabelsWithAliases();
 }

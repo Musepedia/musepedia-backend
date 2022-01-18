@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.service.impl;
 
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.model.entity.UserPreference;
 import cn.abstractmgs.core.repository.UserPreferenceRepository;
 import cn.abstractmgs.core.service.UserPreferenceService;
@@ -14,19 +15,29 @@ import java.util.List;
 public class UserPreferenceServiceImpl extends ServiceImpl<UserPreferenceRepository, UserPreference> implements UserPreferenceService {
 
     @Override
-    public void deleteUserPreferenceById(Long userId) {
-        baseMapper.deleteUserPreferenceById(userId);
+    public void deleteByUserId(Long userId) {
+        baseMapper.deleteByUserId(userId);
     }
 
     @Override
-    public int insertUserPreferenceById(Long userId, List<Integer> hallIds) {
+    public int createByUserId(Long userId, List<Long> hallIds) {
         return baseMapper.insertUserPreferenceById(userId, hallIds);
     }
 
-    public boolean updateUserPreference(Long userId, List<Integer> hallIds) {
-        deleteUserPreferenceById(userId);
-        int insertedRows = insertUserPreferenceById(userId, hallIds);
+    @Override
+    public List<ExhibitionHall> getPreferredHallByUserId(Long userId) {
+        return baseMapper.getPreferredHallByUserId(userId);
+    }
 
-        return insertedRows == hallIds.size();
+    @Transactional
+    @Override
+    public boolean updateUserPreference(Long userId, List<Long> hallIds) {
+        deleteByUserId(userId);
+        if(hallIds.isEmpty()){
+            return true;
+        } else {
+            int insertedRows = createByUserId(userId, hallIds);
+            return insertedRows == hallIds.size();
+        }
     }
 }

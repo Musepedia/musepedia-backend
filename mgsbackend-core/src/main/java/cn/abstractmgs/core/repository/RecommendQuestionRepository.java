@@ -9,9 +9,4 @@ import java.util.List;
 @Mapper
 public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestion> {
 
-//    @Results(id = "recommendQuestionMapper", value = {
-//            @Result(property = "id", column = "question_id"),
-//            @Result(property = "question", column = "question_text"),
-//    })
-//    void resultMap();
 }

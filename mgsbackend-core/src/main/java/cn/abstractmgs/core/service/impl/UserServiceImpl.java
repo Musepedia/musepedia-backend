@@ -40,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             user = new User();
             Assert.isTrue(
                     StringUtils.hasText(param.getNickname())
-                            && StringUtils.hasText(param.getAvatarUrl()), "注册昵称和邮箱不能为空");
+                            && StringUtils.hasText(param.getAvatarUrl()), "注册昵称和头像不能为空");
             user.setNickname(param.getNickname());
             user.setAvatarUrl(param.getAvatarUrl());
             getBaseMapper().insert(user);

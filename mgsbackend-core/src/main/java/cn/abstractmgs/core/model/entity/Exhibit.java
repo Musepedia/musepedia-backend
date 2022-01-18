@@ -6,12 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.One;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_exhibit",autoResultMap = true)
+@TableName(value = "tbl_exhibit", autoResultMap = true, excludeProperty = "exhibitionHall")
 public class Exhibit extends BaseEntity {
 
     @TableId(value = "exhibit_id", type = IdType.AUTO)
@@ -38,5 +39,5 @@ public class Exhibit extends BaseEntity {
     private String url;
 
     @TableField(value = "exhibit_is_hot")
-    private Boolean isHot;
+    private Boolean hot;
 }

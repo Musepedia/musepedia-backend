@@ -3,18 +3,13 @@ package cn.abstractmgs.core.model.dto;
 import lombok.Data;
 
 @Data
-public class ExhibitDTO {
+public class SimpleExhibitDTO {
 
     private String label;
-
-    private String description;
-
-    private String url;
 
     private String figureUrl;
 
     private Boolean hot;
 
     private ExhibitionHallDTO exhibitionHall;
-
 }

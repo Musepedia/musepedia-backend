@@ -14,8 +14,7 @@
         <result property="isHot" column="exhibit_is_hot"/>
         <association property="exhibitionHall"
                      column="exhibition_hall_id"
-                     javaType="cn.abstractmgs.core.model.entity.ExhibitionHall"
-                     typeHandler="cn.abstractmgs.core.model.handler.ExhibitionHallTypeHandler">
+                     javaType="cn.abstractmgs.core.model.entity.ExhibitionHall">
             <id property="id" column="exhibition_hall_id"/>
             <result property="name" column="exhibition_hall_name"/>
             <result property="description" column="exhibition_hall_description"/>

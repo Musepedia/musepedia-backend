@@ -23,8 +23,6 @@ public class UserController {
 
     private final UserService userService;
 
-    private final UserPreferenceService userPreferenceService;
-
     private final UserDTOMapper userDTOMapper;
 
     @AnonymousAccess
@@ -45,14 +43,4 @@ public class UserController {
         return BaseResponse.ok("登陆成功", userDTOMapper.toDto(user));
     }
 
-    @PostMapping("update-preference")
-    public BaseResponse<String> updatePreference(@RequestBody List<Integer> hallIds) {
-         Long userId = SecurityUtil.getCurrentUserId();
-         System.out.println(userId);
-         boolean isUpdated = userPreferenceService.updateUserPreference(userId, hallIds);
-
-        return isUpdated
-                ? BaseResponse.ok("ok", "用户偏好更新成功")
-                : BaseResponse.error("error", "用户偏好更新失败");
-    }
 }

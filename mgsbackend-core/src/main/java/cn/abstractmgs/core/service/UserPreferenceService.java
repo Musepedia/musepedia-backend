@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.service;
 
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.model.entity.UserPreference;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -7,9 +8,11 @@ import java.util.List;
 
 public interface UserPreferenceService extends IService<UserPreference> {
 
-    void deleteUserPreferenceById(Long userId);
+    void deleteByUserId(Long userId);
 
-    int insertUserPreferenceById(Long userId, List<Integer> hallIds);
+    int createByUserId(Long userId, List<Long> hallIds);
 
-    boolean updateUserPreference(Long userId, List<Integer> hallIds);
+    List<ExhibitionHall> getPreferredHallByUserId(Long userId);
+
+    boolean updateUserPreference(Long userId, List<Long> hallIds);
 }

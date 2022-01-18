@@ -15,7 +15,7 @@
         (user_id, exhibition_hall_id)
         values
         <foreach collection="hallIds" item="hallId" index="index" separator=",">
-            (#{id}, #{hallId})
+            (#{userId}, #{hallId})
         </foreach>
     </insert>
 </mapper>

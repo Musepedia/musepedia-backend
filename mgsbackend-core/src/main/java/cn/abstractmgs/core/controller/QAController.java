@@ -7,6 +7,7 @@ import cn.abstractmgs.core.model.dto.AnswerDTO;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import com.google.protobuf.Message;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,17 @@ import java.util.regex.Pattern;
 @Slf4j
 @RestController
 @RequestMapping("/api/qa")
+@RequiredArgsConstructor
 public class QAController {
 
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
-    private final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
+    public static final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
 
-    @Autowired
-    private ExhibitTextService exhibitTextService;
+    private final ExhibitTextService exhibitTextService;
 
-    @Autowired
-    private RecommendQuestionService recommendQuestionService;
+    private final RecommendQuestionService recommendQuestionService;
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {

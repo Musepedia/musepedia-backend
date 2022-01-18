@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_exhibition_hall",autoResultMap = true)
+@TableName(value = "tbl_exhibition_hall", autoResultMap = true)
 public class ExhibitionHall extends BaseEntity {
 
     @TableId(value = "exhibition_hall_id", type = IdType.AUTO)
@@ -29,12 +29,4 @@ public class ExhibitionHall extends BaseEntity {
     @TableField(value = "museum_id")
     private Long museumId;
 
-    public ExhibitionHall(String exhibitionHallName) {
-        this.name = exhibitionHallName;
-    }
-
-    public ExhibitionHall(String exhibitionHallName, String exhibitionDescription) {
-        this.name = exhibitionHallName;
-        this.description = exhibitionDescription;
-    }
 }

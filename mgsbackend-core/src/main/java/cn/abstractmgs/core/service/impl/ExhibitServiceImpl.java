@@ -13,14 +13,37 @@ import java.util.List;
 @Service("exhibitService")
 public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> implements ExhibitService {
 
+    private List<Integer> exhibitIdToInteger(List<String> exhibitIds) {
+        List<Integer> res = new ArrayList<>();
+        for (String ids : exhibitIds) {
+            for (String id : ids.split(",")) {
+                res.add(Integer.parseInt(id));
+            }
+        }
+
+        return res;
+    }
+
     @Override
     public Exhibit getExhibitInfoById(Long id) {
         return baseMapper.selectInfoById(id);
     }
 
     @Override
-    public List<Exhibit> getRandomExhibits(int limit) {
-        return baseMapper.getRandomExhibits(limit);
+    public List<String> selectRandomExhibitId(int limitPerExhibitionHall) {
+        return baseMapper.selectRandomExhibitId(limitPerExhibitionHall);
     }
+
+    @Override
+    public List<Exhibit> selectRandomExhibits(List<Integer> ids) {
+        return baseMapper.selectRandomExhibits(ids);
+    }
+
+    @Override
+    public List<Exhibit> getRandomExhibits(int limitPerExhibitionHall) {
+        List<Integer> exhibitIds = exhibitIdToInteger(selectRandomExhibitId(limitPerExhibitionHall));
+        return selectRandomExhibits(exhibitIds);
+    }
+
 
 }

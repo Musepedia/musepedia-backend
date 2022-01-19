@@ -44,14 +44,15 @@ public class ExhibitController {
         return BaseResponse.ok("ok", dto);
     }
 
+    /**
+     * 随机从每个展区中获取至多{@code limitPerExhibitionHall}个展品供问卷使用
+     */
     @ApiOperation("对于每个展区的随机获取一件展品信息，用于问卷")
     @AnonymousAccess
     @GetMapping("/random")
     public BaseResponse<List<SimpleExhibitDTO>> getRandomExhibitPreference() {
-        List<Exhibit> exhibits = exhibitService.getRandomExhibits(16);
-        for (Exhibit exhibit : exhibits) {
-            exhibit.setExhibitionHall(exhibitionHallRepository.selectById(exhibit.getHallId()));
-        }
+
+        List<Exhibit> exhibits = exhibitService.getRandomExhibits(4);
         return BaseResponse.ok("ok", simpleExhibitDTOMapper.toDto(exhibits));
     }
 }

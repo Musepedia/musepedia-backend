@@ -1,20 +1,14 @@
 package cn.abstractmgs.core.model.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class ExhibitDTO {
-
-    private String label;
+@EqualsAndHashCode(callSuper = true)
+public class ExhibitDTO extends SimpleExhibitDTO {
 
     private String description;
 
     private String url;
-
-    private String figureUrl;
-
-    private Boolean hot;
-
-    private ExhibitionHallDTO exhibitionHall;
 
 }

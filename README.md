@@ -51,7 +51,7 @@
   }
 }
 ```
-- GET请求`localhost:80/api/exhibit/preference`随机从每个展区获取至多N个展品（N固定，现在N=4）
+- GET请求`localhost:80/api/exhibit/random`随机从每个展区获取至多N个展品（N固定，现在N=4）
 ```json
 {
   "status": 200,

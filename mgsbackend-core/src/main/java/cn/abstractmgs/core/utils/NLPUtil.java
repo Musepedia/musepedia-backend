@@ -7,10 +7,10 @@ import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NLPTool {
+public class NLPUtil {
     private final String text;
 
-    public NLPTool(String text) {
+    public NLPUtil(String text) {
         this.text = text;
     }
 

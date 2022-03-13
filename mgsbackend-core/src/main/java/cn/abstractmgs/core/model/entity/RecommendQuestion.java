@@ -22,4 +22,16 @@ public class RecommendQuestion extends BaseEntity {
 
     @TableField("question_text")
     private String questionText;
+
+    @TableField("answer_type")
+    private int answerType;
+
+    @TableField("answer_text")
+    private String answerText;
+
+    @TableField("exhibit_id")
+    private Long exhibitId;
+
+    @TableField("question_freq")
+    private int questionFreq;
 }

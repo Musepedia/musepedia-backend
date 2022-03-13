@@ -2,6 +2,7 @@ package cn.abstractmgs.core.repository;
 
 import cn.abstractmgs.core.model.entity.Exhibit;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.cucumber.java.eo.Se;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
@@ -23,4 +24,10 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
     List<String> selectRandomExhibitId(@Param("limit") int limitPerExhibitionHall);
 
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
+
+    @Select("select " +
+            "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id1}) " +
+            "= " +
+            "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id2})")
+    boolean isSameExhibitionHall(@Param("id1") int id1, @Param("id2") int id2);
 }

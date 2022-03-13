@@ -10,8 +10,8 @@
         <result property="text" column="exhibit_text"/>
     </resultMap>
 
-    <select id="selectByLabel" resultType="java.lang.String">
-        select exhibit_text
+    <select id="selectByLabel" resultMap="textMapper">
+        select exhibit_id, exhibit_text
         from tbl_exhibit_text
         where exhibit_id in (
             select t1.exhibit_id

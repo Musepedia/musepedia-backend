@@ -17,4 +17,5 @@ public interface ExhibitService extends IService<Exhibit> {
 
     List<Exhibit> getRandomExhibits(int limitPerExhibitionHall);
 
+    boolean isSameExhibitionHall(@Param("id1") int id1, @Param("id2") int id2);
 }

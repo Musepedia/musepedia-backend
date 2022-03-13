@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface ExhibitTextRepository extends BaseMapper<ExhibitText> {
 
-    List<String> selectByLabel(@Param("labels") List<String> labels);
+    List<ExhibitText> selectByLabel(@Param("labels") List<String> labels);
 
     @Select("select exhibit_label " +
             "from tbl_exhibit " +

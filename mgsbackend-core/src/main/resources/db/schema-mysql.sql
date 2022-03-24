@@ -1,22 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS tbl_recommend_question;
-
-CREATE TABLE tbl_recommend_question
-(
-    question_id   BIGINT(20)   NOT NULL AUTO_INCREMENT,
-    question_text VARCHAR(255) NOT NULL,
-    answer_type INT NOT NULL,
-    answer_text VARCHAR(255),
-    exhibit_id BIGINT(20) NOT NULL,
-    question_freq INT NOT NULL DEFAULT 1,
-    create_time   DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_time   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`question_id`) USING BTREE,
-    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
 DROP TABLE IF EXISTS tbl_museum;
 
 CREATE TABLE tbl_museum
@@ -62,6 +45,23 @@ CREATE TABLE tbl_exhibit
     PRIMARY KEY (`exhibit_id`) USING BTREE,
     FOREIGN KEY fk_exhibition_hall_id (exhibition_hall_id) REFERENCES tbl_exhibition_hall (exhibition_hall_id),
     INDEX idx_exhibits_label (exhibit_label)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS tbl_recommend_question;
+
+CREATE TABLE tbl_recommend_question
+(
+    question_id   BIGINT(20)   NOT NULL AUTO_INCREMENT,
+    question_text VARCHAR(255) NOT NULL,
+    answer_type INT NOT NULL,
+    answer_text VARCHAR(255),
+    exhibit_id BIGINT(20) NOT NULL,
+    question_freq INT NOT NULL DEFAULT 1,
+    create_time   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`question_id`) USING BTREE,
+    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

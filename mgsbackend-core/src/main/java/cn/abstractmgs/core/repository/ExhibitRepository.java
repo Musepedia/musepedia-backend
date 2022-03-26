@@ -25,6 +25,16 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
 
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
 
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select("select * " +
+            "from tbl_exhibit " +
+            "where exhibit_id != #{id} and exhibition_hall_id = ( " +
+            "select exhibition_hall_id " +
+            "from tbl_exhibit " +
+            "where exhibit_id = #{id} " +
+            ")")
+    List<Exhibit> getExhibitsInSameExhibitionHall(@Param("id") Long id);
+
     @Select("select " +
             "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id1}) " +
             "= " +

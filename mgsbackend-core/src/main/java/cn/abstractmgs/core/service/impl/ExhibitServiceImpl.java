@@ -46,6 +46,11 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
+    public List<Exhibit> getExhibitsInSameExhibitionHall(Long id) {
+        return baseMapper.getExhibitsInSameExhibitionHall(id);
+    }
+
+    @Override
     public boolean isSameExhibitionHall(int id1, int id2) {
         return baseMapper.isSameExhibitionHall(id1, id2);
     }

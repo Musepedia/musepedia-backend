@@ -89,6 +89,9 @@ public class QAServiceImpl implements QAService {
             }
         }
 
+        // todo re resp -> url: xxx | [CLS]: xxx
+        // todo answer_type
+
         // 将答案写入数据库中
         recommendQuestionService.insertQuestion(question,
                                                 getStatus(answer),

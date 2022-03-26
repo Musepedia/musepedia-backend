@@ -1,6 +1,7 @@
 package question;
 
 import cn.abstractmgs.core.App;
+import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,9 @@ public class RecommendQuestionTest {
     @Resource
     private RecommendQuestionService service;
 
+    @Resource
+    private ExhibitService exhibitService;
+
     @Test
     public void testUpdate() {
         service.updateQuestionFreqByText("测试问题");
@@ -29,6 +33,11 @@ public class RecommendQuestionTest {
 
         // answer_type = 0表示该答案暂时无法回答
         service.insertQuestion("测试问题3", 0, null, 100L);
+    }
+
+    @Test
+    public void testExhibitionHall() {
+        System.out.println(exhibitService.getExhibitsInSameExhibitionHall(346L));
     }
 
     @Test

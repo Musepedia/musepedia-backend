@@ -4,6 +4,7 @@ import cn.abstractmgs.core.HelloRequest;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import cn.abstractmgs.core.model.entity.RecommendQuestion;
+import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.service.QAService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
@@ -26,16 +27,27 @@ public class QAServiceImpl implements QAService {
     @Resource
     private ExhibitTextService exhibitTextService;
 
+    @Resource
+    private ExhibitService exhibitService;
+
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
     public static final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
 
+    public static final Pattern urlPattern = Pattern.compile("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\n");
+
     private static final String DEFAULT_ANSWER = "暂时无法回答这个问题";
 
     @Override
     public int getStatus(String answer) {
-        return answer.equals(DEFAULT_ANSWER) ? 0 : 1;
+        if (answer.equals(DEFAULT_ANSWER)) {
+            return 0;
+        } else if (urlPattern.matcher(answer).matches()) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     @Override
@@ -46,17 +58,16 @@ public class QAServiceImpl implements QAService {
         if (recommendQuestion != null) {
             // 在数据库中更新question_freq
             recommendQuestionService.updateQuestionFreqByText(question);
-            switch (recommendQuestion.getAnswerType()) {
-                case 1:
-                    return recommendQuestion.getAnswerText();
-                case 2:
-                    // todo 对应生成的图片作为静态资源返回
-                    return null;
-                default:
-                    // 包括answer_type = 0时的情况
-                    return DEFAULT_ANSWER;
-            }
+            return recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
         }
+
+        // todo ATR -> 分词 -> answer_type = 3时直接return exhibit_figure_url，并且写入数据库，answer_text字段为空
+        /*
+         * 分词可以调用 exhibitService.selectAllLabelsWithAliases()
+         * 分词得到的结果记为label，如有多个请考虑其他策略
+         * 存数据库：recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
+         * answer_type=3时，先存数据库再 return exhibitService.selectExhibitFigureUrlByLabel(label);
+         */
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
@@ -88,9 +99,6 @@ public class QAServiceImpl implements QAService {
                 log.error("Rpc error: ",e);
             }
         }
-
-        // todo re resp -> url: xxx | [CLS]: xxx
-        // todo answer_type
 
         // 将答案写入数据库中
         recommendQuestionService.insertQuestion(question,

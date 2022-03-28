@@ -37,7 +37,7 @@ public class RecommendQuestionTest {
 
     @Test
     public void testExhibitionHall() {
-        System.out.println(exhibitService.getExhibitsInSameExhibitionHall(346L));
+        System.out.println(exhibitService.selectExhibitFigureUrlByLabel("展品测试5"));
     }
 
     @Test

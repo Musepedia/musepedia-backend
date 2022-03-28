@@ -78,6 +78,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
+    public List<RecommendQuestion> selectMostFrequentQuestions(int count) {
+        return baseMapper.selectMostFrequentQuestions(count);
+    }
+
+    @Override
     public RecommendQuestion getRecommendQuestion(String question) {
         RecommendQuestion cached = (RecommendQuestion) redisUtil.get(question);
         if (cached == null) {

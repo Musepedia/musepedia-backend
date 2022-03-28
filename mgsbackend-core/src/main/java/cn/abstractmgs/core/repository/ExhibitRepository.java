@@ -25,6 +25,9 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
 
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
 
+    @Select("select exhibit_figure_url from tbl_exhibit where exhibit_label = #{label}")
+    String selectExhibitFigureUrlByLabel(@Param("label") String label);
+
     @ResultMap("mybatis-plus_Exhibit")
     @Select("select * " +
             "from tbl_exhibit " +

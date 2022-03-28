@@ -46,6 +46,11 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
+    public String selectExhibitFigureUrlByLabel(String label) {
+        return baseMapper.selectExhibitFigureUrlByLabel(label);
+    }
+
+    @Override
     public List<Exhibit> getExhibitsInSameExhibitionHall(Long id) {
         return baseMapper.getExhibitsInSameExhibitionHall(id);
     }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_recommend_question", autoResultMap = true)
+@TableName(value = "tbl_recommend_question", autoResultMap = true, excludeProperty = "exhibitFigureUrl")
 public class RecommendQuestion extends BaseEntity {
 
     @TableId(value = "question_id", type = IdType.AUTO)
@@ -31,6 +31,8 @@ public class RecommendQuestion extends BaseEntity {
 
     @TableField("exhibit_id")
     private Long exhibitId;
+
+    private String exhibitFigureUrl;
 
     @TableField("question_freq")
     private int questionFreq;

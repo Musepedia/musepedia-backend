@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    cn:
+      abstractmgs:
+        label:
+          repository: debug
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mgs_label?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      validation-query: SELECT 1 FROM DUAL
+    schema: classpath:db/schema-mysql.sql
+    platform: mysql
+    initialization-mode: always

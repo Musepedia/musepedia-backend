@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.core.repository.ExhibitTextRepository">
+    <resultMap id="textMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.core.model.entity.ExhibitText">
+        <id property="id" column="exhibit_text_id"/>
+        <result property="exhibitId" column="exhibit_id"/>
+        <result property="text" column="exhibit_text"/>
+    </resultMap>
+
+    <select id="selectByLabel" resultMap="textMapper">
+        select exhibit_id, exhibit_text
+        from tbl_exhibit_text
+        where exhibit_id in (
+            select t1.exhibit_id
+            from tbl_exhibit t1, tbl_exhibit_alias t2
+            where
+                (<foreach collection="labels" item="label" index="index" separator="or">
+                    t1.exhibit_label = #{label}
+                </foreach>)
+                or
+                (<foreach collection="labels" item="label" index="index" separator="or">
+                   t2.exhibit_alias = #{label}
+                </foreach>)
+                and t1.exhibit_id = t2.exhibit_id
+        )
+    </select>
+</mapper>

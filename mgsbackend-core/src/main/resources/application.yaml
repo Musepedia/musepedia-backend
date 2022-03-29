@@ -1,0 +1,54 @@
+server:
+  port: 80
+
+logging:
+  level:
+    cn:
+      abstractmgs:
+        core:
+          repository: debug
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      validation-query: SELECT 1 FROM DUAL
+    initialization-mode: never
+    platform: mysql
+    schema: classpath:db/schema-mysql.sql
+    data: classpath:db/data-mysql.sql
+  jpa:
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 3MB
+  data:
+    redis:
+      repositories:
+        enabled: false
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  cache:
+    type: redis
+
+mgs:
+  weixin:
+    appid: wxfe9a49b9f26c289d
+    secret: 60232f676e1215a24a8e357d2b1c76dc
+
+grpc:
+  client:
+    myService:
+      address: static://localhost:5555
+      negotiationType=: PLAINTEXT
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-aliases-package: cn.abstactmgs.repository.TextRepository
+  type-handlers-package: cn.abstractmgs.core.model.handler

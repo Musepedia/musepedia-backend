@@ -8,6 +8,7 @@ import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.service.QAService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
+import cn.abstractmgs.core.utils.NLPUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -68,12 +69,20 @@ public class QAServiceImpl implements QAService {
          * 存数据库：recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
          * answer_type=3时，先存数据库再 return exhibitService.selectExhibitFigureUrlByLabel(label);
          */
+        NLPUtil nlpUtil = new NLPUtil(question);
+        int answer_type = nlpUtil.answerRecognition(question);
+        List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(), question);
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
         List<String> texts = new ArrayList<>();
         for (ExhibitText exhibitText : exhibitTexts) {
             texts.add(exhibitText.getText());
+        }
+
+        if (answer_type == 3) {
+            recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
+            return exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
         }
 
         String answer = DEFAULT_ANSWER;

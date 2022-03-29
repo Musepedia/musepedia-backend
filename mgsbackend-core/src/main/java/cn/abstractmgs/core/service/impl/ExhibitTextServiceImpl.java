@@ -12,7 +12,7 @@ import java.util.List;
 @Service("exhibitTextService")
 public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements ExhibitTextService {
 
-    private List<String> getLabel(List<String> labels, String question) {
+    public List<String> getLabel(List<String> labels, String question) {
         NLPUtil nlpUtil = new NLPUtil(question);
         nlpUtil.updateCustomDictionary(labels);
 

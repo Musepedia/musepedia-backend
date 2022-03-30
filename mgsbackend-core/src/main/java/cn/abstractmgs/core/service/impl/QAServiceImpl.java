@@ -70,7 +70,7 @@ public class QAServiceImpl implements QAService {
          * answer_type=3时，先存数据库再 return exhibitService.selectExhibitFigureUrlByLabel(label);
          */
         NLPUtil nlpUtil = new NLPUtil(question);
-        int answer_type = nlpUtil.answerRecognition(question);
+        int answerType = nlpUtil.answerRecognition(question);
         List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(), question);
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
@@ -80,7 +80,7 @@ public class QAServiceImpl implements QAService {
             texts.add(exhibitText.getText());
         }
 
-        if (answer_type == 3) {
+        if (answerType == 3) {
             recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
             return exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
         }
@@ -91,6 +91,7 @@ public class QAServiceImpl implements QAService {
                     .newBuilder()
                     .setQuestion(question)
                     .addAllTexts(texts)
+                    .setStatus(answerType)
                     .build();
 
             try {

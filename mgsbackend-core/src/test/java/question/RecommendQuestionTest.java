@@ -1,7 +1,9 @@
 package question;
 
 import cn.abstractmgs.core.App;
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.service.ExhibitService;
+import cn.abstractmgs.core.service.ExhibitionHallService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +24,9 @@ public class RecommendQuestionTest {
     @Resource
     private ExhibitService exhibitService;
 
+    @Resource
+    private ExhibitionHallService exhibitionHallService;
+
     @Test
     public void testUpdate() {
         service.updateQuestionFreqByText("测试问题");
@@ -37,7 +42,7 @@ public class RecommendQuestionTest {
 
     @Test
     public void testExhibitionHall() {
-        System.out.println(exhibitService.selectExhibitFigureUrlByLabel("展品测试5"));
+        System.out.println(exhibitionHallService.selectExhibitionHallIds(1L));
     }
 
     @Test

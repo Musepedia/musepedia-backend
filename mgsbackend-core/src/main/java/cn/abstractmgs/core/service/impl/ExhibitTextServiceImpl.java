@@ -20,6 +20,15 @@ public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, E
     }
 
     @Override
+    public List<String> getLabel(String question) {
+        List<String> storedLabels = selectAllLabelsWithAliases();
+        NLPUtil nlpUtil = new NLPUtil(question);
+        nlpUtil.updateCustomDictionary(storedLabels);
+
+        return nlpUtil.getNoun();
+    }
+
+    @Override
     public List<ExhibitText> selectByLabel(List<String> labels) {
         return baseMapper.selectByLabel(labels);
     }

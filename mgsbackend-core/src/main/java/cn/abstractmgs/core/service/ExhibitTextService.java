@@ -17,4 +17,6 @@ public interface ExhibitTextService extends IService<ExhibitText> {
     List<String> selectAllLabelsWithAliases();
 
     List<String> getLabel(List<String> labels, String question);
+
+    List<String> getLabel(String question);
 }

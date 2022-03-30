@@ -37,7 +37,7 @@ public class QAController {
         int status = qaService.getStatus(answer);
 
         int countOfRecommendation = 2;
-        List<String> recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
+        List<String> recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer);
         return BaseResponse.ok(new AnswerDTO(status, answer, recommendQuestions));
     }
 }

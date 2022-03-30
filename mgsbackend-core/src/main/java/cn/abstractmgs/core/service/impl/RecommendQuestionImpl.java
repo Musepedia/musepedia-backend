@@ -4,6 +4,7 @@ import cn.abstractmgs.core.model.entity.Exhibit;
 import cn.abstractmgs.core.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.repository.RecommendQuestionRepository;
 import cn.abstractmgs.core.service.ExhibitService;
+import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.utils.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -27,6 +28,9 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Resource
     private RecommendQuestionService recommendQuestionService;
+
+    @Resource
+    private ExhibitTextService exhibitTextService;
 
 
     @Resource
@@ -130,7 +134,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public List<String> selectRecommendQuestions(String originalQ, String originalAnswer, long Id) {
+    public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer) {
+        // todo 由answer -> ID
+        List<String> labels = exhibitTextService.getLabel(originalQuestion);
+        Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
+
         List<String> RecommendQuestions = new ArrayList<>();
 
         //judge answerable
@@ -138,7 +146,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         if (!originalAnswer.isEmpty()) {//can answer
             reMode = 1;
         } else {
-            if (Id != -1) {//can't answer, can locate
+            if (id != -1) {//can't answer, can locate
                 reMode = 3;
             } else {//random, can't locate
                 reMode = 2;
@@ -150,13 +158,13 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
             case 1: {
                 List<Exhibit> nowHall = new ArrayList<Exhibit>();
                 List<Long> idINHall = new ArrayList<Long>();
-                nowHall = exhibitService.getExhibitsInSameExhibitionHall(Id);
+                nowHall = exhibitService.getExhibitsInSameExhibitionHall(id);
                 for (int i = 0; i < nowHall.size(); ++i) {
                     Exhibit temp = nowHall.get(i);
                     long a = temp.getId();
                     idINHall.add(a);
                 }
-                long[] near = findNearest(Id, idINHall);
+                long[] near = findNearest(id, idINHall);
                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[0]).getQuestionText());
                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[1]).getQuestionText());
 
@@ -169,18 +177,18 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
             case 3: {
                 List<Exhibit> nowHall = new ArrayList<Exhibit>();
                 List<Long> idINHall = new ArrayList<Long>();
-                nowHall = exhibitService.getExhibitsInSameExhibitionHall(Id);
+                nowHall = exhibitService.getExhibitsInSameExhibitionHall(id);
                 for (int i = 0; i < nowHall.size(); ++i) {
                     Exhibit temp = nowHall.get(i);
                     long a = temp.getId();
                     idINHall.add(a);
                 }
-                long[] near = findNearest(Id, idINHall);
+                long[] near = findNearest(id, idINHall);
                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[0]).getQuestionText());
                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[1]).getQuestionText());
 
                 //查询当前展品的其他问题
-                String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(Id + 1).getQuestionText();
+                String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id + 1).getQuestionText();
                 RecommendQuestions.add(nowQuestion);
                 break;
             }

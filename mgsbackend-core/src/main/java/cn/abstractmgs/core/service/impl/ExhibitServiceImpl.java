@@ -56,6 +56,11 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
+    public Long selectExhibitIdByLabel(String label) {
+        return baseMapper.selectExhibitIdByLabel(label);
+    }
+
+    @Override
     public boolean isSameExhibitionHall(int id1, int id2) {
         return baseMapper.isSameExhibitionHall(id1, id2);
     }

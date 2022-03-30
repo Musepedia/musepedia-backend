@@ -38,6 +38,9 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             ")")
     List<Exhibit> getExhibitsInSameExhibitionHall(@Param("id") Long id);
 
+    @Select("select exhibit_id from tbl_exhibit where exhibit_label = #{label}")
+    Long selectExhibitIdByLabel(@Param("label") String label);
+
     @Select("select " +
             "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id1}) " +
             "= " +

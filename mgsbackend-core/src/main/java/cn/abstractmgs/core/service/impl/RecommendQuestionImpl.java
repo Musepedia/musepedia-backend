@@ -1,26 +1,13 @@
 package cn.abstractmgs.core.service.impl;
 
-<<<<<<< HEAD
-import cn.abstractmgs.core.model.entity.RecommendQuestion;
-import cn.abstractmgs.core.repository.RecommendQuestionRepository;
-=======
 import cn.abstractmgs.core.model.entity.Exhibit;
 import cn.abstractmgs.core.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.repository.RecommendQuestionRepository;
 import cn.abstractmgs.core.service.ExhibitService;
->>>>>>> origin/beta0.2.5-re
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.utils.RedisUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-<<<<<<< HEAD
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.*;
-=======
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
->>>>>>> origin/beta0.2.5-re
 import java.util.stream.Collectors;
 
 @Service("recommendQuestionService")
@@ -37,8 +23,6 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     private List<String> cachedQuestions;
 
     @Resource
-<<<<<<< HEAD
-=======
     private ExhibitService exhibitService;
 
     @Resource
@@ -46,24 +30,15 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
 
     @Resource
->>>>>>> origin/beta0.2.5-re
     private RedisUtil redisUtil;
 
     @Override
     public List<String> getRandomQuestions(int count) {
-<<<<<<< HEAD
         if(count <= 0){
             return new ArrayList<>();
         }
 
         if(cachedQuestions == null){
-=======
-        if (count <= 0) {
-            return new ArrayList<>();
-        }
-
-        if (cachedQuestions == null) {
->>>>>>> origin/beta0.2.5-re
             Page<RecommendQuestion> page = new Page<>();
             page.setSize(100);
             cachedQuestions = page(page)
@@ -74,11 +49,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         }
 
         int size = cachedQuestions.size();
-<<<<<<< HEAD
-        if(count >= size){
-=======
         if (count >= size) {
->>>>>>> origin/beta0.2.5-re
             return cachedQuestions;
         }
 
@@ -86,15 +57,9 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         HashSet<Integer> selectedQuestions = new HashSet<>();
         Random random = new Random();
         int max = Math.min(count, cachedQuestions.size());
-<<<<<<< HEAD
         while(selectedQuestions.size() < max){
             int i = random.nextInt(cachedQuestions.size());
             if(selectedQuestions.add(i)){
-=======
-        while (selectedQuestions.size() < max) {
-            int i = random.nextInt(cachedQuestions.size());
-            if (selectedQuestions.add(i)) {
->>>>>>> origin/beta0.2.5-re
                 recommendQuestions.add(cachedQuestions.get(i));
             }
         }
@@ -140,8 +105,6 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
         return cached;
     }
-<<<<<<< HEAD
-=======
 
     private long[] findNearest(long id, List<Long> allId) {
         long min = id;
@@ -226,5 +189,4 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
         return RecommendQuestions;
     }
->>>>>>> origin/beta0.2.5-re
 }

@@ -25,4 +25,6 @@ public interface RecommendQuestionService extends IService<RecommendQuestion> {
     RecommendQuestion selectQuestionByText(@Param("text") String question);
 
     List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count);
+
+    List<String> selectRecommendQuestions(String originalQuestion,String originalAnswer, long Id);
 }

@@ -62,13 +62,7 @@ public class QAServiceImpl implements QAService {
             return recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
         }
 
-        // todo ATR -> 分词 -> answer_type = 3时直接return exhibit_figure_url，并且写入数据库，answer_text字段为空
-        /*
-         * 分词可以调用 exhibitService.selectAllLabelsWithAliases()
-         * 分词得到的结果记为label，如有多个请考虑其他策略
-         * 存数据库：recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
-         * answer_type=3时，先存数据库再 return exhibitService.selectExhibitFigureUrlByLabel(label);
-         */
+        // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
         NLPUtil nlpUtil = new NLPUtil(question);
 
         int answerType = nlpUtil.answerRecognition(question);

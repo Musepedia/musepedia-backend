@@ -135,7 +135,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer) {
-        // todo 由answer -> ID
+        // TODO 由answer -> ID
         List<String> labels = exhibitTextService.getLabel(originalQuestion);
         Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
 
@@ -164,10 +164,12 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                     long a = temp.getId();
                     idINHall.add(a);
                 }
-                long[] near = findNearest(id, idINHall);
-                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[0]).getQuestionText());
-                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[1]).getQuestionText());
-
+                long[] near=findNearest(id,idINHall);
+                for (int i=0;i<2;++i){
+                    if(near[i]!=0){
+                        RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                    }
+                }
                 break;
             }
             case 2: {
@@ -183,12 +185,14 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                     long a = temp.getId();
                     idINHall.add(a);
                 }
-                long[] near = findNearest(id, idINHall);
-                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[0]).getQuestionText());
-                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[1]).getQuestionText());
-
+                long[] near=findNearest(id,idINHall);
+                for (int i=0;i<2;++i){
+                    if(near[i]!=0){
+                        RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                    }
+                }
                 //查询当前展品的其他问题
-                String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id + 1).getQuestionText();
+                String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id).getQuestionText();
                 RecommendQuestions.add(nowQuestion);
                 break;
             }

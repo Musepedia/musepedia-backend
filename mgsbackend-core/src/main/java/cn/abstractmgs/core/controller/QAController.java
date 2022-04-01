@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,14 @@ public class QAController {
         int status = qaService.getStatus(answer);
 
         int countOfRecommendation = 2;
-        List<String> recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer);
+        List<String> recommendQuestions = new ArrayList<>();
+        try {
+            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer);
+        } catch (Exception ex) {
+            // TODO 当推荐算法抛出异常时，使用随机推荐代替
+            log.error("推荐算法异常：", ex);
+            recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
+        }
         return BaseResponse.ok(new AnswerDTO(status, answer, recommendQuestions));
     }
 }

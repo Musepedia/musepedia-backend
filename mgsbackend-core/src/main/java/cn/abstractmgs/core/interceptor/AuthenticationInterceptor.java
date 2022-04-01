@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.interceptor;
 
+import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -34,6 +35,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-//        SecurityUtil.removeCurrentUser();
+        SecurityUtil.removeCurrentUser();
     }
 }

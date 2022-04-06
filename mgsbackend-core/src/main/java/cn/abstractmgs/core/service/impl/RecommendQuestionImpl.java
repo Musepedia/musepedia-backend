@@ -38,11 +38,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public List<String> getRandomQuestions(int count) {
-        if(count <= 0){
+        if (count <= 0) {
             return new ArrayList<>();
         }
 
-        if(cachedQuestions == null){
+        if (cachedQuestions == null) {
             Page<RecommendQuestion> page = new Page<>();
             page.setSize(100);
             cachedQuestions = page(page)
@@ -61,9 +61,9 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         HashSet<Integer> selectedQuestions = new HashSet<>();
         Random random = new Random();
         int max = Math.min(count, cachedQuestions.size());
-        while(selectedQuestions.size() < max){
+        while (selectedQuestions.size() < max) {
             int i = random.nextInt(cachedQuestions.size());
-            if(selectedQuestions.add(i)){
+            if (selectedQuestions.add(i)) {
                 recommendQuestions.add(cachedQuestions.get(i));
             }
         }
@@ -98,6 +98,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public RecommendQuestion getRecommendQuestion(String question) {
+        // table:primary_key:field
         RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "answer"));
         if (cached == null) {
             cached = selectQuestionByText(question);
@@ -111,25 +112,29 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     private long[] findNearest(long id, List<Long> allId) {
-        long min = id;
         long[] re = {0, 0};
-        int index = 0;
         for (int i = 0; i < allId.size(); ++i) {
-            if (Math.abs(allId.get(i) - id) < min) {
-                min = Math.abs(allId.get(i) - id);
-                index = i;
-            }
+            allId.set(i, allId.get(i) - id);
         }
-        re[0] = allId.get(index);
-        allId.remove(index);
-        min = id;
-        for (int i = 0; i < allId.size(); ++i) {
-            if (Math.abs(allId.get(i) - id) < min) {
-                min = Math.abs(allId.get(i) - id);
-                index = i;
+        //sort and find 2 nearest exhibits
+        for (int i = 1; i < allId.size(); ++i) {
+            boolean f = true;
+            for (int j = 0; j < allId.size() - i; ++j) {
+                if (Math.abs(allId.get(j)) > Math.abs(allId.get(j + 1))) {
+                    long temp = allId.get(j);
+                    allId.set(j, allId.get(j + 1));
+                    allId.set(j + 1, temp);
+                    f = false;
+                }
             }
+            if (f) break;
         }
-        re[1] = allId.get(index);
+        try {
+            re[0] = allId.get(0) + id;
+            re[1] = allId.get(1) + id;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return re;
     }
 
@@ -160,19 +165,30 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                 List<Long> idINHall = new ArrayList<Long>();
                 nowHall = exhibitService.getExhibitsInSameExhibitionHall(id);
                 for (int i = 0; i < nowHall.size(); ++i) {
+
                     Exhibit temp = nowHall.get(i);
                     long a = temp.getId();
+                    System.out.println(a);
                     idINHall.add(a);
                 }
-                long[] near=findNearest(id,idINHall);
-                for (int i=0;i<2;++i){
-                    if(near[i]!=0){
-                        RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                long[] near = findNearest(id, idINHall);
+                if (near[0] == 0) {
+                    RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
+                } else {
+                    for (int i = 0; i < 2; ++i) {
+                        if (near[i] != 0) {
+                            try {
+                                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 break;
             }
             case 2: {
+                System.out.println("this is random");
                 RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
                 break;
             }
@@ -185,10 +201,18 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                     long a = temp.getId();
                     idINHall.add(a);
                 }
-                long[] near=findNearest(id,idINHall);
-                for (int i=0;i<2;++i){
-                    if(near[i]!=0){
-                        RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                long[] near = findNearest(id, idINHall);
+                if (near[0] == 0) {
+                    RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
+                } else {
+                    for (int i = 0; i < 2; ++i) {
+                        if (near[i] != 0) {
+                            try {
+                                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 //查询当前展品的其他问题
@@ -197,7 +221,6 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                 break;
             }
         }
-
 
         return RecommendQuestions;
     }

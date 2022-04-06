@@ -7,6 +7,7 @@ import cn.abstractmgs.core.model.param.WxLoginParam;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
 import cn.abstractmgs.core.service.UserService;
+import cn.abstractmgs.core.utils.RedisUtil;
 import cn.abstractmgs.core.utils.WxUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     private final WxUtil wxUtil;
 
     private final UserWxOpenidRepository openidRepository;
+
+    private final RedisUtil redisUtil;
 
     @Override
     public User getByOpenId(String openid) {
@@ -52,5 +55,16 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         }
 
         return user;
+    }
+
+    @Override
+    public void setUserLocation(Long userId, Long exhibitionHallId) {
+        redisUtil.set(redisUtil.getKey("user", userId, "location"), exhibitionHallId);
+    }
+
+    @Override
+    public Long getUserLocation(Long userId) {
+        Object userLocation = redisUtil.get(redisUtil.getKey("user", userId, "location"));
+        return Long.valueOf(String.valueOf(userLocation));
     }
 }

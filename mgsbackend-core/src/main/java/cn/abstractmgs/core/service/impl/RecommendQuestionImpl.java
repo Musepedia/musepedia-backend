@@ -98,13 +98,13 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public RecommendQuestion getRecommendQuestion(String question) {
-        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(question);
+        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "answer"));
         if (cached == null) {
             cached = selectQuestionByText(question);
             if (cached == null) {
                 return null;
             }
-            redisUtil.set(cached.getQuestionText(), cached);
+            redisUtil.set(redisUtil.getKey("question", cached.getQuestionText(), "answer"), cached);
         }
 
         return cached;

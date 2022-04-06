@@ -44,6 +44,10 @@ public class RedisUtil {
         this.redisTemplate = redisTemplate;
     }
 
+    public String getKey(Object table, Object key, Object field) {
+        return table.toString() + ":" + key.toString() + ":" + field.toString();
+    }
+
     /**
      * 指定缓存失效时间
      *

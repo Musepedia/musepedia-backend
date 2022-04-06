@@ -7,8 +7,10 @@ import cn.abstractmgs.core.model.dto.SimpleExhibitDTO;
 import cn.abstractmgs.core.model.entity.Exhibit;
 import cn.abstractmgs.core.repository.ExhibitionHallRepository;
 import cn.abstractmgs.core.service.ExhibitService;
+import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.ExhibitDTOMapper;
 import cn.abstractmgs.core.service.mapstruct.SimpleExhibitDTOMapper;
+import cn.abstractmgs.core.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,8 @@ public class ExhibitController {
 
     private final ExhibitService exhibitService;
 
+    private final UserService userService;
+
     private final ExhibitionHallRepository exhibitionHallRepository;
 
     private final ExhibitDTOMapper exhibitDTOMapper;
@@ -40,6 +44,11 @@ public class ExhibitController {
     public BaseResponse<ExhibitDTO> getExhibitInfo(@RequestParam Long id) {
         // no exhibition hall info
         Exhibit exhibit = exhibitService.getExhibitInfoById(id);
+
+        // 根据问题更新用户所在位置
+        System.out.println(exhibit.getHallId());
+        userService.setUserLocation(SecurityUtil.getCurrentUserId(), exhibit.getHallId());
+
         ExhibitDTO dto = exhibitDTOMapper.toDto(exhibit);
         return BaseResponse.ok("ok", dto);
     }

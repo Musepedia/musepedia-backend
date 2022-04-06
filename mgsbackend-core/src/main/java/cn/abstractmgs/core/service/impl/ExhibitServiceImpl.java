@@ -56,6 +56,11 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
+    public Long selectExhibitionHallIdByExhibitId(Long id) {
+        return baseMapper.selectExhibitionHallIdByExhibitId(id);
+    }
+
+    @Override
     public Long selectExhibitIdByLabel(String label) {
         return baseMapper.selectExhibitIdByLabel(label);
     }

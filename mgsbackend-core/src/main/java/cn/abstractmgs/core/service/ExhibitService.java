@@ -21,6 +21,8 @@ public interface ExhibitService extends IService<Exhibit> {
 
     List<Exhibit> getExhibitsInSameExhibitionHall(@Param("id") Long id);
 
+    Long selectExhibitionHallIdByExhibitId(@Param("id") Long id);
+
     Long selectExhibitIdByLabel(@Param("label") String label);
 
     boolean isSameExhibitionHall(@Param("id1") int id1, @Param("id2") int id2);

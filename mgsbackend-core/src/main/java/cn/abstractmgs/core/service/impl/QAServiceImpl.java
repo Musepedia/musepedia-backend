@@ -4,11 +4,9 @@ import cn.abstractmgs.core.HelloRequest;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import cn.abstractmgs.core.model.entity.RecommendQuestion;
-import cn.abstractmgs.core.service.ExhibitService;
-import cn.abstractmgs.core.service.ExhibitTextService;
-import cn.abstractmgs.core.service.QAService;
-import cn.abstractmgs.core.service.RecommendQuestionService;
+import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.NLPUtil;
+import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,9 @@ public class QAServiceImpl implements QAService {
 
     @Resource
     private ExhibitService exhibitService;
+
+    @Resource
+    private UserService userService;
 
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
@@ -56,9 +57,16 @@ public class QAServiceImpl implements QAService {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
 
+        Long userLocation;
+
         if (recommendQuestion != null) {
             // 在数据库中更新question_freq
             recommendQuestionService.updateQuestionFreqByText(question);
+
+            // 根据问题更新用户所在位置
+            userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
+            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+
             return recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
         }
 
@@ -106,6 +114,10 @@ public class QAServiceImpl implements QAService {
                 log.error("Rpc error: ",e);
             }
         }
+
+        // 根据问题更新用户所在位置
+        userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
+        userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
 
         // 将答案写入数据库中
         recommendQuestionService.insertQuestion(question,

@@ -9,4 +9,8 @@ public interface UserService extends IService<User> {
     User getByOpenId(String openid);
 
     User loginWx(WxLoginParam param);
+
+    void setUserLocation(Long userId, Long exhibitionHallId);
+
+    Long getUserLocation(Long userId);
 }

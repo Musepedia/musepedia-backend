@@ -15,7 +15,7 @@ import java.util.List;
 public interface ExhibitRepository extends BaseMapper<Exhibit> {
 
     @ResultMap("mybatis-plus_Exhibit")
-    @Select("select exhibit_label, exhibit_description, exhibit_url from tbl_exhibit where exhibit_id = #{id}")
+    @Select("select exhibition_hall_id, exhibit_label, exhibit_description, exhibit_url from tbl_exhibit where exhibit_id = #{id}")
     Exhibit selectInfoById(@Param("id") Long id);
 
     @Select("select substring_index(group_concat(t.exhibit_id order by rand()), ',', #{limit}) " +
@@ -29,14 +29,18 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
     String selectExhibitFigureUrlByLabel(@Param("label") String label);
 
     @ResultMap("mybatis-plus_Exhibit")
-    @Select("select * " +
-            "from tbl_exhibit " +
-            "where exhibit_id != #{id} and exhibition_hall_id = ( " +
+    @Select("select distinct t1.exhibit_id, t1.exhibition_hall_id, t1.exhibit_label, t1.exhibit_is_hot " +
+            "from tbl_exhibit t1 " +
+            "join tbl_recommend_question t2 on t1.exhibit_id = t2.exhibit_id " +
+            "where t1.exhibit_id != #{id} and exhibition_hall_id = ( " +
             "select exhibition_hall_id " +
             "from tbl_exhibit " +
-            "where exhibit_id = #{id} " +
-            ")")
+            "where exhibit_id = #{id})")
     List<Exhibit> getExhibitsInSameExhibitionHall(@Param("id") Long id);
+
+
+    @Select("select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id}")
+    Long selectExhibitionHallIdByExhibitId(@Param("id") Long id);
 
     @Select("select exhibit_id from tbl_exhibit where exhibit_label = #{label}")
     Long selectExhibitIdByLabel(@Param("label") String label);

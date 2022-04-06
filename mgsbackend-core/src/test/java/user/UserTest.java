@@ -5,6 +5,7 @@ import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.entity.UserWxOpenid;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
+import cn.abstractmgs.core.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,9 @@ public class UserTest {
 
     @Resource
     UserWxOpenidRepository openidRepository;
+
+    @Resource
+    private UserService userService;
 
     @Test
     public void test(){
@@ -42,5 +46,12 @@ public class UserTest {
         User u = userRepository.selectById(10000L);
         List<User> uu = userRepository.listByNickname("nick");
         User user = userRepository.getByOpenid("RANDOM");
+    }
+
+    @Test
+    public void getterSetter() {
+        System.out.println(userService.getUserLocation(10000L));;
+        userService.setUserLocation(10000L, 1L);
+        System.out.println(userService.getUserLocation(10000L));
     }
 }

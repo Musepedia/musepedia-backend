@@ -42,7 +42,7 @@ public class RecommendQuestionTest {
 
     @Test
     public void testExhibitionHall() {
-        System.out.println(exhibitionHallService.selectExhibitionHallIds(1L));
+        System.out.println(exhibitService.selectExhibitionHallIdByExhibitId(344L));
     }
 
     @Test

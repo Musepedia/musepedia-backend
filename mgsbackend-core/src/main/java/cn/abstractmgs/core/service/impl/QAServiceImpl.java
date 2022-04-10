@@ -78,19 +78,29 @@ public class QAServiceImpl implements QAService {
         List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(), question);
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
+        String answer = DEFAULT_ANSWER;
+
+        if (label.size() == 0) {
+            recommendQuestionService.insertQuestion(question, 0, null, null);
+            return answer;
+        }
+
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
         List<String> texts = new ArrayList<>();
         for (ExhibitText exhibitText : exhibitTexts) {
             texts.add(exhibitText.getText());
         }
 
-
         if (answerType == 3) {
-            recommendQuestionService.insertQuestion(question, 3, null, exhibitTexts.get(0).getExhibitId());
-            return exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
+            if (texts.size() != 0) {
+                answer = exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
+                recommendQuestionService.insertQuestion(question, 3, answer, exhibitTexts.get(0).getExhibitId());
+            } else {
+                recommendQuestionService.insertQuestion(question, 0, null, null);
+            }
+            return answer;
         }
 
-        String answer = DEFAULT_ANSWER;
         if (texts.size() != 0) {
             HelloRequest helloRequest = HelloRequest
                     .newBuilder()
@@ -116,14 +126,16 @@ public class QAServiceImpl implements QAService {
         }
 
         // 根据问题更新用户所在位置
-        userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
-        userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+        if (exhibitTexts.size() != 0) {
+            userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
+            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+        }
 
         // 将答案写入数据库中
         recommendQuestionService.insertQuestion(question,
                                                 getStatus(answer),
                                                 getStatus(answer) == 0 ? null : answer,
-                                                exhibitTexts.get(0).getExhibitId());
+                                                exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId());
 
         return answer;
     }

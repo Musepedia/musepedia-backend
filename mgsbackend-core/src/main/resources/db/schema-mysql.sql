@@ -56,7 +56,7 @@ CREATE TABLE tbl_recommend_question
     question_text VARCHAR(255) NOT NULL,
     answer_type INT NOT NULL,
     answer_text VARCHAR(255),
-    exhibit_id BIGINT(20) NOT NULL,
+    exhibit_id BIGINT(20),
     question_freq INT NOT NULL DEFAULT 1,
     create_time   DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

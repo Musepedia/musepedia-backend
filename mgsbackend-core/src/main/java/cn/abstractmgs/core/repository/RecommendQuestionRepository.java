@@ -15,7 +15,7 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
     void updateQuestionFreqByText(@Param("text") String question);
 
     @Insert("insert into tbl_recommend_question " +
-            "(question_text, answer_type, answer_text, exhibit_id, text_id) " +
+            "(question_text, answer_type, answer_text, exhibit_id, exhibit_text_id) " +
             "values " +
             "(#{question_text}, #{answer_type}, #{answer_text}, #{id}, #{text_id}) ")
     void insertQuestion(@Param("question_text") String questionText, @Param("answer_type") int answerType,

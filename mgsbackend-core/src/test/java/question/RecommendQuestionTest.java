@@ -1,15 +1,19 @@
 package question;
 
 import cn.abstractmgs.core.App;
+import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
 import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.ExhibitionHallService;
+import cn.abstractmgs.core.service.QAService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
+import cn.abstractmgs.core.utils.SecurityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -17,6 +21,9 @@ import javax.annotation.Resource;
 @SpringBootTest(classes = App.class)
 @EnableCaching
 public class RecommendQuestionTest {
+
+    @Resource
+    private QAService qaService;
 
     @Resource
     private RecommendQuestionService service;
@@ -48,5 +55,18 @@ public class RecommendQuestionTest {
     @Test
     public void testGetRandomQuestion() {
         System.out.println(service.getRandomQuestionWithSameExhibitId(100L));
+    }
+
+    @Test
+    @Transactional
+    public void test2() {
+        SecurityUtil.setCurrentUserId(10000L);
+
+        String question = "狼和狗有什么关系";
+        AnswerWithTextIdDTO awt = qaService.getAnswer(question);
+        String answer = awt.getAnswer();
+        int status = qaService.getStatus(answer);
+
+        System.out.println(answer);
     }
 }

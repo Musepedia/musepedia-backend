@@ -11,7 +11,7 @@
     </resultMap>
 
     <select id="selectByLabel" resultMap="textMapper">
-        select exhibit_id, exhibit_text
+        select exhibit_id, exhibit_text, exhibit_text_id
         from tbl_exhibit_text
         where exhibit_id in (
             select t1.exhibit_id

@@ -27,4 +27,9 @@
                 and t1.exhibit_id = t2.exhibit_id
         )
     </select>
+
+    <select id="selectExhibitTextByKeyword" resultType="java.lang.String">
+        select exhibit_text from tbl_exhibit_text
+        where exhibit_text like concat('%', #{keyword}, '%')
+    </select>
 </mapper>

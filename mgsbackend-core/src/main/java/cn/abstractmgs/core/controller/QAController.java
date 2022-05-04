@@ -3,6 +3,7 @@ package cn.abstractmgs.core.controller;
 import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
+import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
 import cn.abstractmgs.core.service.QAService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -26,19 +28,18 @@ public class QAController {
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
-    public static final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
-
     private final RecommendQuestionService recommendQuestionService;
 
     private final QAService qaService;
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
-        String answer = qaService.getAnswer(question);
+        AnswerWithTextIdDTO awt = qaService.getAnswer(question);
+        String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);
 
         int countOfRecommendation = 2;
-        List<String> recommendQuestions = new ArrayList<>();
+        List<String> recommendQuestions;
         try {
             recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer);
         } catch (Exception ex) {
@@ -46,6 +47,6 @@ public class QAController {
             log.error("推荐算法异常：", ex);
             recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
         }
-        return BaseResponse.ok(new AnswerDTO(status, answer, recommendQuestions));
+        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions));
     }
 }

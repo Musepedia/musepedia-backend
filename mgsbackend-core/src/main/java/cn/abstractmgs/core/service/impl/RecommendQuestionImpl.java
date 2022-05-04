@@ -77,8 +77,13 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId) {
-        baseMapper.insertQuestion(questionText, answerType, answerText, exhibitId);
+    public void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId) {
+        baseMapper.insertQuestion(questionText, answerType, answerText, exhibitId, exhibitTextId);
+    }
+
+    @Override
+    public void insertIrrelevantQuestion(String questionText) {
+        baseMapper.insertQuestion(questionText, 0, null, null, null);
     }
 
     @Override

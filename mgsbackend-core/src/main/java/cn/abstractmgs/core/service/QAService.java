@@ -1,12 +1,10 @@
 package cn.abstractmgs.core.service;
 
-import cn.abstractmgs.core.model.entity.ExhibitText;
-
-import java.util.List;
+import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
 
 public interface QAService {
 
     int getStatus(String answer);
 
-    String getAnswer(String question);
+    AnswerWithTextIdDTO getAnswer(String question);
 }

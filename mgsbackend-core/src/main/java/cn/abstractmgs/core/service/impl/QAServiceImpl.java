@@ -1,7 +1,10 @@
 package cn.abstractmgs.core.service.impl;
 
+import cn.abstractmgs.core.AnswerWithTextId;
 import cn.abstractmgs.core.HelloRequest;
 import cn.abstractmgs.core.MyServiceGrpc;
+import cn.abstractmgs.core.RpcExhibitText;
+import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import cn.abstractmgs.core.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.service.*;
@@ -9,12 +12,15 @@ import cn.abstractmgs.core.utils.NLPUtil;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("qaService")
@@ -53,7 +59,7 @@ public class QAServiceImpl implements QAService {
     }
 
     @Override
-    public String getAnswer(String question) {
+    public AnswerWithTextIdDTO getAnswer(String question) {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
 
@@ -67,7 +73,8 @@ public class QAServiceImpl implements QAService {
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
             userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
 
-            return recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
+            String answerText = recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
+            return new AnswerWithTextIdDTO(answerText, recommendQuestion.getExhibitTextId());
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -81,47 +88,55 @@ public class QAServiceImpl implements QAService {
         String answer = DEFAULT_ANSWER;
 
         if (label.size() == 0) {
-            recommendQuestionService.insertQuestion(question, 0, null, null);
-            return answer;
+            recommendQuestionService.insertIrrelevantQuestion(question);
+            // 无法回答问题（无关问题）
+            return new AnswerWithTextIdDTO(answer, null);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
-        List<String> texts = new ArrayList<>();
-        for (ExhibitText exhibitText : exhibitTexts) {
-            texts.add(exhibitText.getText());
-        }
+        List<RpcExhibitText> rpcTexts =
+                exhibitTexts.stream()
+                        .map(e -> RpcExhibitText.newBuilder()
+                                .setText(e.getText())
+                                .setId(e.getId())
+                                .build())
+                        .collect(Collectors.toList());
 
         if (answerType == 3) {
-            if (texts.size() != 0) {
+            if (rpcTexts.size() != 0) {
                 answer = exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
-                recommendQuestionService.insertQuestion(question, 3, answer, exhibitTexts.get(0).getExhibitId());
+                recommendQuestionService.insertQuestion(question, 3, answer, exhibitTexts.get(0).getExhibitId(), null);
             } else {
-                recommendQuestionService.insertQuestion(question, 0, null, null);
+                recommendQuestionService.insertIrrelevantQuestion(question);
             }
-            return answer;
+            return new AnswerWithTextIdDTO(answer, null);
         }
 
-        if (texts.size() != 0) {
+        Long textId = null;
+
+        if (rpcTexts.size() != 0) {
             HelloRequest helloRequest = HelloRequest
                     .newBuilder()
                     .setQuestion(question)
-                    .addAllTexts(texts)
+                    .addAllTexts(rpcTexts)
                     .setStatus(answerType)
                     .build();
 
             try {
-                String resp = myServiceBlockingStub
+                AnswerWithTextId answerWithTextId = myServiceBlockingStub
                         .sayHello(helloRequest)
-                        .getAnswer();
+                        .getAnswerWithTextId();
+                String resp = answerWithTextId.getAnswer();
                 // 替换grpc返回的所有包含[CLS]的占位符，如果仅包含占位符则返回"无法回答"
                 resp = placeholderPattern.matcher(resp).replaceAll("");
-                if(resp.length() != 0){
+                if (resp.length() != 0) {
                     // has exact answer
                     answer = resp;
+                    textId = answerWithTextId.getTextId();
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 // rpc error
-                log.error("Rpc error: ",e);
+                log.error("Rpc error: ", e);
             }
         }
 
@@ -133,10 +148,11 @@ public class QAServiceImpl implements QAService {
 
         // 将答案写入数据库中
         recommendQuestionService.insertQuestion(question,
-                                                getStatus(answer),
-                                                getStatus(answer) == 0 ? null : answer,
-                                                exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId());
+                getStatus(answer),
+                getStatus(answer) == 0 ? null : answer,
+                exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId(),
+                textId);
 
-        return answer;
+        return new AnswerWithTextIdDTO(answer, textId);
     }
 }

@@ -12,6 +12,8 @@ public interface ExhibitTextRepository extends BaseMapper<ExhibitText> {
 
     List<ExhibitText> selectByLabel(@Param("labels") List<String> labels);
 
+    String selectExhibitTextByKeyword(@Param("keyword") String keyword);
+
     @Select("select exhibit_label " +
             "from tbl_exhibit " +
             "union " +

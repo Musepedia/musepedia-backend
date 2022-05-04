@@ -7,6 +7,10 @@ logging:
       abstractmgs:
         core:
           repository: debug
+  file:
+    path: log
+    max-history: 30
+
 
 spring:
   datasource:

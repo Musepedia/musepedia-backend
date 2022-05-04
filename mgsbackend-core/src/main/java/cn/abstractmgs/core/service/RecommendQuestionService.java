@@ -16,7 +16,10 @@ public interface RecommendQuestionService extends IService<RecommendQuestion> {
     void insertQuestion(@Param("question_text") String questionText,
                         @Param("answer_type") int answerType,
                         @Param("answer_text") String answerText,
-                        @Param("id") Long exhibitId);
+                        @Param("id") Long exhibitId,
+                        Long exhibitTextId);
+
+    void insertIrrelevantQuestion(@Param("question_text") String questionText);
 
     RecommendQuestion getRandomQuestionWithSameExhibitId(@Param("id") Long exhibitId);
 

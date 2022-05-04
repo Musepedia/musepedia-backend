@@ -34,6 +34,9 @@ public class RecommendQuestion extends BaseEntity {
 
     private String exhibitFigureUrl;
 
+    @TableField("exhibit_text_id")
+    private Long exhibitTextId;
+
     @TableField("question_freq")
     private int questionFreq;
 }

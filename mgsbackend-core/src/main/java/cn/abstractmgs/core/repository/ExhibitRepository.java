@@ -50,4 +50,13 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "= " +
             "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id2})")
     boolean isSameExhibitionHall(@Param("id1") int id1, @Param("id2") int id2);
+
+
+    @Select("select exhibit_id from tbl_exhibit " +
+            "where exhibition_hall_id = ( " +
+            "    select exhibition_hall_id from tbl_exhibit " +
+            "    where exhibit_id = #{id} " +
+            ") " +
+            "order by exhibit_id")
+    List<Long> selectExhibitIdsInSameExhibitionHall(@Param("id") Long id);
 }

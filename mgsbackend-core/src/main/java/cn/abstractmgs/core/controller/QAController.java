@@ -4,10 +4,9 @@ import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
 import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
-import cn.abstractmgs.core.service.ExhibitService;
-import cn.abstractmgs.core.service.QAService;
-import cn.abstractmgs.core.service.RecommendQuestionService;
-import cn.abstractmgs.core.service.UserService;
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
+import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +32,18 @@ public class QAController {
 
     private final RecommendQuestionService recommendQuestionService;
 
+    private final RecommendExhibitionHallService recommendExhibitionHallService;
+
+    private final ExhibitionHallService exhibitionHallService;
+
+    private final UserPreferenceService userPreferenceService;
+
     private final QAService qaService;
 
     private final UserService userService;
 
     @GetMapping
-    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
+    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question, @RequestParam Long museumId) {
         AnswerWithTextIdDTO awt = qaService.getAnswer(question);
         String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);
@@ -53,9 +58,13 @@ public class QAController {
             recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
         }
 
+        ExhibitionHall recommendExhibitionHall = null;
         if (userService.isUserAtEndOfExhibitionHall(SecurityUtil.getCurrentUserId())) {
-            // TODO 推荐展区
+            Long currentLocationId = userService.getUserLocation(SecurityUtil.getCurrentUserId());
+            ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
+            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId());
+            recommendExhibitionHall = recommendExhibitionHallService.getRecommendExhibitionHall(museumId, userPref, currentLocation);
         }
-        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, null));
+        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
     }
 }

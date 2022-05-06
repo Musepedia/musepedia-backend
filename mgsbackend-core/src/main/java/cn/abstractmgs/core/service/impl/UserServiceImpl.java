@@ -4,6 +4,7 @@ import cn.abstractmgs.core.model.entity.UserWxOpenid;
 import cn.abstractmgs.core.model.response.Code2SessionResponse;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.param.WxLoginParam;
+import cn.abstractmgs.core.repository.ExhibitRepository;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
 import cn.abstractmgs.core.service.UserService;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 @Service("userService")
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserRepository, User> implements UserService {
@@ -23,6 +26,8 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     private final WxUtil wxUtil;
 
     private final UserWxOpenidRepository openidRepository;
+
+    private final ExhibitRepository exhibitRepository;
 
     private final RedisUtil redisUtil;
 
@@ -66,5 +71,21 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     public Long getUserLocation(Long userId) {
         Object userLocation = redisUtil.get(redisUtil.getKey("user", userId, "location"));
         return Long.valueOf(String.valueOf(userLocation));
+    }
+
+    @Override
+    public boolean isUserAtEndOfExhibitionHall(Long userId) {
+        Long userLocation = getUserLocation(userId);
+        double percentage = 0.1;
+        List<Long> exhibits = exhibitRepository.selectExhibitIdsInSameExhibitionHall(userLocation);
+
+        int countOfExhibits = (int)Math.ceil(percentage * exhibits.size());
+
+        for (int i=exhibits.size()-1; countOfExhibits >= 0; --i, --countOfExhibits) {
+            if (userLocation.equals(exhibits.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

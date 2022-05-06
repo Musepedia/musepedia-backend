@@ -4,8 +4,11 @@ import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
 import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
+import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.QAService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
+import cn.abstractmgs.core.service.UserService;
+import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -32,6 +35,8 @@ public class QAController {
 
     private final QAService qaService;
 
+    private final UserService userService;
+
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
         AnswerWithTextIdDTO awt = qaService.getAnswer(question);
@@ -47,6 +52,10 @@ public class QAController {
             log.error("推荐算法异常：", ex);
             recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
         }
-        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions));
+
+        if (userService.isUserAtEndOfExhibitionHall(SecurityUtil.getCurrentUserId())) {
+            // TODO 推荐展区
+        }
+        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, null));
     }
 }

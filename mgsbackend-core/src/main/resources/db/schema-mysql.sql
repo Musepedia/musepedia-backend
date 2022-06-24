@@ -40,6 +40,8 @@ CREATE TABLE tbl_exhibit
     exhibit_description VARCHAR(511),
     exhibit_url VARCHAR(1023) DEFAULT '',
     exhibit_is_hot BOOL DEFAULT FALSE,
+    exhibit_prev_id BIGINT(20) DEFAULT NULL,
+    exhibit_next_id BIGINT(20) DEFAULT NULL,
     create_time      DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`exhibit_id`) USING BTREE,

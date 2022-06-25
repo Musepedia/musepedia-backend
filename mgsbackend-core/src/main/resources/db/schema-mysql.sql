@@ -7,6 +7,8 @@ CREATE TABLE tbl_museum
     museum_id BIGINT(20) NOT NULL AUTO_INCREMENT,
     museum_name VARCHAR(255) NOT NULL,
     museum_description VARCHAR(512) NOT NULL ,
+    museum_logo_url VARCHAR(1023) DEFAULT '',
+    museum_is_service BOOL DEFAULT FALSE,
     museum_floor_plan_filepath VARCHAR(255) NOT NULL ,
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

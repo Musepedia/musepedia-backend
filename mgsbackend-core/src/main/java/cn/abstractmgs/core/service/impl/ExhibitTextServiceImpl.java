@@ -20,8 +20,8 @@ public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, E
     }
 
     @Override
-    public List<String> getLabel(String question) {
-        List<String> storedLabels = selectAllLabelsWithAliases();
+    public List<String> getLabel(String question, Long museumId) {
+        List<String> storedLabels = selectAllLabelsWithAliases(museumId);
         NLPUtil nlpUtil = new NLPUtil(question);
         nlpUtil.updateCustomDictionary(storedLabels);
 
@@ -29,21 +29,21 @@ public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, E
     }
 
     @Override
-    public List<ExhibitText> selectByLabel(List<String> labels) {
-        return baseMapper.selectByLabel(labels);
+    public List<ExhibitText> selectByLabel(List<String> labels, Long museumId) {
+        return baseMapper.selectByLabel(labels, museumId);
     }
 
     @Override
-    public List<String> selectAllLabelsWithAliases() {
-        return baseMapper.selectAllLabelsWithAliases();
+    public List<String> selectAllLabelsWithAliases(Long museumId) {
+        return baseMapper.selectAllLabelsWithAliases(museumId);
     }
 
     @Override
-    public List<ExhibitText> getAllTexts(String question) {
-        List<String> storedLabels = selectAllLabelsWithAliases();
+    public List<ExhibitText> getAllTexts(String question, Long museumId) {
+        List<String> storedLabels = selectAllLabelsWithAliases(museumId);
 
         List<String> labels = getLabel(storedLabels, question);
-        List<ExhibitText> exhibitTexts = selectByLabel(labels);
+        List<ExhibitText> exhibitTexts = selectByLabel(labels, museumId);
 
         return exhibitTexts.size() >= MAX_TEXTS_COUNT
                 ? null

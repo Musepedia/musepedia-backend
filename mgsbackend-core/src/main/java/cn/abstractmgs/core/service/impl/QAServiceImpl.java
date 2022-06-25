@@ -59,7 +59,7 @@ public class QAServiceImpl implements QAService {
     }
 
     @Override
-    public AnswerWithTextIdDTO getAnswer(String question) {
+    public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
 
@@ -82,7 +82,7 @@ public class QAServiceImpl implements QAService {
 
         int answerType = nlpUtil.answerRecognition(question);
 
-        List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(), question);
+        List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(museumId), question);
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
         String answer = DEFAULT_ANSWER;
@@ -93,7 +93,7 @@ public class QAServiceImpl implements QAService {
             return new AnswerWithTextIdDTO(answer, null);
         }
 
-        List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
+        List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
         List<RpcExhibitText> rpcTexts =
                 exhibitTexts.stream()
                         .map(e -> RpcExhibitText.newBuilder()

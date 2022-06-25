@@ -10,13 +10,13 @@ public interface ExhibitTextService extends IService<ExhibitText> {
 
     int MAX_TEXTS_COUNT = 15;  // 允许至多抽取的text数量
 
-    List<ExhibitText> selectByLabel(List<String> labels);
+    List<ExhibitText> selectByLabel(List<String> labels, Long museumId);
 
-    List<ExhibitText> getAllTexts(String question);
+    List<ExhibitText> getAllTexts(String question, Long museumId);
 
-    List<String> selectAllLabelsWithAliases();
+    List<String> selectAllLabelsWithAliases(Long museumId);
 
     List<String> getLabel(List<String> labels, String question);
 
-    List<String> getLabel(String question);
+    List<String> getLabel(String question, Long museumId);
 }

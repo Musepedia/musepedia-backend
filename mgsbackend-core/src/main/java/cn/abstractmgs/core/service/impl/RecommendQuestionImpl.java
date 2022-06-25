@@ -144,9 +144,9 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer) {
+    public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
         // TODO 由answer -> ID
-        List<String> labels = exhibitTextService.getLabel(originalQuestion);
+        List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
         Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
 
         List<String> RecommendQuestions = new ArrayList<>();

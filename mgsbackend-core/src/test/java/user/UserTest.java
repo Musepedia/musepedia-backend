@@ -3,6 +3,8 @@ package user;
 import cn.abstractmgs.core.App;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.entity.UserWxOpenid;
+import cn.abstractmgs.core.model.entity.enums.AgeEnum;
+import cn.abstractmgs.core.model.entity.enums.GenderEnum;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
 import cn.abstractmgs.core.service.UserService;
@@ -10,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -53,5 +56,18 @@ public class UserTest {
         System.out.println(userService.getUserLocation(10000L));;
         userService.setUserLocation(10000L, 1L);
         System.out.println(userService.getUserLocation(10000L));
+    }
+
+    @Test
+    @Transactional
+    public void test2() {
+        userService.insertUserSetting("testname4", "https://example.com", "12345678910", GenderEnum.MALE, AgeEnum.JUNIOR_HIGH_SCHOOL);
+    }
+
+    @Test
+    public void testInsertQuestion() {
+        // userService.insertUserQuestion(10003L, 353L);
+        Boolean res = userService.updateUserFeedbackOnQuestion(10003L, 1000L, false);
+        System.out.println(res);
     }
 }

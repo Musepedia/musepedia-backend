@@ -63,6 +63,7 @@ public class QAServiceImpl implements QAService {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
 
+        Long userId = SecurityUtil.getCurrentUserId();
         Long userLocation;
 
         if (recommendQuestion != null) {
@@ -71,7 +72,10 @@ public class QAServiceImpl implements QAService {
 
             // 根据问题更新用户所在位置
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
-            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+            userService.setUserLocation(userId, userLocation);
+
+            // 更新用户历史提问
+            userService.insertUserQuestion(userId, recommendQuestion.getId());
 
             String answerText = recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
             return new AnswerWithTextIdDTO(answerText, recommendQuestion.getExhibitTextId());
@@ -143,7 +147,7 @@ public class QAServiceImpl implements QAService {
         // 根据问题更新用户所在位置
         if (exhibitTexts.size() != 0) {
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
-            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+            userService.setUserLocation(userId, userLocation);
         }
 
         // 将答案写入数据库中
@@ -152,6 +156,10 @@ public class QAServiceImpl implements QAService {
                 getStatus(answer) == 0 ? null : answer,
                 exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId(),
                 textId);
+
+        // 写入缓存后，更新用户历史提问
+        recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
+        userService.insertUserQuestion(userId, recommendQuestion.getId());
 
         return new AnswerWithTextIdDTO(answer, textId);
     }

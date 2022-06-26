@@ -8,8 +8,8 @@ CREATE TABLE tbl_museum
     museum_name VARCHAR(255) NOT NULL,
     museum_description VARCHAR(512) NOT NULL ,
     museum_logo_url VARCHAR(1023) DEFAULT '',
-    museum_is_service BOOL DEFAULT FALSE,
-    museum_floor_plan_filepath VARCHAR(255) NOT NULL ,
+    museum_is_service BOOL NOT NULL DEFAULT FALSE,
+    museum_floor_plan_filepath VARCHAR(255) NOT NULL,
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`museum_id`) USING BTREE
@@ -23,7 +23,7 @@ CREATE TABLE tbl_exhibition_hall
     exhibition_hall_id BIGINT(20) NOT NULL AUTO_INCREMENT,
     exhibition_hall_name varchar(255) NOT NULL,
     exhibition_hall_description varchar(512) NOT NULL,
-    museum_id BIGINT(20) DEFAULT NULL,
+    museum_id BIGINT(20) NOT NULL,
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`exhibition_hall_id`) USING BTREE,
@@ -41,7 +41,7 @@ CREATE TABLE tbl_exhibit
     exhibit_label    VARCHAR(255) NOT NULL,
     exhibit_description VARCHAR(511),
     exhibit_url VARCHAR(1023) DEFAULT '',
-    exhibit_is_hot BOOL DEFAULT FALSE,
+    exhibit_is_hot BOOL NOT NULL DEFAULT FALSE,
     exhibit_prev_id BIGINT(20) DEFAULT NULL,
     exhibit_next_id BIGINT(20) DEFAULT NULL,
     create_time      DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -107,6 +107,8 @@ CREATE TABLE tbl_user
     nickname     VARCHAR(255)  NOT NULL DEFAULT '',
     avatar_url   VARCHAR(1023) NOT NULL DEFAULT '',
     phone_number VARCHAR(15)            DEFAULT NULL UNIQUE,
+    gender       TINYINT(1) DEFAULT NULL,
+    age          TINYINT(1) DEFAULT NULL,
     create_time  DATETIME               DEFAULT CURRENT_TIMESTAMP,
     update_time  DATETIME               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`) USING BTREE
@@ -143,5 +145,22 @@ CREATE TABLE tbl_user_preference
     FOREIGN KEY fk_exhibition_hall_id (`exhibition_hall_id`) REFERENCES tbl_exhibition_hall (`exhibition_hall_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS tbl_user_question;
+
+CREATE TABLE tbl_user_question
+(
+    user_question_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    user_id BIGINT(20) NOT NULL,
+    question_id BIGINT(20) NOT NULL,
+    feedback BOOL DEFAULT NULL,
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_question_id`) USING BTREE,
+    FOREIGN KEY fk_user_id (`user_id`) REFERENCES tbl_user (`user_id`),
+    FOREIGN KEY fk_question_id (`question_id`) REFERENCES tbl_recommend_question (`question_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 
 SET FOREIGN_KEY_CHECKS = 1;

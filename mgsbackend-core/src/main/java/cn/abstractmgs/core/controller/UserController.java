@@ -9,6 +9,7 @@ import cn.abstractmgs.core.service.UserPreferenceService;
 import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.UserDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,4 +44,14 @@ public class UserController {
         return BaseResponse.ok("登陆成功", userDTOMapper.toDto(user));
     }
 
+    @AnonymousAccess
+    @PostMapping("/question-feedback")
+    public BaseResponse<?> updateQuestionFeedback(@RequestBody Long questionId, @RequestBody Boolean feedback) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Boolean isUpdated = userService.updateUserFeedbackOnQuestion(userId, questionId, feedback);
+
+        return isUpdated
+                ? BaseResponse.ok("问题反馈成功")
+                : BaseResponse.error("问题反馈失败");
+    }
 }

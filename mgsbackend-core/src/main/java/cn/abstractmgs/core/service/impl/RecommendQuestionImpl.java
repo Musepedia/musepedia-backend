@@ -116,27 +116,14 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         return cached;
     }
 
-    private long[] findNearest(long id, List<Long> allId) {
+
+    private long[] findNearest(List<Long> allId) {
         long[] re = {0, 0};
-        for (int i = 0; i < allId.size(); ++i) {
-            allId.set(i, allId.get(i) - id);
-        }
-        //sort and find 2 nearest exhibits
-        for (int i = 1; i < allId.size(); ++i) {
-            boolean f = true;
-            for (int j = 0; j < allId.size() - i; ++j) {
-                if (Math.abs(allId.get(j)) > Math.abs(allId.get(j + 1))) {
-                    long temp = allId.get(j);
-                    allId.set(j, allId.get(j + 1));
-                    allId.set(j + 1, temp);
-                    f = false;
-                }
-            }
-            if (f) break;
-        }
+
         try {
-            re[0] = allId.get(0) + id;
-            re[1] = allId.get(1) + id;
+            for (int i = 0; i < allId.size(); ++i) {
+                re[i] = allId.get(i);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,47 +131,53 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer) {
+    public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
+        List<String> RecommendQuestions = new ArrayList<>();
+
         // TODO 由answer -> ID
-        List<String> labels = exhibitTextService.getLabel(originalQuestion);
+        List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
         Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
 
-        List<String> RecommendQuestions = new ArrayList<>();
+        RecommendQuestion answerInfo = this.selectQuestionByText(originalQuestion);
+        int answerType = answerInfo.getAnswerType();
 
         //judge answerable
         int reMode = 0;
-        if (!originalAnswer.isEmpty()) {//can answer
+        if (answerType != 0) {//can answer
             reMode = 1;
         } else {
-            if (id != -1) {//can't answer, can locate
-                reMode = 3;
-            } else {//random, can't locate
+            if (answerType == 0 && id == 0) {//random, can't locate
                 reMode = 2;
+            } else {//can't answer, can locate
+                reMode = 3;
             }
         }
 
         //do Recommendation
         switch (reMode) {
+            //can answer and recommend
             case 1: {
                 List<Exhibit> nowHall = new ArrayList<Exhibit>();
-                List<Long> idINHall = new ArrayList<Long>();
-                nowHall = exhibitService.getExhibitsInSameExhibitionHall(id);
+
+                List<Long> idNear = new ArrayList<Long>();
+                nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
                 for (int i = 0; i < nowHall.size(); ++i) {
 
                     Exhibit temp = nowHall.get(i);
                     long a = temp.getId();
                     System.out.println(a);
-                    idINHall.add(a);
+                    idNear.add(a);
                 }
-                long[] near = findNearest(id, idINHall);
-                if (near[0] == 0) {
+                long[] near = findNearest(idNear);
+
+                if (near[0] == 0 && near[1] == 0) {//only on exhibit in local hall
                     RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
                 } else {
                     for (int i = 0; i < 2; ++i) {
                         if (near[i] != 0) {
                             try {
                                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -192,29 +185,33 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                 }
                 break;
             }
+            //no exhibit and random recommend
             case 2: {
                 System.out.println("this is random");
                 RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
                 break;
             }
+            //can answer the question, so recommend another question about local question
             case 3: {
                 List<Exhibit> nowHall = new ArrayList<Exhibit>();
-                List<Long> idINHall = new ArrayList<Long>();
-                nowHall = exhibitService.getExhibitsInSameExhibitionHall(id);
+
+                List<Long> idNear = new ArrayList<Long>();
+                nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
                 for (int i = 0; i < nowHall.size(); ++i) {
                     Exhibit temp = nowHall.get(i);
                     long a = temp.getId();
-                    idINHall.add(a);
+                    idNear.add(a);
                 }
-                long[] near = findNearest(id, idINHall);
-                if (near[0] == 0) {
+                long[] near = findNearest(idNear);
+
+                if (near[0] == 0 && near[1] == 0) {
                     RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
                 } else {
                     for (int i = 0; i < 2; ++i) {
                         if (near[i] != 0) {
                             try {
                                 RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -227,6 +224,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
             }
         }
 
+        RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
         return RecommendQuestions;
     }
 }

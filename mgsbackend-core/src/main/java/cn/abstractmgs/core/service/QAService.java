@@ -6,5 +6,5 @@ public interface QAService {
 
     int getStatus(String answer);
 
-    AnswerWithTextIdDTO getAnswer(String question);
+    AnswerWithTextIdDTO getAnswer(String question, Long museumId);
 }

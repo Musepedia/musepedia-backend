@@ -3,10 +3,7 @@ package question;
 import cn.abstractmgs.core.App;
 import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
 import cn.abstractmgs.core.model.entity.ExhibitionHall;
-import cn.abstractmgs.core.service.ExhibitService;
-import cn.abstractmgs.core.service.ExhibitionHallService;
-import cn.abstractmgs.core.service.QAService;
-import cn.abstractmgs.core.service.RecommendQuestionService;
+import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +27,9 @@ public class RecommendQuestionTest {
 
     @Resource
     private ExhibitService exhibitService;
+
+    @Resource
+    private ExhibitTextService exhibitTextService;
 
     @Resource
     private ExhibitionHallService exhibitionHallService;
@@ -63,10 +63,15 @@ public class RecommendQuestionTest {
         SecurityUtil.setCurrentUserId(10000L);
 
         String question = "狼和狗有什么关系";
-        AnswerWithTextIdDTO awt = qaService.getAnswer(question);
+        AnswerWithTextIdDTO awt = qaService.getAnswer(question, 1L);
         String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);
 
         System.out.println(answer);
+    }
+
+    @Test
+    public void test3() {
+        System.out.println(exhibitTextService.getAllTexts("银杏叫什么", 1L));
     }
 }

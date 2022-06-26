@@ -70,5 +70,10 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
         return baseMapper.isSameExhibitionHall(id1, id2);
     }
 
+    @Override
+    public List<Exhibit> selectPreviousAndNextExhibitById(Long id) {
+        return baseMapper.selectPreviousAndNextExhibitById(id);
+    }
+
 
 }

@@ -59,4 +59,15 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             ") " +
             "order by exhibit_id")
     List<Long> selectExhibitIdsInSameExhibitionHall(@Param("id") Long id);
+
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select("select * from tbl_exhibit " +
+            "where exhibit_id = ( " +
+            "    select exhibit_prev_id from tbl_exhibit " +
+            "    where exhibit_id = #{id} " +
+            ") or exhibit_id = ( " +
+            "    select exhibit_next_id from tbl_exhibit " +
+            "    where exhibit_id = #{id} " +
+            ")")
+    List<Exhibit> selectPreviousAndNextExhibitById(@Param("id") Long id);
 }

@@ -132,8 +132,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
+<<<<<<< HEAD
         List<String> RecommendQuestions = new ArrayList<>();
 
+=======
+>>>>>>> 2516f4a82e00a3927d05d2d8832a26d9a62386bb
         // TODO 由answer -> ID
         List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
         Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));

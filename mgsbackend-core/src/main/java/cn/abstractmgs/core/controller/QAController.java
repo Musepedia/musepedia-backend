@@ -44,14 +44,14 @@ public class QAController {
 
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question, @RequestParam Long museumId) {
-        AnswerWithTextIdDTO awt = qaService.getAnswer(question);
+        AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
         String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);
 
         int countOfRecommendation = 2;
         List<String> recommendQuestions;
         try {
-            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer);
+            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer, museumId);
         } catch (Exception ex) {
             // TODO 当推荐算法抛出异常时，使用随机推荐代替
             log.error("推荐算法异常：", ex);

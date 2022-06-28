@@ -130,6 +130,25 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         return re;
     }
 
+    private List<String> preSelect(List<Long> idNear){
+        long[] near = findNearest(idNear);
+        List<String> recommendQuestions=new ArrayList<>();
+        if (near[0] == 0 && near[1] == 0) {//only on exhibit in local hall
+            recommendQuestions = recommendQuestionService.getRandomQuestions(3);
+        } else {
+            for (int i = 0; i < 2; ++i) {
+                if (near[i] != 0) {
+                    try {
+                        recommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return recommendQuestions;
+    }
+
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
         List<String> RecommendQuestions = new ArrayList<>();
@@ -142,11 +161,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         int answerType = answerInfo.getAnswerType();
 
         //judge answerable
-        int reMode = 0;
+        int reMode;
         if (answerType != 0) {//can answer
             reMode = 1;
         } else {
-            if (answerType == 0 && id == 0) {//random, can't locate
+            if (id == 0) {//random, can't locate
                 reMode = 2;
             } else {//can't answer, can locate
                 reMode = 3;
@@ -157,32 +176,16 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         switch (reMode) {
             //can answer and recommend
             case 1: {
-                List<Exhibit> nowHall = new ArrayList<Exhibit>();
+                List<Exhibit> nowHall ;
 
-                List<Long> idNear = new ArrayList<Long>();
+                List<Long> idNear = new ArrayList<>();
                 nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
-                for (int i = 0; i < nowHall.size(); ++i) {
-
-                    Exhibit temp = nowHall.get(i);
+                for (Exhibit temp : nowHall) {
                     long a = temp.getId();
                     System.out.println(a);
                     idNear.add(a);
                 }
-                long[] near = findNearest(idNear);
-
-                if (near[0] == 0 && near[1] == 0) {//only on exhibit in local hall
-                    RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
-                } else {
-                    for (int i = 0; i < 2; ++i) {
-                        if (near[i] != 0) {
-                            try {
-                                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
+                RecommendQuestions=preSelect(idNear);
                 break;
             }
             //no exhibit and random recommend
@@ -193,38 +196,22 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
             }
             //can answer the question, so recommend another question about local question
             case 3: {
-                List<Exhibit> nowHall = new ArrayList<Exhibit>();
+                List<Exhibit> nowHall ;
 
-                List<Long> idNear = new ArrayList<Long>();
+                List<Long> idNear = new ArrayList<>();
                 nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
-                for (int i = 0; i < nowHall.size(); ++i) {
-                    Exhibit temp = nowHall.get(i);
+                for (Exhibit temp : nowHall) {
                     long a = temp.getId();
                     idNear.add(a);
                 }
-                long[] near = findNearest(idNear);
 
-                if (near[0] == 0 && near[1] == 0) {
-                    RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
-                } else {
-                    for (int i = 0; i < 2; ++i) {
-                        if (near[i] != 0) {
-                            try {
-                                RecommendQuestions.add(recommendQuestionService.getRandomQuestionWithSameExhibitId(near[i]).getQuestionText());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
+                RecommendQuestions=preSelect(idNear);
                 //查询当前展品的其他问题
                 String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id).getQuestionText();
                 RecommendQuestions.add(nowQuestion);
                 break;
             }
         }
-
-        RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
         return RecommendQuestions;
     }
 }

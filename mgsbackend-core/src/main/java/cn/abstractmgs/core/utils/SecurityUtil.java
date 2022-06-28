@@ -2,9 +2,9 @@ package cn.abstractmgs.core.utils;
 
 import cn.abstractmgs.core.model.entity.User;
 
-public class SecurityUtil {
+import static cn.abstractmgs.core.utils.ThreadContextHolder.currentUserId;
 
-    private final static ThreadLocal<Long> currentUserId = new ThreadLocal<>();
+public class SecurityUtil {
 
     public static Long getCurrentUserId(){
         return currentUserId.get();

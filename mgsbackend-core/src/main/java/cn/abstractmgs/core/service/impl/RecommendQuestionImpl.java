@@ -151,7 +151,6 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
-
         List<String> RecommendQuestions = new ArrayList<>();
 
         // TODO 由answer -> ID

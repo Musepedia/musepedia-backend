@@ -91,18 +91,4 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         return false;
     }
 
-    @Override
-    public void insertUserSetting(String nickname, String avatarUrl, String phoneNumber, GenderEnum gender, AgeEnum age) {
-        baseMapper.insertUserSetting(nickname, avatarUrl, phoneNumber, gender, age);
-    }
-
-    @Override
-    public void insertUserQuestion(Long userId, Long questionId) {
-        baseMapper.insertUserQuestion(userId, questionId);
-    }
-
-    @Override
-    public Boolean updateUserFeedbackOnQuestion(Long userId, Long questionId, Boolean feedback) {
-        return baseMapper.updateUserFeedbackOnQuestion(userId, questionId, feedback);
-    }
 }

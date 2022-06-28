@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,9 @@ public class UserController {
     private final UserService userService;
 
     private final UserDTOMapper userDTOMapper;
+
+    @Value("${mgs.login-any:false}")
+    private Boolean loginAny;
 
     @AnonymousAccess
     @GetMapping("/info")
@@ -62,6 +66,9 @@ public class UserController {
     @AnonymousAccess
     @PostMapping("/login-any")
     public BaseResponse<?> loginAny(HttpServletRequest request){
+        if(!loginAny){
+            throw new UnsupportedOperationException();
+        }
         User u = userService.getOne(new QueryWrapper<>());
         request.getSession().setAttribute("userId", u.getId());
         return BaseResponse.ok("ok", u);

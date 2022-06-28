@@ -40,6 +40,8 @@ spring:
     database: 0
   cache:
     type: redis
+  profiles:
+    active: default
 
 mgs:
   weixin:

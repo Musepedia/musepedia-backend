@@ -3,49 +3,50 @@ package cn.abstractmgs.core.service.impl;
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import cn.abstractmgs.core.repository.ExhibitTextRepository;
 import cn.abstractmgs.core.service.ExhibitTextService;
-import cn.abstractmgs.core.utils.NLPTool;
+import cn.abstractmgs.core.utils.NLPUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("exhibitTextService")
 public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements ExhibitTextService {
 
-    private List<String> getLabel(List<String> labels, String question) {
-        NLPTool nlpTool = new NLPTool(question);
-        nlpTool.updateCustomDictionary(labels);
+    public List<String> getLabel(List<String> labels, String question) {
+        NLPUtil nlpUtil = new NLPUtil(question);
+        nlpUtil.updateCustomDictionary(labels);
 
-        return nlpTool.getNoun();
+        return nlpUtil.getNoun();
     }
 
     @Override
-    public List<String> selectByLabel(String label) {
-        return baseMapper.selectByLabel(label);
+    public List<String> getLabel(String question, Long museumId) {
+        List<String> storedLabels = selectAllLabelsWithAliases(museumId);
+        NLPUtil nlpUtil = new NLPUtil(question);
+        nlpUtil.updateCustomDictionary(storedLabels);
+
+        return nlpUtil.getNoun();
     }
 
     @Override
-    public List<String> selectAllLabels() {
-        return baseMapper.selectAllLabels();
+    public List<ExhibitText> selectByLabel(List<String> labels, Long museumId) {
+        return baseMapper.selectByLabel(labels, museumId);
     }
 
     @Override
-    public String getText(String question) {
-        List<String> storedLabels = selectAllLabels();
+    public List<String> selectAllLabelsWithAliases(Long museumId) {
+        return baseMapper.selectAllLabelsWithAliases(museumId);
+    }
+
+    @Override
+    public List<ExhibitText> getAllTexts(String question, Long museumId) {
+        List<String> storedLabels = selectAllLabelsWithAliases(museumId);
 
         List<String> labels = getLabel(storedLabels, question);
+        List<ExhibitText> exhibitTexts = selectByLabel(labels, museumId);
 
-        ArrayList<String> texts = new ArrayList<>();
-        for (String label : labels) {
-            List<String> possibleTexts = selectByLabel(label);
-            if (!possibleTexts.isEmpty()){
-                texts.add(possibleTexts.get(0));
-            }
-        }
-
-        return texts.size() != 1
+        return exhibitTexts.size() >= MAX_TEXTS_COUNT
                 ? null
-                : texts.get(0);
+                : exhibitTexts;
     }
 }

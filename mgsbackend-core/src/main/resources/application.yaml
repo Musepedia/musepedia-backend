@@ -7,6 +7,10 @@ logging:
       abstractmgs:
         core:
           repository: debug
+  file:
+    path: log
+    max-history: 30
+
 
 spring:
   datasource:
@@ -34,6 +38,10 @@ spring:
     host: localhost
     port: 6379
     database: 0
+  cache:
+    type: redis
+  profiles:
+    active: default
 
 mgs:
   weixin:
@@ -49,3 +57,5 @@ grpc:
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
   type-aliases-package: cn.abstactmgs.repository.TextRepository
+  type-handlers-package: cn.abstractmgs.core.model.handler
+  type-enums-package: cn.abstractmgs.core.model.entity.enums

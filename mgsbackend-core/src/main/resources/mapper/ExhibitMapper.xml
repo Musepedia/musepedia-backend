@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.abstractmgs.core.repository.ExhibitRepository">
+    <resultMap id="exhibitMapper"
+               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
+               type="cn.abstractmgs.core.model.entity.Exhibit">
+        <id property="id" column="exhibit_id"/>
+        <result property="figureUrl" column="exhibit_figure_url"/>
+        <result property="label" column="exhibit_label"/>
+        <result property="hallId" column="exhibition_hall_id"/>
+        <result property="description" column="exhibit_description"/>
+        <result property="url" column="exhibit_url"/>
+        <result property="hot" column="exhibit_is_hot"/>
+        <association property="exhibitionHall"
+                     column="exhibition_hall_id"
+                     javaType="cn.abstractmgs.core.model.entity.ExhibitionHall">
+            <id property="id" column="exhibition_hall_id"/>
+            <result property="name" column="exhibition_hall_name"/>
+            <result property="description" column="exhibition_hall_description"/>
+            <result property="museumId" column="museum_id"/>
+        </association>
+    </resultMap>
+
+    <select id="selectRandomExhibits" resultMap="exhibitMapper">
+        select t1.exhibit_id, t1.exhibition_hall_id, t1.exhibit_label, t2.exhibition_hall_name, t2.exhibition_hall_description, t1.exhibit_figure_url, t1.exhibit_is_hot
+        from tbl_exhibit t1, tbl_exhibition_hall t2
+        where t1.exhibition_hall_id = t2.exhibition_hall_id
+        and t1.exhibit_id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

@@ -205,6 +205,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                     long a = temp.getId();
                     idNear.add(a);
                 }
+
                 RecommendQuestions=preSelect(idNear);
                 //查询当前展品的其他问题
                 String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id).getQuestionText();

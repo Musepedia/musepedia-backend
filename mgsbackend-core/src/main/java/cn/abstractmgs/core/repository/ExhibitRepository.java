@@ -18,10 +18,14 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
     @Select("select exhibition_hall_id, exhibit_label, exhibit_description, exhibit_url from tbl_exhibit where exhibit_id = #{id}")
     Exhibit selectInfoById(@Param("id") Long id);
 
-    @Select("select substring_index(group_concat(t.exhibit_id order by rand()), ',', #{limit}) " +
-            "from tbl_exhibit t " +
-            "group by t.exhibition_hall_id ")
-    List<String> selectRandomExhibitId(@Param("limit") int limitPerExhibitionHall);
+    @Select("select substring_index(group_concat(t1.exhibit_id order by rand()), ',', #{limit}) " +
+            "from tbl_exhibit t1 " +
+            "where t1.exhibition_hall_id in ( " +
+            "    select exhibition_hall_id from tbl_exhibition_hall t2 " +
+            "    where t2.museum_id = #{id} " +
+            ") " +
+            "group by t1.exhibition_hall_id ")
+    List<String> selectRandomExhibitId(@Param("limit") int limitPerExhibitionHall, @Param("id") Long museumId);
 
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
 

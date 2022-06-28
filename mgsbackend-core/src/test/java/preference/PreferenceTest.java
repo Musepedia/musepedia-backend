@@ -81,11 +81,6 @@ public class PreferenceTest {
     }
 
     @Test
-    public void randomExhibit(){
-        BaseResponse<?> res = exhibitController.getRandomExhibitPreference();
-    }
-
-    @Test
     public void updateUserPreference(){
         List<Long> hallIds = new ArrayList<>();
         hallIds.add(halls.get(0).getId());

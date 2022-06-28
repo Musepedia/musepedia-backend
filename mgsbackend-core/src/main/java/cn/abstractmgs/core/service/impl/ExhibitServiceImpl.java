@@ -30,8 +30,8 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
-    public List<String> selectRandomExhibitId(int limitPerExhibitionHall) {
-        return baseMapper.selectRandomExhibitId(limitPerExhibitionHall);
+    public List<String> selectRandomExhibitId(int limitPerExhibitionHall, Long museumId) {
+        return baseMapper.selectRandomExhibitId(limitPerExhibitionHall, museumId);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
-    public List<Exhibit> getRandomExhibits(int limitPerExhibitionHall) {
-        List<Integer> exhibitIds = exhibitIdToInteger(selectRandomExhibitId(limitPerExhibitionHall));
+    public List<Exhibit> getRandomExhibits(int limitPerExhibitionHall, Long museumId) {
+        List<Integer> exhibitIds = exhibitIdToInteger(selectRandomExhibitId(limitPerExhibitionHall, museumId));
         return selectRandomExhibits(exhibitIds);
     }
 

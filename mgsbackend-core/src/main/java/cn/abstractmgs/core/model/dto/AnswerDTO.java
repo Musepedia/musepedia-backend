@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.model.dto;
 
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,9 @@ public class AnswerDTO {
 
     private String answer;
 
+    private Long textId;
+
     private List<String> recommendQuestions;
+
+    private ExhibitionHall recommendExhibitionHall;
 }

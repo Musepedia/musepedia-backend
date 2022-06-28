@@ -1,69 +1,70 @@
 package cn.abstractmgs.core.controller;
 
 import cn.abstractmgs.common.model.BaseResponse;
-import cn.abstractmgs.core.HelloRequest;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
-import cn.abstractmgs.core.service.RecommendQuestionService;
-import cn.abstractmgs.core.service.ExhibitTextService;
+import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
+import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
+import cn.abstractmgs.core.service.*;
+import cn.abstractmgs.core.utils.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/qa")
+@RequiredArgsConstructor
 public class QAController {
 
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
-    private final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
+    private final RecommendQuestionService recommendQuestionService;
 
-    @Autowired
-    private ExhibitTextService exhibitTextService;
+    private final RecommendExhibitionHallService recommendExhibitionHallService;
 
-    @Autowired
-    private RecommendQuestionService recommendQuestionService;
+    private final ExhibitionHallService exhibitionHallService;
+
+    private final UserPreferenceService userPreferenceService;
+
+    private final QAService qaService;
+
+    private final UserService userService;
 
     @GetMapping
-    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
-        String text = exhibitTextService.getText(question);
-        String answer = "暂时无法回答这个问题";
-        int status = 0;
+    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question, @RequestParam Long museumId) {
+        AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
+        String answer = awt.getAnswer();
+        int status = qaService.getStatus(answer);
 
-        if (text != null) {
-            HelloRequest helloRequest = HelloRequest
-                    .newBuilder()
-                    .setQuestion(question)
-                    .setText(text)
-                    .build();
-
-            try {
-                String resp = myServiceBlockingStub
-                        .sayHello(helloRequest)
-                        .getAnswer();
-                // 替换grpc返回的所有包含[CLS]的占位符，如果仅包含占位符则返回"无法回答"
-                resp = placeholderPattern.matcher(resp).replaceAll("");
-                if(resp.length() != 0){
-                    // has exact answer
-                    answer = resp;
-                    status = 1;
-                }
-            } catch (Exception e){
-                // rpc error
-                log.error("Rpc error: ",e);
-            }
-        }
         int countOfRecommendation = 2;
-        List<String> recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
-        return BaseResponse.ok(new AnswerDTO(status, answer, recommendQuestions));
+        List<String> recommendQuestions;
+        try {
+            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer, museumId);
+        } catch (Exception ex) {
+            // TODO 当推荐算法抛出异常时，使用随机推荐代替
+            log.error("推荐算法异常：", ex);
+            recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
+        }
+
+        ExhibitionHall recommendExhibitionHall = null;
+        if (userService.isUserAtEndOfExhibitionHall(SecurityUtil.getCurrentUserId())) {
+            Long currentLocationId = userService.getUserLocation(SecurityUtil.getCurrentUserId());
+            ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
+            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId());
+            recommendExhibitionHall = recommendExhibitionHallService.getRecommendExhibitionHall(museumId, userPref, currentLocation);
+        }
+        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
     }
 }

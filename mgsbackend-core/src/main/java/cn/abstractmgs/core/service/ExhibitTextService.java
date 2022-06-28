@@ -2,14 +2,21 @@ package cn.abstractmgs.core.service;
 
 import cn.abstractmgs.core.model.entity.ExhibitText;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface ExhibitTextService extends IService<ExhibitText> {
 
-    List<String> selectByLabel(String label);
+    int MAX_TEXTS_COUNT = 15;  // 允许至多抽取的text数量
 
-    String getText(String question);
+    List<ExhibitText> selectByLabel(List<String> labels, Long museumId);
 
-    List<String> selectAllLabels();
+    List<ExhibitText> getAllTexts(String question, Long museumId);
+
+    List<String> selectAllLabelsWithAliases(Long museumId);
+
+    List<String> getLabel(List<String> labels, String question);
+
+    List<String> getLabel(String question, Long museumId);
 }

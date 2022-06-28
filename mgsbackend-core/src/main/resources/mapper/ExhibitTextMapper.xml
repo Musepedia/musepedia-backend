@@ -25,6 +25,12 @@
                    t2.exhibit_alias = #{label}
                 </foreach>)
                 and t1.exhibit_id = t2.exhibit_id
+        ) and exhibit_id in (
+            select exhibit_id from tbl_exhibit
+            where exhibition_hall_id in (
+                select exhibition_hall_id from tbl_exhibition_hall
+                where museum_id = #{id}
+            )
         )
     </select>
 

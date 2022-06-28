@@ -8,6 +8,7 @@ import cn.abstractmgs.core.service.mapstruct.ExhibitionHallDTOMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class ExhibitionHallController {
 
     @AnonymousAccess
     @GetMapping
-    public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall(Long museumId){
-        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.selectAll()));
+    public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall(@RequestParam Long museumId){
+        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.selectAll(museumId)));
     }
 }

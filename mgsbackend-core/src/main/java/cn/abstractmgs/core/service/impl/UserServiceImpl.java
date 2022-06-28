@@ -1,6 +1,8 @@
 package cn.abstractmgs.core.service.impl;
 
 import cn.abstractmgs.core.model.entity.UserWxOpenid;
+import cn.abstractmgs.core.model.entity.enums.AgeEnum;
+import cn.abstractmgs.core.model.entity.enums.GenderEnum;
 import cn.abstractmgs.core.model.response.Code2SessionResponse;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.param.WxLoginParam;
@@ -87,5 +89,20 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             }
         }
         return false;
+    }
+
+    @Override
+    public void insertUserSetting(String nickname, String avatarUrl, String phoneNumber, GenderEnum gender, AgeEnum age) {
+        baseMapper.insertUserSetting(nickname, avatarUrl, phoneNumber, gender, age);
+    }
+
+    @Override
+    public void insertUserQuestion(Long userId, Long questionId) {
+        baseMapper.insertUserQuestion(userId, questionId);
+    }
+
+    @Override
+    public Boolean updateUserFeedbackOnQuestion(Long userId, Long questionId, Boolean feedback) {
+        return baseMapper.updateUserFeedbackOnQuestion(userId, questionId, feedback);
     }
 }

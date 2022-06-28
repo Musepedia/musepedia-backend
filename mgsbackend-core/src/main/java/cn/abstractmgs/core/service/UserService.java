@@ -1,6 +1,8 @@
 package cn.abstractmgs.core.service;
 
 import cn.abstractmgs.core.model.entity.User;
+import cn.abstractmgs.core.model.entity.enums.AgeEnum;
+import cn.abstractmgs.core.model.entity.enums.GenderEnum;
 import cn.abstractmgs.core.model.param.WxLoginParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
@@ -16,4 +18,14 @@ public interface UserService extends IService<User> {
     Long getUserLocation(Long userId);
 
     boolean isUserAtEndOfExhibitionHall(Long userId);
+
+    void insertUserSetting(@Param("nickname") String nickname,
+                           @Param("url") String avatarUrl,
+                           @Param("phone") String phoneNumber,
+                           @Param("gender") GenderEnum gender,
+                           @Param("age") AgeEnum age);
+
+    void insertUserQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId);
+
+    Boolean updateUserFeedbackOnQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId, Boolean feedback);
 }

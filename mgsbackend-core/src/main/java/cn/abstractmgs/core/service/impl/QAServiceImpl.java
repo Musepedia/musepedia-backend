@@ -59,10 +59,11 @@ public class QAServiceImpl implements QAService {
     }
 
     @Override
-    public AnswerWithTextIdDTO getAnswer(String question) {
+    public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
 
+        Long userId = SecurityUtil.getCurrentUserId();
         Long userLocation;
 
         if (recommendQuestion != null) {
@@ -71,7 +72,10 @@ public class QAServiceImpl implements QAService {
 
             // 根据问题更新用户所在位置
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
-            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+            userService.setUserLocation(userId, userLocation);
+
+            // 更新用户历史提问
+            userService.insertUserQuestion(userId, recommendQuestion.getId());
 
             String answerText = recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
             return new AnswerWithTextIdDTO(answerText, recommendQuestion.getExhibitTextId());
@@ -82,7 +86,7 @@ public class QAServiceImpl implements QAService {
 
         int answerType = nlpUtil.answerRecognition(question);
 
-        List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(), question);
+        List<String> label = exhibitTextService.getLabel(exhibitTextService.selectAllLabelsWithAliases(museumId), question);
 
         // 无法从缓存或数据库中找到答案，需要经过Python模型抽取文本
         String answer = DEFAULT_ANSWER;
@@ -93,7 +97,7 @@ public class QAServiceImpl implements QAService {
             return new AnswerWithTextIdDTO(answer, null);
         }
 
-        List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question);
+        List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
         List<RpcExhibitText> rpcTexts =
                 exhibitTexts.stream()
                         .map(e -> RpcExhibitText.newBuilder()
@@ -143,7 +147,7 @@ public class QAServiceImpl implements QAService {
         // 根据问题更新用户所在位置
         if (exhibitTexts.size() != 0) {
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
-            userService.setUserLocation(SecurityUtil.getCurrentUserId(), userLocation);
+            userService.setUserLocation(userId, userLocation);
         }
 
         // 将答案写入数据库中
@@ -152,6 +156,10 @@ public class QAServiceImpl implements QAService {
                 getStatus(answer) == 0 ? null : answer,
                 exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId(),
                 textId);
+
+        // 写入缓存后，更新用户历史提问
+        recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
+        userService.insertUserQuestion(userId, recommendQuestion.getId());
 
         return new AnswerWithTextIdDTO(answer, textId);
     }

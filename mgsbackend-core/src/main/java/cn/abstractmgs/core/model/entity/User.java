@@ -1,8 +1,6 @@
 package cn.abstractmgs.core.model.entity;
 
 import cn.abstractmgs.common.model.BaseEntity;
-import cn.abstractmgs.core.model.entity.enums.AgeEnum;
-import cn.abstractmgs.core.model.entity.enums.GenderEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -30,10 +28,4 @@ public class User extends BaseEntity {
 
     @TableField("avatar_url")
     private String avatarUrl;
-
-    @TableField("gender")
-    private GenderEnum gender;
-
-    @TableField("age")
-    private AgeEnum age;
 }

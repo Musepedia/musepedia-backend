@@ -9,33 +9,4 @@
         <result property="exhibitId" column="exhibit_id"/>
         <result property="text" column="exhibit_text"/>
     </resultMap>
-
-    <select id="selectByLabel" resultMap="textMapper">
-        select exhibit_id, exhibit_text, exhibit_text_id
-        from tbl_exhibit_text
-        where exhibit_id in (
-            select t1.exhibit_id
-            from tbl_exhibit t1, tbl_exhibit_alias t2
-            where
-                (<foreach collection="labels" item="label" index="index" separator="or">
-                    t1.exhibit_label = #{label}
-                </foreach>)
-                or
-                (<foreach collection="labels" item="label" index="index" separator="or">
-                   t2.exhibit_alias = #{label}
-                </foreach>)
-                and t1.exhibit_id = t2.exhibit_id
-        ) and exhibit_id in (
-            select exhibit_id from tbl_exhibit
-            where exhibition_hall_id in (
-                select exhibition_hall_id from tbl_exhibition_hall
-                where museum_id = #{id}
-            )
-        )
-    </select>
-
-    <select id="selectExhibitTextByKeyword" resultType="java.lang.String">
-        select exhibit_text from tbl_exhibit_text
-        where exhibit_text like concat('%', #{keyword}, '%')
-    </select>
 </mapper>

@@ -19,13 +19,4 @@ public interface UserService extends IService<User> {
 
     boolean isUserAtEndOfExhibitionHall(Long userId);
 
-    void insertUserSetting(@Param("nickname") String nickname,
-                           @Param("url") String avatarUrl,
-                           @Param("phone") String phoneNumber,
-                           @Param("gender") GenderEnum gender,
-                           @Param("age") AgeEnum age);
-
-    void insertUserQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId);
-
-    Boolean updateUserFeedbackOnQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId, Boolean feedback);
 }

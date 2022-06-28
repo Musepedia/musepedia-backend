@@ -61,13 +61,10 @@ public class UserTest {
     @Test
     @Transactional
     public void test2() {
-        userService.insertUserSetting("testname4", "https://example.com", "12345678910", GenderEnum.MALE, AgeEnum.JUNIOR_HIGH_SCHOOL);
     }
 
     @Test
     public void testInsertQuestion() {
         // userService.insertUserQuestion(10003L, 353L);
-        Boolean res = userService.updateUserFeedbackOnQuestion(10003L, 1000L, false);
-        System.out.println(res);
     }
 }

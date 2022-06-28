@@ -10,6 +10,7 @@ import cn.abstractmgs.core.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.NLPUtil;
 import cn.abstractmgs.core.utils.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.cache.annotation.CacheEvict;
@@ -24,19 +25,18 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service("qaService")
+@RequiredArgsConstructor
 public class QAServiceImpl implements QAService {
 
-    @Resource
-    private RecommendQuestionService recommendQuestionService;
+    private final RecommendQuestionService recommendQuestionService;
 
-    @Resource
-    private ExhibitTextService exhibitTextService;
+    private final ExhibitTextService exhibitTextService;
 
-    @Resource
-    private ExhibitService exhibitService;
+    private final ExhibitService exhibitService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+
+    private final QuestionFeedbackService feedbackService;
 
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
@@ -75,7 +75,7 @@ public class QAServiceImpl implements QAService {
             userService.setUserLocation(userId, userLocation);
 
             // 更新用户历史提问
-            userService.insertUserQuestion(userId, recommendQuestion.getId());
+            feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
             String answerText = recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
             return new AnswerWithTextIdDTO(answerText, recommendQuestion.getExhibitTextId());
@@ -159,7 +159,7 @@ public class QAServiceImpl implements QAService {
 
         // 写入缓存后，更新用户历史提问
         recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
-        userService.insertUserQuestion(userId, recommendQuestion.getId());
+        feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
         return new AnswerWithTextIdDTO(answer, textId);
     }

@@ -11,11 +11,11 @@ public interface ExhibitService extends IService<Exhibit> {
 
     Exhibit getExhibitInfoById(Long id);
 
-    List<String> selectRandomExhibitId(@Param("limit") int limitPerExhibitionHall);
+    List<String> selectRandomExhibitId(int limitPerExhibitionHall, Long museumId);
 
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
 
-    List<Exhibit> getRandomExhibits(int limitPerExhibitionHall);
+    List<Exhibit> getRandomExhibits(int limitPerExhibitionHall, Long museumId);
 
     String selectExhibitFigureUrlByLabel(@Param("label") String label);
 

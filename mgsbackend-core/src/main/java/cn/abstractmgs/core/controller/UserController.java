@@ -10,7 +10,6 @@ import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.UserDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

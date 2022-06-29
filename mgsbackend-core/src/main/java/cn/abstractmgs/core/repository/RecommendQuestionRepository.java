@@ -21,7 +21,8 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
     void insertQuestion(@Param("question_text") String questionText, @Param("answer_type") int answerType,
                         @Param("answer_text") String answerText, @Param("id") Long exhibitId, @Param("text_id") Long textId);
 
-    @Select("select question_text, answer_type, answer_text, exhibit_id " +
+    @ResultMap("mybatis-plus_RecommendQuestion")
+    @Select("select * " +
             "from tbl_recommend_question " +
             "where question_text = #{text} ")
     RecommendQuestion selectQuestionByText(@Param("text") String question);

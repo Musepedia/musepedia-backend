@@ -10,6 +10,7 @@ import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.UserDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,8 +69,10 @@ public class UserController {
         if(!loginAny){
             throw new UnsupportedOperationException();
         }
-        User u = userService.getOne(new QueryWrapper<>());
-        request.getSession().setAttribute("userId", u.getId());
+        Page<User> page = new Page<>();
+        page.setSize(1);
+        User u = userService.page(page).getRecords().get(0);
+        request.getSession().setAttribute("userId", 10000L);
         return BaseResponse.ok("ok", u);
     }
 

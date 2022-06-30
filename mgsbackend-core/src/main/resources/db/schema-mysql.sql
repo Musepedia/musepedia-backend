@@ -158,7 +158,8 @@ CREATE TABLE tbl_user_question
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_question_id`) USING BTREE,
     FOREIGN KEY fk_user_id (`user_id`) REFERENCES tbl_user (`user_id`),
-    FOREIGN KEY fk_question_id (`question_id`) REFERENCES tbl_recommend_question (`question_id`)
+    FOREIGN KEY fk_question_id (`question_id`) REFERENCES tbl_recommend_question (`question_id`),
+    UNIQUE KEY `uk_user_question` (user_id, question_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

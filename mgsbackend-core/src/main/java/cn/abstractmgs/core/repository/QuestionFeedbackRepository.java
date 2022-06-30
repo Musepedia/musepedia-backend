@@ -2,10 +2,7 @@ package cn.abstractmgs.core.repository;
 
 import cn.abstractmgs.core.model.entity.QuestionFeedback;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface QuestionFeedbackRepository extends BaseMapper<QuestionFeedback> {
@@ -14,4 +11,8 @@ public interface QuestionFeedbackRepository extends BaseMapper<QuestionFeedback>
             "set feedback = #{feedback} " +
             "where user_id = #{userId} and question_id = #{questionId}")
     Boolean updateUserFeedbackOnQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId, Boolean feedback);
+
+    @Select("select user_id, question_id from tbl_user_question " +
+            "where user_id = #{userId} and question_id = #{questionId}")
+    QuestionFeedback selectUserQuestion(@Param("userId") Long userId, @Param("questionId") Long questionId);
 }

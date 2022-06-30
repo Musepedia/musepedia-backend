@@ -14,12 +14,19 @@ public class QuestionFeedbackServiceImpl
     @Override
     public QuestionFeedback insertUserQuestion(Long userId, Long questionId) {
         QuestionFeedback feedback = new QuestionFeedback(null, userId, questionId, null);
-        save(feedback);
+        if (!isUserQuestionExists(userId, questionId)) {
+            save(feedback);
+        }
         return feedback;
     }
 
     @Override
     public void updateFeedback(QuestionFeedback feedback) {
         getBaseMapper().updateUserFeedbackOnQuestion(feedback.getUserId(), feedback.getQuestionId(), feedback.getFeedback());
+    }
+
+    @Override
+    public boolean isUserQuestionExists(Long userId, Long questionId) {
+        return baseMapper.selectUserQuestion(userId, questionId) != null;
     }
 }

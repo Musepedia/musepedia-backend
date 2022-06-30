@@ -5,6 +5,7 @@ import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.model.dto.ExhibitionHallDTO;
 import cn.abstractmgs.core.repository.ExhibitionHallRepository;
 import cn.abstractmgs.core.service.mapstruct.ExhibitionHallDTOMapper;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class ExhibitionHallController {
 
     @AnonymousAccess
     @GetMapping
-    public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall(@RequestParam Long museumId){
-        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.selectAll(museumId)));
+    public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall(){
+        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.selectAll(ThreadContextHolder.getCurrentMuseumId())));
     }
 }

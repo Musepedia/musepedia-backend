@@ -11,6 +11,7 @@ import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.ExhibitDTOMapper;
 import cn.abstractmgs.core.service.mapstruct.SimpleExhibitDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +60,9 @@ public class ExhibitController {
     @ApiOperation("对于每个展区的随机获取一件展品信息，用于问卷")
     @AnonymousAccess
     @GetMapping("/random")
-    public BaseResponse<List<SimpleExhibitDTO>> getRandomExhibitPreference(Long museumId) {
+    public BaseResponse<List<SimpleExhibitDTO>> getRandomExhibitPreference() {
 
-        List<Exhibit> exhibits = exhibitService.getRandomExhibits(4, museumId);
+        List<Exhibit> exhibits = exhibitService.getRandomExhibits(4, ThreadContextHolder.getCurrentMuseumId());
         return BaseResponse.ok("ok", simpleExhibitDTOMapper.toDto(exhibits));
     }
 }

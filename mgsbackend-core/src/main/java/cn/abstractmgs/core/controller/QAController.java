@@ -8,6 +8,7 @@ import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -43,7 +44,8 @@ public class QAController {
     private final UserService userService;
 
     @GetMapping
-    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question, @RequestParam Long museumId) {
+    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
+        Long museumId = ThreadContextHolder.getCurrentMuseumId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
         String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);

@@ -3,6 +3,7 @@ package cn.abstractmgs.core.service.impl;
 import cn.abstractmgs.core.model.entity.Museum;
 import cn.abstractmgs.core.repository.MuseumRepository;
 import cn.abstractmgs.core.service.MuseumService;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +20,10 @@ public class MuseumServiceImpl extends ServiceImpl<MuseumRepository, Museum> imp
     @Override
     public List<Museum> selectAllServicedMuseums() {
         return baseMapper.selectAllServicedMuseums();
+    }
+
+    @Override
+    public Museum selectCurrentMuseum() {
+        return getById(ThreadContextHolder.getCurrentMuseumId());
     }
 }

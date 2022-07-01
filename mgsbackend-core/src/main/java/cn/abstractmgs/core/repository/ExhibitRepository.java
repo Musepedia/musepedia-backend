@@ -74,4 +74,16 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "    where exhibit_id = #{id} " +
             ")")
     List<Exhibit> selectPreviousAndNextExhibitById(@Param("id") Long id);
+
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select("select t2.exhibit_id, t2.exhibit_label, t2.exhibit_figure_url, t2.exhibit_description " +
+            "from tbl_recommend_question t1, tbl_exhibit t2 " +
+            "where t1.exhibit_id = t2.exhibit_id and t1.answer_type != 0 and t1.exhibit_id is not null and t2.exhibition_hall_id in ( " +
+            "    select exhibition_hall_id from tbl_exhibition_hall t3 " +
+            "    where t3.museum_id = #{id} " +
+            ") " +
+            "group by t1.exhibit_id " +
+            "order by sum(t1.question_freq) desc " +
+            "limit #{count}")
+    List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("id") Long museumId);
 }

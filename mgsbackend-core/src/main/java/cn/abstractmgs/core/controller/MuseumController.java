@@ -28,4 +28,10 @@ public class MuseumController {
     public BaseResponse<List<MuseumDTO>> listMuseum() {
         return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.selectAllMuseums()));
     }
+
+    @AnonymousAccess
+    @GetMapping("/current")
+    public BaseResponse<MuseumDTO> getCurrentMuseum() {
+        return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.selectCurrentMuseum()));
+    }
 }

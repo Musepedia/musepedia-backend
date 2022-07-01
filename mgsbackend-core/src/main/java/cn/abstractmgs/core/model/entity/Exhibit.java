@@ -40,4 +40,10 @@ public class Exhibit extends BaseEntity {
 
     @TableField(value = "exhibit_is_hot")
     private Boolean hot;
+
+    @TableField(value = "exhibit_prev_id")
+    private Long prevId;
+
+    @TableField(value = "exhibit_next_id")
+    private Long nextId;
 }

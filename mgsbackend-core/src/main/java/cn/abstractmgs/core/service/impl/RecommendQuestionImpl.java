@@ -97,8 +97,8 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public List<RecommendQuestion> selectMostFrequentQuestions(int count) {
-        return baseMapper.selectMostFrequentQuestions(count);
+    public List<RecommendQuestion> selectMostFrequentQuestions(int count, Long exhibitId) {
+        return baseMapper.selectMostFrequentQuestions(count, exhibitId);
     }
 
     @Override

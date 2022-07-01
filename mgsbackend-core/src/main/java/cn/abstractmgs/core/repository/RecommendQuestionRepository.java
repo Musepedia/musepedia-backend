@@ -33,8 +33,8 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
     RecommendQuestion selectRandomQuestionWithSameExhibitId(@Param("id") Long exhibitId);
 
     @Select("select t1.question_text, t1.answer_type, t1.answer_text, t2.exhibit_figure_url from tbl_recommend_question t1, tbl_exhibit t2 " +
-            "where t1.exhibit_id = t2.exhibit_id and t1.answer_type != 0 and t1.exhibit_id is not null" +
+            "where t1.exhibit_id = t2.exhibit_id and t1.exhibit_id = #{id} and t1.answer_type != 0 and t1.exhibit_id is not null " +
             "order by question_freq desc " +
             "limit #{count}")
-    List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count);
+    List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count, @Param("id") Long exhibitId);
 }

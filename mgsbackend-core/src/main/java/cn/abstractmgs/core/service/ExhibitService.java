@@ -28,4 +28,6 @@ public interface ExhibitService extends IService<Exhibit> {
     boolean isSameExhibitionHall(@Param("id1") int id1, @Param("id2") int id2);
 
     List<Exhibit> selectPreviousAndNextExhibitById(@Param("id") Long id);
+
+    List<Exhibit> getMostFrequentExhibits(int count, Long museumId);
 }

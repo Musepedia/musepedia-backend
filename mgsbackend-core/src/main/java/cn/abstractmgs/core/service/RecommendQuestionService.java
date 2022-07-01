@@ -11,23 +11,19 @@ public interface RecommendQuestionService extends IService<RecommendQuestion> {
 
     List<String> getRandomQuestions(int count);
 
-    void updateQuestionFreqByText(@Param("text") String question);
+    void updateQuestionFreqByText(String question);
 
-    void insertQuestion(@Param("question_text") String questionText,
-                        @Param("answer_type") int answerType,
-                        @Param("answer_text") String answerText,
-                        @Param("id") Long exhibitId,
-                        Long exhibitTextId);
+    void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId);
 
-    void insertIrrelevantQuestion(@Param("question_text") String questionText);
+    void insertIrrelevantQuestion(String questionText);
 
-    RecommendQuestion getRandomQuestionWithSameExhibitId(@Param("id") Long exhibitId);
+    RecommendQuestion getRandomQuestionWithSameExhibitId(Long exhibitId);
 
-    RecommendQuestion getRecommendQuestion(@Param("question") String question);
+    RecommendQuestion getRecommendQuestion(String question);
 
-    RecommendQuestion selectQuestionByText(@Param("text") String question);
+    RecommendQuestion selectQuestionByText(String question);
 
-    List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count);
+    List<RecommendQuestion> selectMostFrequentQuestions(int count, Long exhibitId);
 
     List<String> selectRecommendQuestions(String originalQuestion,String originalAnswer, Long museumId);
 }

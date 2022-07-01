@@ -75,5 +75,10 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
         return baseMapper.selectPreviousAndNextExhibitById(id);
     }
 
+    @Override
+    public List<Exhibit> getMostFrequentExhibits(int count, Long museumId) {
+        return baseMapper.selectMostFrequentExhibits(count, museumId);
+    }
+
 
 }

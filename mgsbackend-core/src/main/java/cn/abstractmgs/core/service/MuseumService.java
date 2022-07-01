@@ -10,4 +10,6 @@ public interface MuseumService extends IService<Museum> {
     List<Museum> selectAllMuseums();
 
     List<Museum> selectAllServicedMuseums();
+
+    Museum selectCurrentMuseum();
 }

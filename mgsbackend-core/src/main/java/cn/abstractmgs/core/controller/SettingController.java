@@ -6,6 +6,7 @@ import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.service.UserPreferenceService;
 import cn.abstractmgs.core.service.mapstruct.ExhibitionHallDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +25,16 @@ public class SettingController {
     @GetMapping("/preference")
     public BaseResponse<List<Long>> getUserPreference(){
         Long userId = SecurityUtil.getCurrentUserId();
-        List<ExhibitionHall> halls = userPreferenceService.getPreferredHallByUserId(userId);
+        Long museumId = ThreadContextHolder.getCurrentMuseumId();
+        List<ExhibitionHall> halls = userPreferenceService.getPreferredHallByUserId(userId, museumId);
         return BaseResponse.ok("ok", halls.stream().map(ExhibitionHall::getId).collect(Collectors.toList()));
     }
 
     @PutMapping("/preference")
     public BaseResponse<?> updatePreference(@RequestBody List<Long> hallIds) {
         Long userId = SecurityUtil.getCurrentUserId();
-        boolean isUpdated = userPreferenceService.updateUserPreference(userId, hallIds);
+        Long museumId = ThreadContextHolder.getCurrentMuseumId();
+        boolean isUpdated = userPreferenceService.updateUserPreference(userId, hallIds, museumId);
 
         return isUpdated
                 ? BaseResponse.ok("用户偏好更新成功")

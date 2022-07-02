@@ -64,7 +64,7 @@ public class QAController {
         if (userService.isUserAtEndOfExhibitionHall(SecurityUtil.getCurrentUserId())) {
             Long currentLocationId = userService.getUserLocation(SecurityUtil.getCurrentUserId());
             ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
-            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId());
+            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId(), museumId);
             recommendExhibitionHall = recommendExhibitionHallService.getRecommendExhibitionHall(museumId, userPref, currentLocation);
         }
         return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));

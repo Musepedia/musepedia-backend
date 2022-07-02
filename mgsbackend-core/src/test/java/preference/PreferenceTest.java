@@ -86,16 +86,16 @@ public class PreferenceTest {
         hallIds.add(halls.get(0).getId());
         hallIds.add(halls.get(2).getId());
         hallIds.add(halls.get(6).getId());
-        userPreferenceService.updateUserPreference(user.getId(), hallIds);
+        userPreferenceService.updateUserPreference(user.getId(), hallIds, 1L);
 
-        List<ExhibitionHall> preferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId());
+        List<ExhibitionHall> preferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId(), 1L);
 
         List<Long> newHallIds = new ArrayList<>();
         newHallIds.add(halls.get(0).getId());
         newHallIds.add(halls.get(10).getId());
-        userPreferenceService.updateUserPreference(user.getId(), newHallIds);
+        userPreferenceService.updateUserPreference(user.getId(), newHallIds, 1L);
 
-        List<ExhibitionHall> newPreferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId());
+        List<ExhibitionHall> newPreferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId(), 1L);
 
     }
 }

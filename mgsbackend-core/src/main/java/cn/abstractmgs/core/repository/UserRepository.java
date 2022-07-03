@@ -18,6 +18,9 @@ public interface UserRepository extends BaseMapper<User> {
             "where t2.wx_openid = #{openid}")
     User getByOpenid(@Param("openid") String openid);
 
+    @Select("select * from tbl_user where phone_number = #{phoneNumber}")
+    User getByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
     @ResultMap("mybatis-plus_User")
     @Select("select * from tbl_user where nickname = #{nickname}")
     List<User> listByNickname(@Param("nickname") String nickname);

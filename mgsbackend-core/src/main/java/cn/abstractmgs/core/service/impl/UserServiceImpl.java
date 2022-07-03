@@ -1,17 +1,21 @@
 package cn.abstractmgs.core.service.impl;
 
+import cn.abstractmgs.common.exception.BadRequestException;
 import cn.abstractmgs.core.model.entity.UserWxOpenid;
 import cn.abstractmgs.core.model.entity.enums.AgeEnum;
 import cn.abstractmgs.core.model.entity.enums.GenderEnum;
+import cn.abstractmgs.core.model.param.PhoneLoginParam;
 import cn.abstractmgs.core.model.response.Code2SessionResponse;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.model.param.WxLoginParam;
 import cn.abstractmgs.core.repository.ExhibitRepository;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
+import cn.abstractmgs.core.service.SMSService;
 import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.utils.RedisUtil;
 import cn.abstractmgs.core.utils.WxUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,8 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     private final RedisUtil redisUtil;
 
+    private final SMSService smsService;
+
     @Override
     public User getByOpenId(String openid) {
         return getBaseMapper().getByOpenid(openid);
@@ -47,18 +53,32 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         String openid = resp.getOpenid();
         User user = getByOpenId(openid);
         if(user == null){
-            user = new User();
-            Assert.isTrue(
-                    StringUtils.hasText(param.getNickname())
-                            && StringUtils.hasText(param.getAvatarUrl()), "注册昵称和头像不能为空");
-            user.setNickname(param.getNickname());
-            user.setAvatarUrl(param.getAvatarUrl());
-            getBaseMapper().insert(user);
+            if(param.getPhoneNumber() == null){
+                return null;
+            }
+            user = loginPhone(param);
+            Assert.notNull(user, "注册失败");
 
             UserWxOpenid openid1 = new UserWxOpenid();
             openid1.setUserId(user.getId());
             openid1.setWxOpenId(openid);
             openidRepository.insert(openid1);
+        }
+
+        return user;
+    }
+
+    @Override
+    public User loginPhone(PhoneLoginParam param) {
+        Assert.isTrue(smsService.verifyCode(param.getPhoneNumber(), param.getVc(), param.getSms()), "短信验证码错误");
+
+        User user = getBaseMapper().getByPhoneNumber(param.getPhoneNumber());
+        if(user == null){
+            user = new User();
+            user.setPhoneNumber(param.getPhoneNumber());
+            user.setNickname("umt_"+param.getPhoneNumber());
+            user.setAvatarUrl("");
+            getBaseMapper().insert(user);
         }
 
         return user;
@@ -91,4 +111,12 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         return false;
     }
 
+    private void checkDuplicatePhone(String phone){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("phone_number", phone);
+        Long l = getBaseMapper().selectCount(wrapper);
+        if(l != null && l > 0){
+            throw new BadRequestException("手机号已被注册");
+        }
+    }
 }

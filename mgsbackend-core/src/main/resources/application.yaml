@@ -47,6 +47,9 @@ mgs:
   weixin:
     appid: wxfe9a49b9f26c289d
     secret: 60232f676e1215a24a8e357d2b1c76dc
+  sms:
+    access-key-id: ""
+    access-key-secret: ""
 
 grpc:
   client:

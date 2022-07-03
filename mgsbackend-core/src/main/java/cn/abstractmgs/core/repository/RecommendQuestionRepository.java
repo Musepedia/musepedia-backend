@@ -36,4 +36,9 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
             "order by question_freq desc " +
             "limit #{count}")
     List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count);
+
+    @Select("select t1.question_text, t1.question_freq, t2.exhibit_label from tbl_recommend_question t1, tbl_exhibit t2" +
+            "where t1.exhibit_id = t2.exhibit_id and t1.answer_type != 0 and t1.exhibit_id is not null" +
+            "order by question_freq desc")
+    List<RecommendQuestion> selectQuestionsWithFreqAndLabels();
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import cn.abstractmgs.core.model.entity;
 
 @Data
 @NoArgsConstructor
@@ -39,4 +40,6 @@ public class RecommendQuestion extends BaseEntity {
 
     @TableField("question_freq")
     private int questionFreq;
+
+    private Exhibit exhibit;
 }

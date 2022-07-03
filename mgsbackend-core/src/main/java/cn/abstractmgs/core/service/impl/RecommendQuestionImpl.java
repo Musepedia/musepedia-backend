@@ -102,6 +102,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
+    public List<RecommendQuestion> selectQuestionsWithFreqAndLabels() {
+        return baseMapper.selectQuestionsWithFreqAndLabels();
+    }
+
+    @Override
     public RecommendQuestion getRecommendQuestion(String question) {
         // table:primary_key:field
         RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "answer"));

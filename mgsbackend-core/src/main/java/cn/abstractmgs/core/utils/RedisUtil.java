@@ -48,6 +48,18 @@ public class RedisUtil {
         return table.toString() + ":" + key.toString() + ":" + field.toString();
     }
 
+    public String getKey(Object ...parts) {
+        String key = "";
+        for (int i=0; i<parts.length; ++i) {
+            if (i != parts.length - 1) {
+                key += (parts[i].toString() + ":");
+            } else {
+                key += parts[parts.length-1];
+            }
+        }
+        return key;
+    }
+
     /**
      * 指定缓存失效时间
      *

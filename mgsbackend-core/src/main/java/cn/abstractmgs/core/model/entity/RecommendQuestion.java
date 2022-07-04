@@ -32,6 +32,9 @@ public class RecommendQuestion extends BaseEntity {
     @TableField("exhibit_id")
     private Long exhibitId;
 
+    @TableField("museum_id")
+    private Long museumId;
+
     private String exhibitFigureUrl;
 
     @TableField("exhibit_text_id")

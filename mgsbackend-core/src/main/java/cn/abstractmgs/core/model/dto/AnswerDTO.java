@@ -14,6 +14,8 @@ public class AnswerDTO {
 
     private Integer status;
 
+    private Long questionId;
+
     private String answer;
 
     private Long textId;

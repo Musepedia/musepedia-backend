@@ -62,11 +62,13 @@ CREATE TABLE tbl_recommend_question
     answer_text VARCHAR(255),
     exhibit_id BIGINT(20),
     exhibit_text_id BIGINT(20),
+    museum_id BIGINT(20) NOT NULL,
     question_freq INT NOT NULL DEFAULT 1,
     create_time   DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`question_id`) USING BTREE,
-    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id)
+    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id),
+    FOREIGN KEY fk_museum_id (museum_id) REFERENCES tbl_museum (museum_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

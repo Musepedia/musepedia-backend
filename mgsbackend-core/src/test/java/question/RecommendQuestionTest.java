@@ -36,15 +36,15 @@ public class RecommendQuestionTest {
 
     @Test
     public void testUpdate() {
-        service.updateQuestionFreqByText("测试问题");
+        service.updateQuestionFreqByText("测试问题", 1L);
     }
 
     @Test
     public void testInsert() {
-        service.insertQuestion("测试问题2", 1, "测试答案2", 100L, null);
+        service.insertQuestion("测试问题2", 1, "测试答案2", 100L, null, 1L);
 
         // answer_type = 0表示该答案暂时无法回答
-        service.insertQuestion("测试问题3", 0, null, 100L, null);
+        service.insertQuestion("测试问题3", 0, null, 100L, null, 1L);
     }
 
     @Test

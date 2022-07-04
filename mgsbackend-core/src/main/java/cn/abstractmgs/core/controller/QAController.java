@@ -67,6 +67,6 @@ public class QAController {
             List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId(), museumId);
             recommendExhibitionHall = recommendExhibitionHallService.getRecommendExhibitionHall(museumId, userPref, currentLocation);
         }
-        return BaseResponse.ok(new AnswerDTO(status, answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
+        return BaseResponse.ok(new AnswerDTO(status, awt.getQuestionId(), answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
     }
 }

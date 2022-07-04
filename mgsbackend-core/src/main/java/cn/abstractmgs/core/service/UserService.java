@@ -7,6 +7,8 @@ import cn.abstractmgs.core.model.param.WxLoginParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface UserService extends IService<User> {
 
     User getByOpenId(String openid);
@@ -18,5 +20,7 @@ public interface UserService extends IService<User> {
     Long getUserLocation(Long userId);
 
     boolean isUserAtEndOfExhibitionHall(Long userId);
+
+    List<User> ageWithLabels(Long museumId);
 
 }

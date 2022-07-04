@@ -102,8 +102,13 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public List<RecommendQuestion> selectQuestionsWithFreqAndLabels() {
-        return baseMapper.selectQuestionsWithFreqAndLabels();
+    public List<RecommendQuestion> selectQuestionsWithFreqAndLabels(Long museumId) {
+        return baseMapper.selectQuestionsWithFreqAndLabels(museumId);
+    }
+
+    @Override
+    public List<RecommendQuestion> selectUserQuestionsWithLabels(Long museumId) {
+        return baseMapper.selectUserQuestionsWithLabels(museumId);
     }
 
     @Override
@@ -219,4 +224,6 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         }
         return RecommendQuestions;
     }
+
+
 }

@@ -36,4 +36,6 @@ public class User extends BaseEntity {
 
     @TableField("age")
     private AgeEnum age;
+
+    private Exhibit exhibit;
 }

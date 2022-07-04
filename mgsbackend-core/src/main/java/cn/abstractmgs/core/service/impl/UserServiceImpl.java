@@ -91,4 +91,9 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         return false;
     }
 
+    @Override
+    public List<User> ageWithLabels(Long museumId) {
+        return baseMapper.ageWithLabels(museumId);
+    }
+
 }

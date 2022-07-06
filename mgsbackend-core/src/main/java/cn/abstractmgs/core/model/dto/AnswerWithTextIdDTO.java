@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AnswerWithTextIdDTO {
 
+    private Long questionId;
+
     private String answer;
 
     private Long textId;

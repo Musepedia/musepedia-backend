@@ -61,14 +61,14 @@ public class QAServiceImpl implements QAService {
     @Override
     public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
         // 尝试从缓存中和数据库中获取答案
-        RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
+        RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
 
         Long userId = SecurityUtil.getCurrentUserId();
         Long userLocation;
 
         if (recommendQuestion != null) {
             // 在数据库中更新question_freq
-            recommendQuestionService.updateQuestionFreqByText(question);
+            recommendQuestionService.updateQuestionFreqByText(question, museumId);
 
             // 根据问题更新用户所在位置
             userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
@@ -78,7 +78,7 @@ public class QAServiceImpl implements QAService {
             feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
             String answerText = recommendQuestion.getAnswerType() == 0 ? DEFAULT_ANSWER : recommendQuestion.getAnswerText();
-            return new AnswerWithTextIdDTO(answerText, recommendQuestion.getExhibitTextId());
+            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answerText, recommendQuestion.getExhibitTextId());
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -92,9 +92,11 @@ public class QAServiceImpl implements QAService {
         String answer = DEFAULT_ANSWER;
 
         if (label.size() == 0) {
-            recommendQuestionService.insertIrrelevantQuestion(question);
             // 无法回答问题（无关问题）
-            return new AnswerWithTextIdDTO(answer, null);
+            recommendQuestionService.insertIrrelevantQuestion(question, museumId);
+            // 写入缓存
+            recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
+            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, null);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
@@ -109,11 +111,13 @@ public class QAServiceImpl implements QAService {
         if (answerType == 3) {
             if (rpcTexts.size() != 0) {
                 answer = exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
-                recommendQuestionService.insertQuestion(question, 3, answer, exhibitTexts.get(0).getExhibitId(), null);
+                recommendQuestionService.insertQuestion(question, 3, answer, exhibitTexts.get(0).getExhibitId(), null, museumId);
             } else {
-                recommendQuestionService.insertIrrelevantQuestion(question);
+                recommendQuestionService.insertIrrelevantQuestion(question, museumId);
             }
-            return new AnswerWithTextIdDTO(answer, null);
+            // 写入缓存
+            recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
+            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, null);
         }
 
         Long textId = null;
@@ -155,12 +159,13 @@ public class QAServiceImpl implements QAService {
                 getStatus(answer),
                 getStatus(answer) == 0 ? null : answer,
                 exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId(),
-                textId);
+                textId,
+                museumId);
 
         // 写入缓存后，更新用户历史提问
-        recommendQuestion = recommendQuestionService.getRecommendQuestion(question);
+        recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
         feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
-        return new AnswerWithTextIdDTO(answer, textId);
+        return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, textId);
     }
 }

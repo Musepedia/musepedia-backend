@@ -72,18 +72,18 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public void updateQuestionFreqByText(String question) {
-        baseMapper.updateQuestionFreqByText(question);
+    public void updateQuestionFreqByText(String question, Long museumId) {
+        baseMapper.updateQuestionFreqByText(question, museumId);
     }
 
     @Override
-    public void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId) {
-        baseMapper.insertQuestion(questionText, answerType, answerText, exhibitId, exhibitTextId);
+    public void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId, Long museumId) {
+        baseMapper.insertQuestion(questionText, answerType, answerText, exhibitId, exhibitTextId, museumId);
     }
 
     @Override
-    public void insertIrrelevantQuestion(String questionText) {
-        baseMapper.insertQuestion(questionText, 0, null, null, null);
+    public void insertIrrelevantQuestion(String questionText, Long museumId) {
+        baseMapper.insertQuestion(questionText, 0, null, null, null, museumId);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public RecommendQuestion selectQuestionByText(String question) {
-        return baseMapper.selectQuestionByText(question);
+    public RecommendQuestion selectQuestionByText(String question, Long museumId) {
+        return baseMapper.selectQuestionByText(question, museumId);
     }
 
     @Override
@@ -102,15 +102,16 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
     }
 
     @Override
-    public RecommendQuestion getRecommendQuestion(String question) {
+    public RecommendQuestion getRecommendQuestion(String question, Long museumId) {
         // table:primary_key:field
-        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "answer"));
+        // question:xxx:museumId:xx:answer
+        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "museumId", museumId, "answer"));
         if (cached == null) {
-            cached = selectQuestionByText(question);
+            cached = selectQuestionByText(question, museumId);
             if (cached == null) {
                 return null;
             }
-            redisUtil.set(redisUtil.getKey("question", cached.getQuestionText(), "answer"), cached);
+            redisUtil.set(redisUtil.getKey("question", cached.getQuestionText(),"museumId", museumId, "answer"), cached);
         }
 
         return cached;
@@ -157,7 +158,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
         Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
 
-        RecommendQuestion answerInfo = this.selectQuestionByText(originalQuestion);
+        RecommendQuestion answerInfo = this.selectQuestionByText(originalQuestion, museumId);
         int answerType = answerInfo.getAnswerType();
 
         //judge answerable
@@ -213,5 +214,10 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
             }
         }
         return RecommendQuestions;
+    }
+
+    @Override
+    public List<RecommendQuestion> selectNonDislikeUserQuestion(Long userId, Long museumId) {
+        return baseMapper.selectNonDislikeUserQuestion(userId, museumId);
     }
 }

@@ -11,19 +11,21 @@ public interface RecommendQuestionService extends IService<RecommendQuestion> {
 
     List<String> getRandomQuestions(int count);
 
-    void updateQuestionFreqByText(String question);
+    void updateQuestionFreqByText(String question, Long museumId);
 
-    void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId);
+    void insertQuestion(String questionText, int answerType, String answerText, Long exhibitId, Long exhibitTextId, Long museumId);
 
-    void insertIrrelevantQuestion(String questionText);
+    void insertIrrelevantQuestion(String questionText, Long museumId);
 
     RecommendQuestion getRandomQuestionWithSameExhibitId(Long exhibitId);
 
-    RecommendQuestion getRecommendQuestion(String question);
+    RecommendQuestion getRecommendQuestion(String question, Long museumId);
 
-    RecommendQuestion selectQuestionByText(String question);
+    RecommendQuestion selectQuestionByText(String question, Long museumId);
 
     List<RecommendQuestion> selectMostFrequentQuestions(int count, Long exhibitId);
 
     List<String> selectRecommendQuestions(String originalQuestion,String originalAnswer, Long museumId);
+
+    List<RecommendQuestion> selectNonDislikeUserQuestion(Long userId, Long museumId);
 }

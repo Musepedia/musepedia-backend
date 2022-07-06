@@ -47,22 +47,22 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     @Transactional
     @Override
     public User loginWx(WxLoginParam param) {
+        User user = loginPhone(param);
+
         Code2SessionResponse resp = wxUtil.code2Session(param);
         Assert.isTrue(resp != null && StringUtils.hasText(resp.getOpenid()), "获取openid失败");
 
         String openid = resp.getOpenid();
-        User user = getByOpenId(openid);
-        if(user == null){
-            if(param.getPhoneNumber() == null){
-                return null;
-            }
-            user = loginPhone(param);
-            Assert.notNull(user, "注册失败");
-
+        User wxUser = getByOpenId(openid);
+        if(wxUser == null){
+            // 绑定微信
             UserWxOpenid openid1 = new UserWxOpenid();
             openid1.setUserId(user.getId());
             openid1.setWxOpenId(openid);
             openidRepository.insert(openid1);
+        } else if(wxUser.getPhoneNumber().equals(user.getPhoneNumber())){
+            // todo
+            // ignore
         }
 
         return user;
@@ -78,6 +78,11 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             user.setPhoneNumber(param.getPhoneNumber());
             user.setNickname("umt_"+param.getPhoneNumber());
             user.setAvatarUrl("");
+            if(param instanceof WxLoginParam){
+                WxLoginParam wxParam = (WxLoginParam) param;
+                user.setNickname(wxParam.getNickname());
+                user.setAvatarUrl(wxParam.getAvatarUrl());
+            }
             getBaseMapper().insert(user);
         }
 

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecommendationDTO {
 
+    private Long questionId;
+
     private String questionText;
 
     private int answerType;

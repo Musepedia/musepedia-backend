@@ -11,5 +11,5 @@ public interface MuseumFloorPlanService {
     
     void saveMuseumFloorPlan(HashMap<String, List<String>> museumFloorPlan, Long museumId);
     
-    String getMuseumFloorPanFilePath(Long museumId);
+    String getMuseumFloorPlanFilepath(Long museumId);
 }

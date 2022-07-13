@@ -6,6 +6,7 @@ import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.service.ExhibitionHallService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,7 +23,7 @@ public class RecommendHallTest {
     ExhibitionHallService exhibitionHallService;
 
     @Test
-    public void recommendHallTest(){
+    public void recommendHallTest() throws JsonProcessingException {
         List<ExhibitionHall> pref = exhibitionHallService.list(new LambdaQueryWrapper<ExhibitionHall>().between(ExhibitionHall::getId, 3, 7));
         ExhibitionHall pos = exhibitionHallService.getById(4);
         System.out.println(recommendService.getRecommendExhibitionHall(1L, pref, pos));

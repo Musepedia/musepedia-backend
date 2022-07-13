@@ -9,6 +9,7 @@ import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import cn.abstractmgs.core.utils.ThreadContextHolder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -44,7 +45,7 @@ public class QAController {
     private final UserService userService;
 
     @GetMapping
-    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) {
+    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) throws JsonProcessingException {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
         String answer = awt.getAnswer();

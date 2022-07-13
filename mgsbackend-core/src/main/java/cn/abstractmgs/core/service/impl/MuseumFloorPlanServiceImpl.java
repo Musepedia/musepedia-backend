@@ -1,47 +1,43 @@
 package cn.abstractmgs.core.service.impl;
 
+import cn.abstractmgs.core.model.entity.Museum;
 import cn.abstractmgs.core.service.MuseumFloorPlanService;
+import cn.abstractmgs.core.service.MuseumService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
 @Service("museumFloorPlanService")
+@RequiredArgsConstructor
 public class MuseumFloorPlanServiceImpl implements MuseumFloorPlanService {
-    
-    // public static final String jsonStr = "{\"5\":[],\"7\":[\"9\",\"10\"],\"9\":[\"7\"],\"10\":[\"7\"],\"8\":[\"6\"],\"3\":[\"4\",\"2\"],\"4\":[\"3\"],\"1\":[\"2\"],\"6\":[\"8\"],\"2\":[\"3\",\"1\"]}";
-    
+
+    private final MuseumService museumService;
+
     @Override
     public HashMap getMuseumFloorPlan(Long museumId) throws JsonProcessingException {
-        //        HashMap<String, String[]> neighbors = new HashMap<>();
-        //        neighbors.put("1", new String[]{"2"});
-        //        neighbors.put("2", new String[]{"3", "1"});
-        //        neighbors.put("3", new String[]{"4", "2"});
-        //        neighbors.put("4", new String[]{"3"});
-        //        neighbors.put("5", new String[0]);
-        //        neighbors.put("6", new String[]{"8"});
-        //        neighbors.put("7", new String[]{"9", "10"});
-        //        neighbors.put("8", new String[]{"6"});
-        //        neighbors.put("9", new String[]{"7"});
-        //        neighbors.put("10", new String[]{"7"});
-        //        return neighbors;
         ObjectMapper mapper = new ObjectMapper();
         try {
-            String path = getMuseumFloorPanFilePath(museumId);
-            JsonNode root = mapper.readTree(path);
+            String path = getMuseumFloorPlanFilepath(museumId);
+            JsonNode root = mapper.readTree(new File(path));
             String jsonStr = root.toString();
             try {
-                return mapper.readValue(jsonStr, HashMap.class);
+                return mapper.readValue(jsonStr, new TypeReference <HashMap <String, List <String>>>() {
+                    @Override
+                    public Type getType() {
+                        return super.getType();
+                    }
+                });
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -50,7 +46,7 @@ public class MuseumFloorPlanServiceImpl implements MuseumFloorPlanService {
     @Override
     public void saveMuseumFloorPlan(HashMap <String, List <String>> museumFloorPlan, Long museumId) {
         ObjectMapper mapper = new ObjectMapper();
-        String filename = getMuseumFloorPanFilePath(museumId);
+        String filename = getMuseumFloorPlanFilepath(museumId);
         try {
             String jsonStr = mapper.writeValueAsString(museumFloorPlan);
             try (FileWriter fw = new FileWriter(filename))
@@ -65,9 +61,10 @@ public class MuseumFloorPlanServiceImpl implements MuseumFloorPlanService {
         }
     }
     @Override
-    public String getMuseumFloorPanFilePath(Long museumId) {
+    public String getMuseumFloorPlanFilepath(Long museumId) {
         // 查询平面图路径
-        String path = "";// 需要实现
+        Museum museum = museumService.getById(museumId);
+        String path = museum.getFloorPlanFilepath();
         return path;
     }
 }

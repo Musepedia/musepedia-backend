@@ -91,13 +91,16 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     @Override
     public void setUserLocation(Long userId, Long exhibitionHallId) {
-        redisUtil.set(redisUtil.getKey("user", userId, "location"), exhibitionHallId);
+        if (!exhibitionHallId.equals(getUserLocation(userId))) {
+            redisUtil.set(redisUtil.getKey("user", userId, "location"), exhibitionHallId);
+            setUserRecommendStatus(userId, true);
+        }
     }
 
     @Override
     public Long getUserLocation(Long userId) {
         Object userLocation = redisUtil.get(redisUtil.getKey("user", userId, "location"));
-        return Long.valueOf(String.valueOf(userLocation));
+        return userLocation != null ? Long.valueOf(String.valueOf(userLocation)) : null;
     }
 
     @Override
@@ -114,6 +117,17 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             }
         }
         return false;
+    }
+
+    @Override
+    public void setUserRecommendStatus(Long userId, boolean recommendStatus) {
+        redisUtil.set(redisUtil.getKey("user", userId, "recommendStatus"), recommendStatus);
+    }
+
+    @Override
+    public boolean getUserRecommendStatus(Long userId) {
+        Object status = redisUtil.get(redisUtil.getKey("user", userId, "recommendStatus"));
+        return (Boolean) status;
     }
 
     private void checkDuplicatePhone(String phone){

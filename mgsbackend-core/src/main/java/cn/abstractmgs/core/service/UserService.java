@@ -22,4 +22,7 @@ public interface UserService extends IService<User> {
 
     boolean isUserAtEndOfExhibitionHall(Long userId);
 
+    void setUserRecommendStatus(Long userId, boolean recommendStatus);
+
+    boolean getUserRecommendStatus(Long userId);
 }

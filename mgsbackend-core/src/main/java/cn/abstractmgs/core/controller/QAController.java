@@ -47,6 +47,7 @@ public class QAController {
     @GetMapping
     public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) throws JsonProcessingException {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
+        Long userId = SecurityUtil.getCurrentUserId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
         String answer = awt.getAnswer();
         int status = qaService.getStatus(answer);
@@ -62,11 +63,14 @@ public class QAController {
         }
 
         ExhibitionHall recommendExhibitionHall = null;
-        if (userService.isUserAtEndOfExhibitionHall(SecurityUtil.getCurrentUserId())) {
-            Long currentLocationId = userService.getUserLocation(SecurityUtil.getCurrentUserId());
+        if (recommendExhibitionHallService.isRecommendExhibitionHall(SecurityUtil.getCurrentUserId())) {
+            Long currentLocationId = userService.getUserLocation(userId);
             ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
-            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(SecurityUtil.getCurrentUserId(), museumId);
+            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(userId, museumId);
             recommendExhibitionHall = recommendExhibitionHallService.getRecommendExhibitionHall(museumId, userPref, currentLocation);
+
+            // 直到用户位置发生变化为止，不再向该用户推荐展区
+            userService.setUserRecommendStatus(userId, false);
         }
         return BaseResponse.ok(new AnswerDTO(status, awt.getQuestionId(), answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
     }

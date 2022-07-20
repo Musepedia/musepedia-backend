@@ -16,4 +16,6 @@ public interface RecommendExhibitionHallService {
      * @return 推荐的展馆
      */
     ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) throws JsonProcessingException;
+
+    boolean isRecommendExhibitionHall(Long userId);
 }

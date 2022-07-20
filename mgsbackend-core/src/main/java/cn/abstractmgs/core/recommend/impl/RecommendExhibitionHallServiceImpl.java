@@ -6,6 +6,7 @@ import cn.abstractmgs.core.recommend.model.AreaSorter;
 import cn.abstractmgs.core.recommend.model.ExhibitionArea;
 import cn.abstractmgs.core.service.ExhibitionHallService;
 import cn.abstractmgs.core.service.MuseumFloorPlanService;
+import cn.abstractmgs.core.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
     private final MuseumFloorPlanService museumFloorPlanService;
 
     private final ExhibitionHallService exhibitionHallService;
+
+    private final UserService userService;
 
     public ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) throws JsonProcessingException {
         List<ExhibitionHall> exhibitionHalls = exhibitionHallService.list(
@@ -48,5 +51,10 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
         obp.listOperation(sorter.areaList); //根据位置操作列表
         String recommended = sorter.recommend1(); //排序后输出第一位的展区名用于推荐
         return exhibitionHalls.get(map.get(recommended));
+    }
+
+    @Override
+    public boolean isRecommendExhibitionHall(Long userId) {
+        return userService.isUserAtEndOfExhibitionHall(userId) && userService.getUserRecommendStatus(userId);
     }
 }

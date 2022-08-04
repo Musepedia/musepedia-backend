@@ -55,7 +55,7 @@ public class ControllerExceptionHandlerAdvice {
     @ExceptionHandler(InternalException.class)
     public BaseResponse<?> internalExceptionHandler(InternalException exception){
         log.error("InternalException: ", exception);
-        String msg = exception.getMessage() + "\n" + Arrays.toString(exception.getStackTrace());
+        String msg = exception.getMessage();
         return new BaseResponse<>(500, msg, null);
     }
 

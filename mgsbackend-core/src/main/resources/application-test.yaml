@@ -1,2 +1,12 @@
 mgs:
   login-any: true
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mgs_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+
+grpc:
+  client:
+    myService:
+      address: static://abstractmgs.cn/_g
+      negotiationType=: PLAINTEXT

@@ -152,11 +152,11 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
 
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, String originalAnswer, Long museumId) {
-        List<String> RecommendQuestions = new ArrayList<>();
+        List<String> recommendQuestions = new ArrayList<>();
 
         // TODO 由answer -> ID
         List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
-        Long id = exhibitService.selectExhibitIdByLabel(labels.get(0));
+        Long exhibitId = labels == null || labels.isEmpty() ? 0 : exhibitService.selectExhibitIdByLabel(labels.get(0));
 
         RecommendQuestion answerInfo = this.selectQuestionByText(originalQuestion, museumId);
         int answerType = answerInfo.getAnswerType();
@@ -166,7 +166,7 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
         if (answerType != 0) {//can answer
             reMode = 1;
         } else {
-            if (id == 0) {//random, can't locate
+            if (exhibitId == 0) {//random, can't locate
                 reMode = 2;
             } else {//can't answer, can locate
                 reMode = 3;
@@ -180,19 +180,17 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                 List<Exhibit> nowHall ;
 
                 List<Long> idNear = new ArrayList<>();
-                nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
+                nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
                 for (Exhibit temp : nowHall) {
                     long a = temp.getId();
-                    System.out.println(a);
                     idNear.add(a);
                 }
-                RecommendQuestions=preSelect(idNear);
+                recommendQuestions=preSelect(idNear);
                 break;
             }
             //no exhibit and random recommend
             case 2: {
-                System.out.println("this is random");
-                RecommendQuestions = recommendQuestionService.getRandomQuestions(3);
+                recommendQuestions = recommendQuestionService.getRandomQuestions(3);
                 break;
             }
             //can answer the question, so recommend another question about local question
@@ -200,20 +198,22 @@ public class RecommendQuestionImpl extends ServiceImpl<RecommendQuestionReposito
                 List<Exhibit> nowHall ;
 
                 List<Long> idNear = new ArrayList<>();
-                nowHall = exhibitService.selectPreviousAndNextExhibitById(id);
+                nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
                 for (Exhibit temp : nowHall) {
                     long a = temp.getId();
                     idNear.add(a);
                 }
 
-                RecommendQuestions=preSelect(idNear);
+                recommendQuestions=preSelect(idNear);
                 //查询当前展品的其他问题
-                String nowQuestion = recommendQuestionService.getRandomQuestionWithSameExhibitId(id).getQuestionText();
-                RecommendQuestions.add(nowQuestion);
+                RecommendQuestion question = recommendQuestionService.getRandomQuestionWithSameExhibitId(exhibitId);
+                if(question != null){
+                    recommendQuestions.add(question.getQuestionText());
+                }
                 break;
             }
         }
-        return RecommendQuestions;
+        return recommendQuestions;
     }
 
     @Override

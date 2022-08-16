@@ -1,18 +1,17 @@
 package cn.abstractmgs.core.service.impl;
 
 import cn.abstractmgs.common.exception.BadRequestException;
-import cn.abstractmgs.core.model.entity.UserWxOpenid;
-import cn.abstractmgs.core.model.entity.enums.AgeEnum;
-import cn.abstractmgs.core.model.entity.enums.GenderEnum;
-import cn.abstractmgs.core.model.param.PhoneLoginParam;
-import cn.abstractmgs.core.model.response.Code2SessionResponse;
 import cn.abstractmgs.core.model.entity.User;
+import cn.abstractmgs.core.model.entity.UserWxOpenid;
+import cn.abstractmgs.core.model.param.PhoneLoginParam;
 import cn.abstractmgs.core.model.param.WxLoginParam;
+import cn.abstractmgs.core.model.response.Code2SessionResponse;
 import cn.abstractmgs.core.repository.ExhibitRepository;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.repository.UserWxOpenidRepository;
 import cn.abstractmgs.core.service.SMSService;
 import cn.abstractmgs.core.service.UserService;
+import cn.abstractmgs.core.utils.EnvironmentUtil;
 import cn.abstractmgs.core.utils.RedisUtil;
 import cn.abstractmgs.core.utils.WxUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -47,33 +46,33 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     @Transactional
     @Override
     public User loginWx(WxLoginParam param) {
-        User user = loginPhone(param);
-
         Code2SessionResponse resp = wxUtil.code2Session(param);
         Assert.isTrue(resp != null && StringUtils.hasText(resp.getOpenid()), "获取openid失败");
 
         String openid = resp.getOpenid();
         User wxUser = getByOpenId(openid);
         if(wxUser == null){
-            // 绑定微信
+            // 未绑定微信，验证短信并绑定微信
+            wxUser = loginPhone(param);
             UserWxOpenid openid1 = new UserWxOpenid();
-            openid1.setUserId(user.getId());
+            openid1.setUserId(wxUser.getId());
             openid1.setWxOpenId(openid);
             openidRepository.insert(openid1);
-        } else if(wxUser.getPhoneNumber().equals(user.getPhoneNumber())){
-            // todo
-            // ignore
         }
 
-        return user;
+        return wxUser;
     }
 
     @Override
     public User loginPhone(PhoneLoginParam param) {
-        Assert.isTrue(smsService.verifyCode(param.getPhoneNumber(), param.getVc(), param.getSms()), "短信验证码错误");
+        if(!EnvironmentUtil.isTestEnv()){
+            // 测试环境跳过验证短信
+            Assert.isTrue(smsService.verifyCode(param.getPhoneNumber(), param.getVc(), param.getSms()), "短信验证码错误");
+        }
 
         User user = getBaseMapper().getByPhoneNumber(param.getPhoneNumber());
         if(user == null){
+            // 手机号未注册 通过手机号注册
             user = new User();
             user.setPhoneNumber(param.getPhoneNumber());
             user.setNickname("umt_"+param.getPhoneNumber());
@@ -97,12 +96,15 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     @Override
     public Long getUserLocation(Long userId) {
         Object userLocation = redisUtil.get(redisUtil.getKey("user", userId, "location"));
-        return Long.valueOf(String.valueOf(userLocation));
+        return userLocation == null ? null : Long.valueOf(String.valueOf(userLocation));
     }
 
     @Override
     public boolean isUserAtEndOfExhibitionHall(Long userId) {
         Long userLocation = getUserLocation(userId);
+        if(userLocation == null){
+            return false;
+        }
         double percentage = 0.1;
         List<Long> exhibits = exhibitRepository.selectExhibitIdsInSameExhibitionHall(userLocation);
 

@@ -67,6 +67,7 @@ public class QAServiceImpl implements QAService {
         Long userLocation;
 
         if (recommendQuestion != null) {
+            log.debug("getAnswer: recommend question exist {}", recommendQuestion);
             // 在数据库中更新question_freq
             recommendQuestionService.updateQuestionFreqByText(question, museumId);
 
@@ -92,6 +93,7 @@ public class QAServiceImpl implements QAService {
         String answer = DEFAULT_ANSWER;
 
         if (label.size() == 0) {
+            log.debug("No label found for question: {}", question);
             // 无法回答问题（无关问题）
             recommendQuestionService.insertIrrelevantQuestion(question, museumId);
             // 写入缓存
@@ -107,6 +109,8 @@ public class QAServiceImpl implements QAService {
                                 .setId(e.getId())
                                 .build())
                         .collect(Collectors.toList());
+
+        log.debug("Question: {}, rpcTexts size: {}", question, rpcTexts.size());
 
         if (answerType == 3) {
             if (rpcTexts.size() != 0) {
@@ -135,6 +139,7 @@ public class QAServiceImpl implements QAService {
                         .sayHello(helloRequest)
                         .getAnswerWithTextId();
                 String resp = answerWithTextId.getAnswer();
+                log.debug("grpc response for question {}, {}", question, resp);
                 // 替换grpc返回的所有包含[CLS]的占位符，如果仅包含占位符则返回"无法回答"
                 resp = placeholderPattern.matcher(resp).replaceAll("");
                 if (resp.length() != 0) {

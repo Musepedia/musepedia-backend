@@ -40,7 +40,7 @@ public class SMSServiceImpl implements SMSService {
         SendSmsRequest sendSmsRequest = new SendSmsRequest()
                 .setSignName("阿里云短信测试")
                 .setTemplateCode("SMS_154950909")
-                .setPhoneNumbers("15821243161")
+                .setPhoneNumbers(phone)
                 .setTemplateParam("{\"code\":\"" + code.getCode() + "\"}");
         try {
             smsClient.sendSms(sendSmsRequest);

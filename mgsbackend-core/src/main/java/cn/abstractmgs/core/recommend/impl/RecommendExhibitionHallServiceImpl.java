@@ -6,7 +6,9 @@ import cn.abstractmgs.core.recommend.model.AreaSorter;
 import cn.abstractmgs.core.recommend.model.ExhibitionArea;
 import cn.abstractmgs.core.service.ExhibitionHallService;
 import cn.abstractmgs.core.service.MuseumFloorPlanService;
+import cn.abstractmgs.core.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +23,14 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
 
     private final ExhibitionHallService exhibitionHallService;
 
-    public ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) {
+    private final UserService userService;
+
+    public ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) throws JsonProcessingException {
         List<ExhibitionHall> exhibitionHalls = exhibitionHallService.list(
                 new LambdaQueryWrapper<>(ExhibitionHall.class)
                         .eq(ExhibitionHall::getMuseumId, museumId));
 
-        HashMap<String, List<String>> neighbors = museumFloorPlanService.getMuseumFloorPlan(null);
+        HashMap<String, List<String>> neighbors = museumFloorPlanService.getMuseumFloorPlan(museumId);
         int len1 = exhibitionHalls.size();  //展区总数
         int len2 = userPreference.size(); //问卷长度
         AreaSorter sorter = new AreaSorter(new HashMap<>()); //排序器
@@ -47,5 +51,10 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
         obp.listOperation(sorter.areaList); //根据位置操作列表
         String recommended = sorter.recommend1(); //排序后输出第一位的展区名用于推荐
         return exhibitionHalls.get(map.get(recommended));
+    }
+
+    @Override
+    public boolean isRecommendExhibitionHall(Long userId) {
+        return userService.isUserAtEndOfExhibitionHall(userId) && userService.getUserRecommendStatus(userId);
     }
 }

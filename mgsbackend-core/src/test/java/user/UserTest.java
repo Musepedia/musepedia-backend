@@ -67,4 +67,17 @@ public class UserTest {
     public void testInsertQuestion() {
         // userService.insertUserQuestion(10003L, 353L);
     }
+
+    @Test
+    public void testUserRecommendStatus() {
+//        userService.setUserRecommendStatus(10000L, true);
+//        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 1L);
+        userService.setUserRecommendStatus(10000L, false);
+        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 1L);
+        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 2L);
+        System.out.println(userService.getUserRecommendStatus(10000L));
+    }
 }

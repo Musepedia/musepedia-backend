@@ -1,6 +1,7 @@
 package cn.abstractmgs.core.recommend;
 
 import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface RecommendExhibitionHallService {
      * @param pos 当前位置
      * @return 推荐的展馆
      */
-    ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos);
+    ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) throws JsonProcessingException;
+
+    boolean isRecommendExhibitionHall(Long userId);
 }

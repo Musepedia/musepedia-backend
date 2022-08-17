@@ -38,6 +38,7 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
             "limit #{count}")
     List<RecommendQuestion> selectMostFrequentQuestions(@Param("count") int count, @Param("id") Long exhibitId);
 
+    @ResultMap("mybatis-plus_RecommendQuestion")
     @Select("select t1.* from tbl_recommend_question t1, tbl_user_question t2 " +
             "where t1.question_id = t2.question_id " +
             "and (t2.feedback is null or t2.feedback = 1) " +

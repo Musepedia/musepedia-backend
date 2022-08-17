@@ -40,8 +40,6 @@ public class ExploreController {
     @GetMapping("/question")
     public BaseResponse<List<RecommendationDTO>> getRecommendQuestion(@RequestParam int count, @RequestParam Long exhibitId) {
         List<RecommendQuestion> recommendations = recommendQuestionService.selectMostFrequentQuestions(count, exhibitId);
-        System.out.println(recommendations);
-
         return BaseResponse.ok("ok", recommendationDTOMapper.toDto(recommendations));
     }
 }

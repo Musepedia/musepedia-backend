@@ -36,6 +36,9 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
 
     @Override
     public List<Exhibit> selectRandomExhibits(List<Integer> ids) {
+        if(ids == null || ids.isEmpty()){
+            return new ArrayList<>();
+        }
         return baseMapper.selectRandomExhibits(ids);
     }
 

@@ -9,21 +9,21 @@ import java.util.List;
 
 public class NLPUtil {
     private final String text;
-    private final String[] map_keywords = {"分布", "哪里", "哪些地方"};
-    private final String[] outlook_keywords = {"长什么样", "外观", "外形"};
+    private final String[] mapKeywords = {"分布", "哪里", "哪些地方"};
+    private final String[] outlookKeywords = {"长什么样", "外观", "外形"};
 
     public NLPUtil(String text) {
         this.text = text;
     }
 
     public int answerRecognition(String question) {
-        for (String keyword: map_keywords) {
+        for (String keyword: mapKeywords) {
             int flag = question.indexOf(keyword);
             if (flag != -1) {
                 return 2;
             }
         }
-        for (String keyword: outlook_keywords) {
+        for (String keyword: outlookKeywords) {
             int flag = question.indexOf(keyword);
             if (flag != -1) {
                 return 3;

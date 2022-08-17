@@ -82,5 +82,5 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "group by t1.exhibit_id " +
             "order by sum(t1.question_freq) desc " +
             "limit #{count}")
-    List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("id") Long museumId);
+    List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("museumId") Long museumId);
 }

@@ -13,13 +13,9 @@ import cn.abstractmgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -41,9 +37,9 @@ public class QAServiceImpl implements QAService {
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
-    public static final Pattern placeholderPattern = Pattern.compile("[\\[A-Z\\]]");
+    public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[\\[A-Z\\]]");
 
-    public static final Pattern urlPattern = Pattern.compile("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\n");
+    public static final Pattern URL_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(.*)");
 
     private static final String DEFAULT_ANSWER = "暂时无法回答这个问题";
 
@@ -51,7 +47,7 @@ public class QAServiceImpl implements QAService {
     public int getStatus(String answer) {
         if (answer.equals(DEFAULT_ANSWER)) {
             return 0;
-        } else if (urlPattern.matcher(answer).matches()) {
+        } else if (URL_PATTERN.matcher(answer).matches()) {
             return 2;
         } else {
             return 1;
@@ -64,15 +60,17 @@ public class QAServiceImpl implements QAService {
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
 
         Long userId = SecurityUtil.getCurrentUserId();
-        Long userLocation;
 
         if (recommendQuestion != null) {
+            log.debug("getAnswer: recommend question exist {}", recommendQuestion);
             // 在数据库中更新question_freq
             recommendQuestionService.updateQuestionFreqByText(question, museumId);
 
             // 根据问题更新用户所在位置
-            userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
-            userService.setUserLocation(userId, userLocation);
+            Long userLocation = exhibitService.selectExhibitionHallIdByExhibitId(recommendQuestion.getExhibitId());
+            if(userLocation != null){
+                userService.setUserLocation(userId, userLocation);
+            }
 
             // 更新用户历史提问
             feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
@@ -92,6 +90,7 @@ public class QAServiceImpl implements QAService {
         String answer = DEFAULT_ANSWER;
 
         if (label.size() == 0) {
+            log.debug("No label found for question: {}", question);
             // 无法回答问题（无关问题）
             recommendQuestionService.insertIrrelevantQuestion(question, museumId);
             // 写入缓存
@@ -107,6 +106,8 @@ public class QAServiceImpl implements QAService {
                                 .setId(e.getId())
                                 .build())
                         .collect(Collectors.toList());
+
+        log.debug("Question: {}, rpcTexts size: {}", question, rpcTexts.size());
 
         if (answerType == 3) {
             if (rpcTexts.size() != 0) {
@@ -135,8 +136,9 @@ public class QAServiceImpl implements QAService {
                         .sayHello(helloRequest)
                         .getAnswerWithTextId();
                 String resp = answerWithTextId.getAnswer();
+                log.debug("grpc response for question {}, {}", question, resp);
                 // 替换grpc返回的所有包含[CLS]的占位符，如果仅包含占位符则返回"无法回答"
-                resp = placeholderPattern.matcher(resp).replaceAll("");
+                resp = PLACEHOLDER_PATTERN.matcher(resp).replaceAll("");
                 if (resp.length() != 0) {
                     // has exact answer
                     answer = resp;
@@ -150,8 +152,10 @@ public class QAServiceImpl implements QAService {
 
         // 根据问题更新用户所在位置
         if (exhibitTexts.size() != 0) {
-            userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
-            userService.setUserLocation(userId, userLocation);
+            Long userLocation = exhibitService.selectExhibitionHallIdByExhibitId(exhibitTexts.get(0).getExhibitId());
+            if(userLocation != null){
+                userService.setUserLocation(userId, userLocation);
+            }
         }
 
         // 将答案写入数据库中

@@ -7,22 +7,26 @@ import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.utils.RedisUtil;
+import cn.abstractmgs.core.utils.ThreadContextHolder;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service("recommendQuestionService")
 public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionRepository, RecommendQuestion> implements RecommendQuestionService {
 
-    private List<String> cachedQuestions;
+    /**
+     * MuseumId到问题的映射
+     */
+    private final Map<Long, List<String>> cachedQuestions = new ConcurrentHashMap<>();
 
     private final ExhibitService exhibitService;
 
@@ -31,34 +35,40 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
     private final RedisUtil redisUtil;
 
     @Override
-    public List<String> getRandomQuestions(int count) {
+    public List<String> getRandomQuestions(int count, Long museumId) {
         if (count <= 0) {
             return new ArrayList<>();
         }
 
-        if (cachedQuestions == null) {
+        List<String> cachedMuseumQuestions = cachedQuestions.get(museumId);
+        if (cachedMuseumQuestions == null) {
+            QueryWrapper<RecommendQuestion> wrapper = new QueryWrapper<>();
+            wrapper.eq("museum_id", museumId);
+            wrapper.ne("answer_type", 0);
             Page<RecommendQuestion> page = new Page<>();
             page.setSize(100);
-            cachedQuestions = page(page)
+
+            cachedMuseumQuestions = page(page, wrapper)
                     .getRecords()
                     .stream()
                     .map(RecommendQuestion::getQuestionText)
                     .collect(Collectors.toList());
+            cachedQuestions.put(museumId, cachedMuseumQuestions);
         }
 
-        int size = cachedQuestions.size();
+        int size = cachedMuseumQuestions.size();
         if (count >= size) {
-            return cachedQuestions;
+            return cachedMuseumQuestions;
         }
 
         List<String> recommendQuestions = new ArrayList<>();
         HashSet<Integer> selectedQuestions = new HashSet<>();
         Random random = new Random();
-        int max = Math.min(count, cachedQuestions.size());
+        int max = Math.min(count, cachedMuseumQuestions.size());
         while (selectedQuestions.size() < max) {
-            int i = random.nextInt(cachedQuestions.size());
+            int i = random.nextInt(cachedMuseumQuestions.size());
             if (selectedQuestions.add(i)) {
-                recommendQuestions.add(cachedQuestions.get(i));
+                recommendQuestions.add(cachedMuseumQuestions.get(i));
             }
         }
 
@@ -99,13 +109,16 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
     public RecommendQuestion getRecommendQuestion(String question, Long museumId) {
         // table:primary_key:field
         // question:xxx:museumId:xx:answer
-        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(redisUtil.getKey("question", question, "museumId", museumId, "answer"));
+        RecommendQuestion cached = (RecommendQuestion) redisUtil.get(
+                redisUtil.getKey("question", question, "museumId", museumId, "answer"));
         if (cached == null) {
             cached = selectQuestionByText(question, museumId);
             if (cached == null) {
                 return null;
             }
-            redisUtil.set(redisUtil.getKey("question", cached.getQuestionText(),"museumId", museumId, "answer"), cached);
+            redisUtil.set(
+                    redisUtil.getKey("question", cached.getQuestionText(), "museumId", museumId, "answer"),
+                    cached, 1, TimeUnit.DAYS);
         }
 
         return cached;
@@ -125,11 +138,11 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
         return re;
     }
 
-    private List<String> preSelect(List<Long> idNear){
+    private List<String> preSelect(List<Long> idNear) {
         long[] near = findNearest(idNear);
-        List<String> recommendQuestions=new ArrayList<>();
+        List<String> recommendQuestions = new ArrayList<>();
         if (near[0] == 0 && near[1] == 0) {//only on exhibit in local hall
-            recommendQuestions = getRandomQuestions(3);
+            recommendQuestions = getRandomQuestions(3, ThreadContextHolder.getCurrentMuseumId());
         } else {
             for (int i = 0; i < 2; ++i) {
                 if (near[i] != 0) {
@@ -151,7 +164,7 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
         // TODO 由answer -> ID
         List<String> labels = exhibitTextService.getLabel(originalQuestion, museumId);
         Long exhibitId = null;
-        if(labels != null && !labels.isEmpty()){
+        if (labels != null && !labels.isEmpty()) {
             exhibitId = exhibitService.selectExhibitIdByLabel(labels.get(0));
         }
 
@@ -173,42 +186,42 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
 
         //do Recommendation
         switch (reMode) {
-            //can answer and recommend
-            case 1: {
-                List<Exhibit> nowHall ;
+        //can answer and recommend
+        case 1: {
+            List<Exhibit> nowHall;
 
-                List<Long> idNear = new ArrayList<>();
-                nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
-                for (Exhibit temp : nowHall) {
-                    long a = temp.getId();
-                    idNear.add(a);
-                }
-                recommendQuestions=preSelect(idNear);
-                break;
+            List<Long> idNear = new ArrayList<>();
+            nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
+            for (Exhibit temp : nowHall) {
+                long a = temp.getId();
+                idNear.add(a);
             }
-            //no exhibit and random recommend
-            case 2: {
-                return getRandomQuestions(3);
-            }
-            //can answer the question, so recommend another question about local question
-            case 3: {
-                List<Exhibit> nowHall ;
+            recommendQuestions = preSelect(idNear);
+            break;
+        }
+        //no exhibit and random recommend
+        case 2: {
+            return getRandomQuestions(3, ThreadContextHolder.getCurrentMuseumId());
+        }
+        //can answer the question, so recommend another question about local question
+        case 3: {
+            List<Exhibit> nowHall;
 
-                List<Long> idNear = new ArrayList<>();
-                nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
-                for (Exhibit temp : nowHall) {
-                    long a = temp.getId();
-                    idNear.add(a);
-                }
-
-                recommendQuestions=preSelect(idNear);
-                //查询当前展品的其他问题
-                RecommendQuestion question = getRandomQuestionWithSameExhibitId(exhibitId);
-                if(question != null){
-                    recommendQuestions.add(question.getQuestionText());
-                }
-                break;
+            List<Long> idNear = new ArrayList<>();
+            nowHall = exhibitService.selectPreviousAndNextExhibitById(exhibitId);
+            for (Exhibit temp : nowHall) {
+                long a = temp.getId();
+                idNear.add(a);
             }
+
+            recommendQuestions = preSelect(idNear);
+            //查询当前展品的其他问题
+            RecommendQuestion question = getRandomQuestionWithSameExhibitId(exhibitId);
+            if (question != null) {
+                recommendQuestions.add(question.getQuestionText());
+            }
+            break;
+        }
         }
         return recommendQuestions;
     }

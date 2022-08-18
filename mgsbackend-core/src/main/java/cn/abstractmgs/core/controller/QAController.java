@@ -59,7 +59,7 @@ public class QAController {
         } catch (Exception ex) {
             // TODO 当推荐算法抛出异常时，使用随机推荐代替
             log.error("推荐算法异常：", ex);
-            recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation);
+            recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation, ThreadContextHolder.getCurrentMuseumId());
         }
 
         ExhibitionHall recommendExhibitionHall = null;

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RecommendQuestionService extends IService<RecommendQuestion> {
 
-    List<String> getRandomQuestions(int count);
+    List<String> getRandomQuestions(int count, Long museumId);
 
     void updateQuestionFreqByText(String question, Long museumId);
 

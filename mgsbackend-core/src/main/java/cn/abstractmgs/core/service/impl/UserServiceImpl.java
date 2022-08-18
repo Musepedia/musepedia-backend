@@ -23,6 +23,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service("userService")
 @RequiredArgsConstructor
@@ -93,7 +94,9 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(exhibitionHallId, "exhibitionHallId must not be null");
         if (!exhibitionHallId.equals(getUserLocation(userId))) {
-            redisUtil.set(redisUtil.getKey("user", userId, "location"), exhibitionHallId);
+            redisUtil.set(
+                    redisUtil.getKey("user", userId, "location"),
+                    exhibitionHallId, 1, TimeUnit.DAYS);
             setUserRecommendStatus(userId, true);
         }
     }
@@ -125,7 +128,9 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     @Override
     public void setUserRecommendStatus(Long userId, boolean recommendStatus) {
-        redisUtil.set(redisUtil.getKey("user", userId, "recommendStatus"), recommendStatus);
+        redisUtil.set(
+                redisUtil.getKey("user", userId, "recommendStatus"),
+                recommendStatus, 1, TimeUnit.DAYS);
     }
 
     @Override

@@ -60,9 +60,9 @@ public class ExhibitController {
     @ApiOperation("对于每个展区的随机获取一件展品信息，用于问卷")
     @AnonymousAccess
     @GetMapping("/random")
-    public BaseResponse<List<SimpleExhibitDTO>> getRandomExhibitPreference() {
+    public BaseResponse<List<ExhibitDTO>> getRandomExhibitPreference() {
 
         List<Exhibit> exhibits = exhibitService.getRandomExhibits(4, ThreadContextHolder.getCurrentMuseumId());
-        return BaseResponse.ok("ok", simpleExhibitDTOMapper.toDto(exhibits));
+        return BaseResponse.ok("ok", exhibitDTOMapper.toDto(exhibits));
     }
 }

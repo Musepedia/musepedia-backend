@@ -32,11 +32,7 @@ public class ExhibitController {
 
     private final UserService userService;
 
-    private final ExhibitionHallRepository exhibitionHallRepository;
-
     private final ExhibitDTOMapper exhibitDTOMapper;
-
-    private final SimpleExhibitDTOMapper simpleExhibitDTOMapper;
 
     @ApiOperation("获取展品详细信息，用于问答")
     @AnonymousAccess

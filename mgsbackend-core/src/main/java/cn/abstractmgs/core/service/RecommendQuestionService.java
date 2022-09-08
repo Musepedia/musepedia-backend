@@ -26,4 +26,8 @@ public interface RecommendQuestionService extends IService<RecommendQuestion> {
     List<String> selectRecommendQuestions(String originalQuestion,String originalAnswer, Long museumId);
 
     List<RecommendQuestion> selectNonDislikeUserQuestion(Long userId, Long museumId);
+
+    List<RecommendQuestion> selectQuestionsWithFreqAndLabels(Long museumId);
+
+    List<RecommendQuestion> selectUserQuestionsWithLabels(Long museumId);
 }

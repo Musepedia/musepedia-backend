@@ -147,4 +147,9 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             throw new BadRequestException("手机号已被注册");
         }
     }
+
+    public List<User> ageWithLabels(Long museumId) {
+        return baseMapper.ageWithLabels(museumId);
+    }
+
 }

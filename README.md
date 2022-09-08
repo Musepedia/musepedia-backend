@@ -17,7 +17,6 @@
 - 需要首先运行maven -> mgsbackend(root) -> Lifecycle -> install 将common,model等模块安装到本地maven仓库，否则其他模块单独打包时会**找不到依赖**
 - common, model模块发生变动时，单独打包前最好先clean后重新install这些模块
 
-
 ## 开发说明
 
 - 使用IDEA第一次打开项目时会自动下载maven所有依赖

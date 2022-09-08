@@ -230,4 +230,15 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
     public List<RecommendQuestion> selectNonDislikeUserQuestion(Long userId, Long museumId) {
         return baseMapper.selectNonDislikeUserQuestion(userId, museumId);
     }
+
+
+    @Override
+    public List<RecommendQuestion> selectQuestionsWithFreqAndLabels(Long museumId) {
+        return baseMapper.selectQuestionsWithFreqAndLabels(museumId);
+    }
+
+    @Override
+    public List<RecommendQuestion> selectUserQuestionsWithLabels(Long museumId) {
+        return baseMapper.selectUserQuestionsWithLabels(museumId);
+    }
 }

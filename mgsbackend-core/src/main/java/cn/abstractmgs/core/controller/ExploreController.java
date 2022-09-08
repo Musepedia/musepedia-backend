@@ -3,7 +3,7 @@ package cn.abstractmgs.core.controller;
 import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.model.dto.ExhibitDTO;
 import cn.abstractmgs.core.model.dto.RecommendationDTO;
-import cn.abstractmgs.core.model.entity.RecommendQuestion;
+import cn.abstractmgs.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
 import cn.abstractmgs.core.service.mapstruct.ExhibitDTOMapper;

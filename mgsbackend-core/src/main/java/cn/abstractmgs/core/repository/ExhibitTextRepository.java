@@ -1,8 +1,7 @@
 package cn.abstractmgs.core.repository;
 
-import cn.abstractmgs.core.model.entity.ExhibitText;
+import cn.abstractmgs.model.entity.ExhibitText;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.cucumber.java.eo.Se;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

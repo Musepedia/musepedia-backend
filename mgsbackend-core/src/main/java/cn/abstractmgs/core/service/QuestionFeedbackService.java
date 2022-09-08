@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service;
 
-import cn.abstractmgs.core.model.entity.QuestionFeedback;
+import cn.abstractmgs.model.entity.QuestionFeedback;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 public interface QuestionFeedbackService extends IService<QuestionFeedback> {

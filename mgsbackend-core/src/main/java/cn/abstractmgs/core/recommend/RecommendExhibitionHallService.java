@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.recommend;
 
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;

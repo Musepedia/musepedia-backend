@@ -8,13 +8,11 @@ import cn.abstractmgs.core.model.param.PhoneLoginParam;
 import cn.abstractmgs.core.model.param.WxLoginParam;
 import cn.abstractmgs.core.service.UserService;
 import cn.abstractmgs.core.service.mapstruct.UserDTOMapper;
-import cn.abstractmgs.core.utils.EnvironmentUtil;
+import cn.abstractmgs.common.utils.EnvironmentUtil;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.api.Http;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service.impl;
 
-import cn.abstractmgs.core.model.entity.Museum;
+import cn.abstractmgs.model.entity.Museum;
 import cn.abstractmgs.core.service.MuseumFloorPlanService;
 import cn.abstractmgs.core.service.MuseumService;
 import com.fasterxml.jackson.core.JsonProcessingException;

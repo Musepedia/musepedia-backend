@@ -1,0 +1,11 @@
+logging:
+  level:
+    cn:
+      abstractmgs:
+        admin:
+          repository: debug
+          service: debug
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mgs_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong

@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.model.dto;
 
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

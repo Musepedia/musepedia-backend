@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service;
 
-import cn.abstractmgs.core.model.entity.Exhibit;
+import cn.abstractmgs.model.entity.Exhibit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 

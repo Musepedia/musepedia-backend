@@ -1,11 +1,10 @@
 package recommend;
 
 import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.service.ExhibitionHallService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

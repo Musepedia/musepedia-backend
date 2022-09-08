@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service.impl;
 
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.model.entity.UserPreference;
 import cn.abstractmgs.core.repository.UserPreferenceRepository;
 import cn.abstractmgs.core.service.UserPreferenceService;

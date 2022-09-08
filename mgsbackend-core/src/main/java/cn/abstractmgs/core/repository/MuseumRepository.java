@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.repository;
 
-import cn.abstractmgs.core.model.entity.Museum;
+import cn.abstractmgs.model.entity.Museum;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.ResultMap;

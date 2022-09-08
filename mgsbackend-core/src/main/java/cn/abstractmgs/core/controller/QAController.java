@@ -4,7 +4,7 @@ import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.MyServiceGrpc;
 import cn.abstractmgs.core.model.dto.AnswerDTO;
 import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 @Slf4j
 @RestController

@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service.impl;
 
-import cn.abstractmgs.core.model.entity.QuestionFeedback;
+import cn.abstractmgs.model.entity.QuestionFeedback;
 import cn.abstractmgs.core.repository.QuestionFeedbackRepository;
 import cn.abstractmgs.core.service.QuestionFeedbackService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

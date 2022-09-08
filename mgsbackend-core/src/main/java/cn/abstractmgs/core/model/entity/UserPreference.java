@@ -1,5 +1,6 @@
 package cn.abstractmgs.core.model.entity;
 
+import cn.abstractmgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @TableName(value = "tbl_user_preference", autoResultMap = true)
-public class UserPreference {
+public class UserPreference extends BaseEntity {
 
     @TableId(value = "user_id", type = IdType.AUTO)
     private Long id;

@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.recommend.impl;
 
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
 import cn.abstractmgs.core.recommend.model.AreaSorter;
 import cn.abstractmgs.core.recommend.model.ExhibitionArea;

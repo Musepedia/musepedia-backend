@@ -1,18 +1,15 @@
 package preference;
 
-import cn.abstractmgs.common.model.BaseResponse;
 import cn.abstractmgs.core.App;
 import cn.abstractmgs.core.controller.ExhibitController;
-import cn.abstractmgs.core.model.entity.Exhibit;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.Exhibit;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.model.entity.User;
 import cn.abstractmgs.core.repository.ExhibitRepository;
 import cn.abstractmgs.core.repository.ExhibitionHallRepository;
 import cn.abstractmgs.core.repository.UserRepository;
 import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.UserPreferenceService;
-import io.cucumber.java.an.E;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

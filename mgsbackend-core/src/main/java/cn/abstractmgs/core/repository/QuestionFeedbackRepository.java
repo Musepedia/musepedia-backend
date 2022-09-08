@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.repository;
 
-import cn.abstractmgs.core.model.entity.QuestionFeedback;
+import cn.abstractmgs.model.entity.QuestionFeedback;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 

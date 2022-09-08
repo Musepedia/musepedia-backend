@@ -3,7 +3,7 @@ package cn.abstractmgs.core.service.impl;
 import cn.abstractmgs.common.exception.InternalException;
 import cn.abstractmgs.core.model.support.SMSCode;
 import cn.abstractmgs.core.service.SMSService;
-import cn.abstractmgs.core.utils.RedisUtil;
+import cn.abstractmgs.common.utils.RedisUtil;
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
 import lombok.RequiredArgsConstructor;

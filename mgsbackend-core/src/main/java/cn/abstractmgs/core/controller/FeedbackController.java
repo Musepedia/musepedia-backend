@@ -1,7 +1,7 @@
 package cn.abstractmgs.core.controller;
 
 import cn.abstractmgs.common.model.BaseResponse;
-import cn.abstractmgs.core.model.entity.QuestionFeedback;
+import cn.abstractmgs.model.entity.QuestionFeedback;
 import cn.abstractmgs.core.service.QuestionFeedbackService;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import io.swagger.annotations.ApiOperation;

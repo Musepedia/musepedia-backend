@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service;
 
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.model.entity.UserPreference;
 import com.baomidou.mybatisplus.extension.service.IService;
 

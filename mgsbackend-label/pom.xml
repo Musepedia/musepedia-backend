@@ -21,6 +21,10 @@
             <groupId>cn.abstractmgs</groupId>
             <artifactId>mgsbackend-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.abstractmgs</groupId>
+            <artifactId>mgsbackend-model</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

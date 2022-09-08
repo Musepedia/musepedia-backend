@@ -4,7 +4,7 @@
 <mapper namespace="cn.abstractmgs.core.repository.RecommendQuestionRepository">
     <resultMap id="recommendQuestionMapper"
                extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
-               type="cn.abstractmgs.core.model.entity.RecommendQuestion">
+               type="cn.abstractmgs.model.entity.RecommendQuestion">
         <id property="id" column="question_id"/>
         <result property="questionText" column="question_text"/>
     </resultMap>

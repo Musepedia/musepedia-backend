@@ -1,8 +1,7 @@
 package cn.abstractmgs.core.controller;
 
 import cn.abstractmgs.common.model.BaseResponse;
-import cn.abstractmgs.core.model.dto.ExhibitionHallDTO;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
+import cn.abstractmgs.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.service.UserPreferenceService;
 import cn.abstractmgs.core.service.mapstruct.ExhibitionHallDTOMapper;
 import cn.abstractmgs.core.utils.SecurityUtil;

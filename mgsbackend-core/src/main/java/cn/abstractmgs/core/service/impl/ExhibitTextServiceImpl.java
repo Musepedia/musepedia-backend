@@ -1,6 +1,6 @@
 package cn.abstractmgs.core.service.impl;
 
-import cn.abstractmgs.core.model.entity.ExhibitText;
+import cn.abstractmgs.model.entity.ExhibitText;
 import cn.abstractmgs.core.repository.ExhibitTextRepository;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.utils.NLPUtil;

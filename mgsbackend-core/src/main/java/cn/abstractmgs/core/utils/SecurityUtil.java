@@ -1,7 +1,5 @@
 package cn.abstractmgs.core.utils;
 
-import cn.abstractmgs.core.model.entity.User;
-
 import static cn.abstractmgs.core.utils.ThreadContextHolder.currentUserId;
 
 public class SecurityUtil {

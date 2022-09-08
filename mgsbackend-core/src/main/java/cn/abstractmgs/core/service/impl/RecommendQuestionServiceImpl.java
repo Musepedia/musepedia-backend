@@ -1,12 +1,12 @@
 package cn.abstractmgs.core.service.impl;
 
-import cn.abstractmgs.core.model.entity.Exhibit;
-import cn.abstractmgs.core.model.entity.RecommendQuestion;
+import cn.abstractmgs.model.entity.Exhibit;
+import cn.abstractmgs.model.entity.RecommendQuestion;
 import cn.abstractmgs.core.repository.RecommendQuestionRepository;
 import cn.abstractmgs.core.service.ExhibitService;
 import cn.abstractmgs.core.service.ExhibitTextService;
 import cn.abstractmgs.core.service.RecommendQuestionService;
-import cn.abstractmgs.core.utils.RedisUtil;
+import cn.abstractmgs.common.utils.RedisUtil;
 import cn.abstractmgs.core.utils.ThreadContextHolder;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

@@ -2,7 +2,6 @@ package question;
 
 import cn.abstractmgs.core.App;
 import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
 import cn.abstractmgs.core.service.*;
 import cn.abstractmgs.core.utils.SecurityUtil;
 import org.junit.Test;

@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 16002
 
 logging:
   level:
@@ -8,7 +8,7 @@ logging:
         core:
           repository: debug
   file:
-    path: log
+    path: logs
     max-history: 30
 
 
@@ -43,13 +43,9 @@ spring:
   profiles:
     active: default
 
-mgs:
-  weixin:
-    appid: wxfe9a49b9f26c289d
-    secret: 60232f676e1215a24a8e357d2b1c76dc
-  sms:
-    access-key-id: LTAI5tHFCH7RfPHqSFHJYnZ5
-    access-key-secret: dj1wFZG0xRT57XM7fPHM064ECCrHXd
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-enums-package: cn.abstractmgs.core.model.entity.enums
 
 grpc:
   client:
@@ -57,6 +53,10 @@ grpc:
       address: static://localhost:5555
       negotiationType=: PLAINTEXT
 
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/*.xml
-  type-enums-package: cn.abstractmgs.core.model.entity.enums
+mgs:
+  weixin:
+    appid: wxfe9a49b9f26c289d
+    secret: 60232f676e1215a24a8e357d2b1c76dc
+  sms:
+    access-key-id: LTAI5tHFCH7RfPHqSFHJYnZ5
+    access-key-secret: dj1wFZG0xRT57XM7fPHM064ECCrHXd

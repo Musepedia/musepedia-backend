@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.abstractmgs.core.repository.ExhibitRepository">
+<mapper namespace="com.mimiter.mgs.core.repository.ExhibitRepository">
     <resultMap id="exhibitMapper"
-               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
-               type="cn.abstractmgs.model.entity.Exhibit">
+               extends="com.mimiter.mgs.BaseEntityMapper.baseEntityMapper"
+               type="com.mimiter.mgs.model.entity.Exhibit">
         <id property="id" column="exhibit_id"/>
         <result property="figureUrl" column="exhibit_figure_url"/>
         <result property="label" column="exhibit_label"/>
@@ -14,7 +14,7 @@
         <result property="hot" column="exhibit_is_hot"/>
         <association property="exhibitionHall"
                      column="exhibition_hall_id"
-                     javaType="cn.abstractmgs.model.entity.ExhibitionHall">
+                     javaType="com.mimiter.mgs.model.entity.ExhibitionHall">
             <id property="id" column="exhibition_hall_id"/>
             <result property="name" column="exhibition_hall_name"/>
             <result property="description" column="exhibition_hall_description"/>

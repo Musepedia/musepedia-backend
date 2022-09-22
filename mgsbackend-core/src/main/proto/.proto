@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "cn.abstractmgs.core";
+option java_package = "com.mimiter.mgs.core";
 option java_outer_classname = "HelloWorldProto";
 
 // The greeting service definition.

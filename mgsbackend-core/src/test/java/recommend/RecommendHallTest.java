@@ -1,9 +1,9 @@
 package recommend;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.model.entity.ExhibitionHall;
-import cn.abstractmgs.core.recommend.RecommendExhibitionHallService;
-import cn.abstractmgs.core.service.ExhibitionHallService;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.model.entity.ExhibitionHall;
+import com.mimiter.mgs.core.recommend.RecommendExhibitionHallService;
+import com.mimiter.mgs.core.service.ExhibitionHallService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;

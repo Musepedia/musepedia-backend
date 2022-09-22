@@ -1,9 +1,9 @@
 package question;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
-import cn.abstractmgs.core.service.*;
-import cn.abstractmgs.core.utils.SecurityUtil;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
+import com.mimiter.mgs.core.service.*;
+import com.mimiter.mgs.core.utils.SecurityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

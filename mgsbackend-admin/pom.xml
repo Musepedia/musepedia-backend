@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mgsbackend</artifactId>
-        <groupId>cn.abstractmgs</groupId>
+        <groupId>com.mimiter.mgs</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -19,7 +19,7 @@
     <dependencies>
 <!--       引入model之后不用引入common  -->
         <dependency>
-            <groupId>cn.abstractmgs</groupId>
+            <groupId>com.mimiter.mgs</groupId>
             <artifactId>mgsbackend-model</artifactId>
         </dependency>
         <!-- api docs -->
@@ -109,7 +109,7 @@
                     <archive>
                         <manifest>
                             <!-- 指定 Spring Boot 启动类，实际测试中必须 -->
-                            <mainClass>cn.abstractmgs.admin.App</mainClass>
+                            <mainClass>com.mimiter.mgs.admin.App</mainClass>
                             <!-- 将所有第三方 jar 添加到项目 jar 的 MANIFEST.MF 文件中，这样运行 jar 时依赖包才能被加载 -->
                             <addClasspath>true</addClasspath>
                             <!-- 指定复制第三方 jar 的目标目录为 target/lib/-->

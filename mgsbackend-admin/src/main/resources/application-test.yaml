@@ -1,10 +1,11 @@
 logging:
   level:
-    cn:
-      abstractmgs:
-        admin:
-          repository: debug
-          service: debug
+    com:
+      mimiter:
+        mgs:
+          admin:
+            repository: debug
+            service: debug
 
 spring:
   datasource:

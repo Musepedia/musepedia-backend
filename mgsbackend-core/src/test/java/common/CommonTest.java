@@ -1,7 +1,7 @@
 package common;
 
-import cn.abstractmgs.common.utils.RedisUtil;
-import cn.abstractmgs.core.App;
+import com.mimiter.mgs.common.utils.RedisUtil;
+import com.mimiter.mgs.core.App;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,6 @@
 package example;
 
-import cn.abstractmgs.core.service.RecommendQuestionService;
+import com.mimiter.mgs.core.service.RecommendQuestionService;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

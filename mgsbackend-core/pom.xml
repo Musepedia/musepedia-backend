@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mgsbackend</artifactId>
-        <groupId>cn.abstractmgs</groupId>
+        <groupId>com.mimiter.mgs</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 <!--    <packaging>jar</packaging>-->
@@ -21,10 +21,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.abstractmgs</groupId>
+            <groupId>com.mimiter.mgs</groupId>
             <artifactId>mgsbackend-model</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <!-- api docs -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -159,7 +167,7 @@
                     <archive>
                         <manifest>
                             <!-- 指定 Spring Boot 启动类，实际测试中必须 -->
-                            <mainClass>cn.abstractmgs.core.App</mainClass>
+                            <mainClass>com.mimiter.mgs.core.App</mainClass>
                             <!-- 将所有第三方 jar 添加到项目 jar 的 MANIFEST.MF 文件中，这样运行 jar 时依赖包才能被加载 -->
                             <addClasspath>true</addClasspath>
                             <!-- 指定复制第三方 jar 的目标目录为 target/lib/-->

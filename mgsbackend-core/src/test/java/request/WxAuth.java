@@ -1,7 +1,7 @@
 package request;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.model.param.WxLoginParam;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.model.param.WxLoginParam;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

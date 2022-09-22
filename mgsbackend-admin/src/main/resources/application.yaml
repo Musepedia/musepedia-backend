@@ -3,10 +3,11 @@ server:
 
 logging:
   level:
-    cn:
-      abstractmgs:
-        core:
-          repository: debug
+    com:
+      mimiter:
+        mgs:
+          core:
+            repository: debug
   file:
     path: logs
     max-history: 30
@@ -41,4 +42,4 @@ spring:
     active: default
 
 mybatis-plus:
-  type-enums-package: cn.abstractmgs.admin.model.entity.enums
+  type-enums-package: com.mimiter.mgs.admin.model.entity.enums

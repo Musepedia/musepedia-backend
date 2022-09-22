@@ -1,7 +1,7 @@
 package feedback;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.service.QuestionFeedbackService;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.service.QuestionFeedbackService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.abstractmgs.label.repository.QuestionRepository">
+<mapper namespace="com.mimiter.mgs.label.repository.QuestionRepository">
     <resultMap id="questionMapper"
-               extends="cn.abstractmgs.BaseEntityMapper.baseEntityMapper"
-               type="cn.abstractmgs.label.model.entity.Question">
+               extends="com.mimiter.mgs.BaseEntityMapper.baseEntityMapper"
+               type="com.mimiter.mgs.label.model.entity.Question">
         <id property="id" column="question_id"/>
         <result property="text" column="text"/>
         <association property="paragraph" column="paragraph_id" fetchType="lazy"
-                     select="cn.abstractmgs.label.repository.ParagraphRepository.selectById"/>
+                     select="com.mimiter.mgs.label.repository.ParagraphRepository.selectById"/>
         <collection property="answers" column="answer_id" fetchType="lazy"
-                    ofType="cn.abstractmgs.label.model.entity.Answer"
+                    ofType="com.mimiter.mgs.label.model.entity.Answer"
                     javaType="ArrayList"
-                    select="cn.abstractmgs.label.repository.AnswerRepository.selectByQuestionId"/>
+                    select="com.mimiter.mgs.label.repository.AnswerRepository.selectByQuestionId"/>
     </resultMap>
 </mapper>

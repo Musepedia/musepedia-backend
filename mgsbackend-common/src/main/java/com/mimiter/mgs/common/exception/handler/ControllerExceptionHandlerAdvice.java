@@ -53,8 +53,7 @@ public class ControllerExceptionHandlerAdvice {
     @ExceptionHandler(InternalException.class)
     public BaseResponse<?> internalExceptionHandler(InternalException exception){
         log.error("InternalException: ", exception);
-        String msg = exception.getMessage();
-        return new BaseResponse<>(500, msg, null);
+        return new BaseResponse<>(500, exception.getMessage(), null);
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -68,4 +67,12 @@ public class ControllerExceptionHandlerAdvice {
     public BaseResponse<?> internalExceptionHandler(UnauthenticatedException exception){
         return new BaseResponse<>(401, exception.getMessage(), null);
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public BaseResponse<?> unhandledExceptionHandler(Exception exception){
+        log.error("InternalException: ", exception);
+        return new BaseResponse<>(500, exception.getMessage(), null);
+    }
+
 }

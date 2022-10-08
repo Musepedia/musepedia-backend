@@ -39,14 +39,6 @@ public class RecommendQuestionTest {
     }
 
     @Test
-    public void testInsert() {
-        service.insertQuestion("测试问题2", 1, "测试答案2", 100L, null, 1L);
-
-        // answer_type = 0表示该答案暂时无法回答
-        service.insertQuestion("测试问题3", 0, null, 100L, null, 1L);
-    }
-
-    @Test
     public void testExhibitionHall() {
         System.out.println(exhibitService.selectExhibitionHallIdByExhibitId(344L));
     }
@@ -64,7 +56,6 @@ public class RecommendQuestionTest {
         String question = "狼和狗有什么关系";
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, 1L);
         String answer = awt.getAnswer();
-        int status = qaService.getStatus(answer);
 
         System.out.println(answer);
     }

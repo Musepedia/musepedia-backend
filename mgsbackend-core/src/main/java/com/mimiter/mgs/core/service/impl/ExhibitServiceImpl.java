@@ -54,18 +54,13 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
-    public List<Exhibit> getExhibitsInSameExhibitionHall(Long id) {
-        return baseMapper.getExhibitsInSameExhibitionHall(id);
-    }
-
-    @Override
     public Long selectExhibitionHallIdByExhibitId(Long id) {
         return baseMapper.selectExhibitionHallIdByExhibitId(id);
     }
 
     @Override
-    public Long selectExhibitIdByLabel(String label) {
-        return baseMapper.selectExhibitIdByLabel(label);
+    public Long selectExhibitIdByLabelAndMuseumId(String label, Long museumId) {
+        return baseMapper.selectExhibitIdByLabelAndMuseumId(label, museumId);
     }
 
     @Override

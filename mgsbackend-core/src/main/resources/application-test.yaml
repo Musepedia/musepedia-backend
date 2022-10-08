@@ -9,9 +9,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://106.14.42.183:3306/mgs_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+    url: jdbc:mysql://81.68.137.146:3306/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
     username: root
-    password: AbstractMGS0926
+    password: k2tNrsL8vet
 
 grpc:
   client:

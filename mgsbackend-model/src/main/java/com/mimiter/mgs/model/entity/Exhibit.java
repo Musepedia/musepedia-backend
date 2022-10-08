@@ -20,6 +20,9 @@ public class Exhibit extends BaseEntity {
     @TableField(value = "exhibition_hall_id")
     private Long hallId;
 
+    @TableField(value = "museum_id")
+    private Long museumId;
+
     private ExhibitionHall exhibitionHall;
 
     @TableField(value = "exhibit_figure_url")

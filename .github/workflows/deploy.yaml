@@ -30,4 +30,4 @@ jobs:
           REMOTE_HOST: "${{ secrets.SERVER_HOST }}"
           REMOTE_USER: "${{ secrets.SERVER_USER }}"
           TARGET: "/root/mgs/backend-core"
-          EXCLUDE: "/classes/, /generated-sources/"
+          EXCLUDE: "/test-classes/, /classes/, /generated-sources/"

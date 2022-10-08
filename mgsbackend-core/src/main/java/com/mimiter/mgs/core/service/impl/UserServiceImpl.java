@@ -50,7 +50,7 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         Code2SessionResponse resp = wxUtil.code2Session(param);
         Assert.isTrue(resp != null && StringUtils.hasText(resp.getOpenid()), "获取openid失败");
 
-        String openid = resp.getOpenid();
+        String openid = resp.getUnionid();
         User wxUser = getByOpenId(openid);
         if(wxUser == null){
             // 未绑定微信，验证短信并绑定微信

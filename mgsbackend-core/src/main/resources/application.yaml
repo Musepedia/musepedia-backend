@@ -67,8 +67,8 @@ grpc:
 
 mgs:
   weixin:
-    appid: wxfe9a49b9f26c289d
-    secret: 60232f676e1215a24a8e357d2b1c76dc
+    appid: wxf2920630b976e003
+    secret: 2c8a3a5109c68d9f1a76bc906ee869da
   sms:
     access-key-id: LTAI5tHFCH7RfPHqSFHJYnZ5
     access-key-secret: dj1wFZG0xRT57XM7fPHM064ECCrHXd

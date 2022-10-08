@@ -13,5 +13,7 @@ public class AnswerWithTextIdDTO {
 
     private String answer;
 
+    private int answerType;
+
     private Long textId;
 }

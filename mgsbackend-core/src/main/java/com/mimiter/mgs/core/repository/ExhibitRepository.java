@@ -45,8 +45,8 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
     @Select("select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id}")
     Long selectExhibitionHallIdByExhibitId(@Param("id") Long id);
 
-    @Select("select exhibit_id from tbl_exhibit where exhibit_label = #{label}")
-    Long selectExhibitIdByLabel(@Param("label") String label);
+    @Select("select exhibit_id from tbl_exhibit where exhibit_label = #{label} and museum_id = #{museumId}")
+    Long selectExhibitIdByLabelAndMuseumId(@Param("label") String label, @Param("museumId") Long museumId);
 
     @Select("select " +
             "(select exhibition_hall_id from tbl_exhibit where exhibit_id = #{id1}) " +

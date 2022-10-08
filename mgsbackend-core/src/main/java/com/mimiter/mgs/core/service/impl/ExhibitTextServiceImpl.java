@@ -7,6 +7,7 @@ import com.mimiter.mgs.core.utils.NLPUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("exhibitTextService")
@@ -46,7 +47,7 @@ public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, E
         List<ExhibitText> exhibitTexts = selectByLabel(labels, museumId);
 
         return exhibitTexts.size() >= MAX_TEXTS_COUNT
-                ? null
+                ? new ArrayList<>()
                 : exhibitTexts;
     }
 }

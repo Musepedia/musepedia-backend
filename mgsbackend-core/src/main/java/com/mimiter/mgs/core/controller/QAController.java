@@ -46,15 +46,13 @@ public class QAController {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
         Long userId = SecurityUtil.getCurrentUserId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
-        String answer = awt.getAnswer();
-        int status = qaService.getStatus(answer);
 
         int countOfRecommendation = 2;
         List<String> recommendQuestions;
         try {
-            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, answer, museumId);
+            recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, museumId);
         } catch (Exception ex) {
-            // TODO 当推荐算法抛出异常时，使用随机推荐代替
+            // 当推荐算法抛出异常时，使用随机推荐代替
             log.error("推荐算法异常：", ex);
             recommendQuestions = recommendQuestionService.getRandomQuestions(countOfRecommendation, ThreadContextHolder.getCurrentMuseumId());
         }
@@ -69,6 +67,8 @@ public class QAController {
             // 直到用户位置发生变化为止，不再向该用户推荐展区
             userService.setUserRecommendStatus(userId, false);
         }
-        return BaseResponse.ok(new AnswerDTO(status, awt.getQuestionId(), answer, awt.getTextId(), recommendQuestions, recommendExhibitionHall));
+        return BaseResponse.ok(new AnswerDTO(
+                awt.getAnswerType(), awt.getQuestionId(), awt.getAnswer(), awt.getTextId(),
+                recommendQuestions, recommendExhibitionHall));
     }
 }

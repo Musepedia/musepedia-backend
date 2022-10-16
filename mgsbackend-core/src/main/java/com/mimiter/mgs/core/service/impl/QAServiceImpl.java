@@ -35,6 +35,8 @@ public class QAServiceImpl implements QAService {
 
     private final QuestionFeedbackService feedbackService;
 
+    private final NLPUtil nlpUtil;
+
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
 
@@ -89,8 +91,6 @@ public class QAServiceImpl implements QAService {
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
-        NLPUtil nlpUtil = new NLPUtil(question);
-
         List<String> label = exhibitTextService.getLabel(
                 exhibitTextService.selectAllLabelsWithAliases(museumId), question);
 

@@ -1,3 +1,14 @@
+env:
+  mysql:
+    host: localhost:3306
+    username: root
+    password: root
+  redis:
+    host: localhost
+    port: 6379
+  grpc:
+    host: 106.14.42.183:5555
+
 server:
   port: 16002
 
@@ -17,9 +28,9 @@ spring:
   application:
     name: mgsbackend-core
   datasource:
-    url: jdbc:mysql://localhost:3306/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
-    username: root
-    password: root
+    url: jdbc:mysql://${env.mysql.host}/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+    username: ${env.mysql.username}
+    password: ${env.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -38,8 +49,9 @@ spring:
       repositories:
         enabled: false
   redis:
-    host: localhost
-    port: 6379
+    host: ${env.redis.host}
+    port: ${env.redis.port}
+    password: ${env.redis.password}
     database: 0
   cache:
     type: redis
@@ -62,7 +74,7 @@ mybatis-plus:
 grpc:
   client:
     myService:
-      address: static://localhost:5555
+      address: static://${env.grpc.host}
       negotiationType=: PLAINTEXT
 
 mgs:

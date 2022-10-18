@@ -24,7 +24,8 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
     @ResultMap("mybatis-plus_RecommendQuestion")
     @Select("select * " +
             "from tbl_recommend_question " +
-            "where question_text = #{text} and museum_id = #{museumId} ")
+            "where question_text = #{text} and museum_id = #{museumId} " +
+            "limit 1")
     RecommendQuestion selectQuestionByText(@Param("text") String question, @Param("museumId") Long museumId);
 
     @Select("select question_text from tbl_recommend_question " +

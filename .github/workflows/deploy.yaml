@@ -25,9 +25,7 @@ jobs:
       - uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: "${{ secrets.SERVER_SSH_KEY }}"
-          ARGS: "-avzr --delete"
-          SOURCE: "mgsbackend-core/target/"
           REMOTE_HOST: "${{ secrets.SERVER_HOST }}"
           REMOTE_USER: "${{ secrets.SERVER_USER }}"
-          TARGET: "/root/mgs/backend-core"
-          EXCLUDE: "/test-classes/, /classes/, /generated-sources/"
+          TARGET: "/root/mgs/"
+          EXCLUDE: "/src/, /test-classes/, /classes/, /generated-sources/, /mgsbackend-label/"

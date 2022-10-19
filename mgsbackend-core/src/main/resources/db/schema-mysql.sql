@@ -10,6 +10,8 @@ CREATE TABLE tbl_museum
     museum_logo_url VARCHAR(1023) DEFAULT '',
     museum_is_service BOOL NOT NULL DEFAULT FALSE,
     museum_floor_plan_filepath VARCHAR(255) NOT NULL,
+    longitude DECIMAL(11,8) DEFAULT NULL,
+    latitude DECIMAL(10,8) DEFAULT NULL,
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`museum_id`) USING BTREE

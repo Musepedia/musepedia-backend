@@ -34,4 +34,10 @@ public class Museum extends BaseEntity {
 
     @TableField(value = "museum_floor_plan_filepath")
     private String floorPlanFilepath;
+
+    @TableField(value = "longitude")
+    private Double longitude;
+
+    @TableField(value = "latitude")
+    private Double latitude;
 }

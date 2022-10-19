@@ -26,7 +26,7 @@ public class MuseumController {
     @AnonymousAccess
     @GetMapping
     public BaseResponse<List<MuseumDTO>> listMuseum() {
-        return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.selectAllMuseums()));
+        return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.list()));
     }
 
     @AnonymousAccess

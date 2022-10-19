@@ -14,4 +14,8 @@ public class MuseumDTO {
     private String logoUrl;
 
     private Boolean service;
+
+    private Double longitude;
+
+    private Double latitude;
 }

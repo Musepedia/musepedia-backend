@@ -3,6 +3,10 @@ version: "3"
 networks:
   mgs:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16
 
 volumes:
   mysql-conf:
@@ -118,6 +122,7 @@ services:
     container_name: filebeat
     restart: always
     user: root
+    command: filebeat -e --strict.perms=false
     depends_on:
       - elasticsearch
       - kibana

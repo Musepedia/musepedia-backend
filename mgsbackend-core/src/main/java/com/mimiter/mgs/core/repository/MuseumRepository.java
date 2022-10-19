@@ -12,13 +12,13 @@ import java.util.List;
 public interface MuseumRepository extends BaseMapper<Museum> {
 
     @ResultMap("mybatis-plus_Museum")
-    @Select("select museum_id, museum_name, museum_description, museum_logo_url, museum_is_service " +
-            "from tbl_museum")
+    @Select("select m.* " +
+            "from tbl_museum m")
     List<Museum> selectAllMuseums();
 
     @ResultMap("mybatis-plus_Museum")
-    @Select("select museum_id, museum_name, museum_description, museum_logo_url, museum_is_service " +
-            "from tbl_museum " +
+    @Select("select m.* " +
+            "from tbl_museum m " +
             "where museum_is_service = true")
     List<Museum> selectAllServicedMuseums();
 

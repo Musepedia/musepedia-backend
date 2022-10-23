@@ -51,13 +51,13 @@ services:
       - mysql-logs:/var/log/mysql
       - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: k2tNrsL8vet
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: mgs
   redis:
     image: redis:5
     container_name: redis 
-    command: redis-server --requirepass k2tNrsL8vet --appendonly yes
+    command: redis-server --requirepass ${REDIS_PASSWORD}  --appendonly yes
     restart: always
     networks:
       - mgs
@@ -75,7 +75,7 @@ services:
         echo "Waiting for Elasticsearch availability";
         until curl -s elasticsearch:9200 | grep -q "missing authentication credentials"; do sleep 10; done;
         echo "Setting kibana_system password";
-        until curl -s -X POST -u "elastic:r2tiq2FqAd5" -H "Content-Type: application/json" elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"r2tiq2FqAd5\"}" | grep -q "^{}"; do sleep 10; done; 
+        until curl -s -X POST -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done; 
         echo "Done.";
       '
 # ' 
@@ -97,7 +97,7 @@ services:
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xmx1024m"
-      ELASTIC_PASSWORD: r2tiq2FqAd5
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       xpack.security.http.ssl.enabled: "false"
       xpack.security.transport.ssl.enabled: "false"
   kibana:
@@ -116,7 +116,8 @@ services:
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
       ELASTICSEARCH_USERNAME: kibana_system
-      ELASTICSEARCH_PASSWORD: r2tiq2FqAd5
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASSWORD}
+      SERVER_BASEPATH: /kibana
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.4.3
     container_name: filebeat
@@ -139,7 +140,7 @@ services:
       setup.kibana.host: kibana:5601
       ELASTICSEARCH_HOSTS: "['elasticsearch:9200']"
       ELASTICSEARCH_USERNAME: elastic
-      ELASTICSEARCH_PASSWORD: r2tiq2FqAd5
+      ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
 
   mgsbackend-core:
     build:
@@ -165,7 +166,8 @@ services:
     environment:
       ENV_MYSQL_HOST: mysql:3306
       ENV_MYSQL_USER: root
-      ENV_MYSQL_PASSWORD: k2tNrsL8vet
+      ENV_MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       ENV_REDIS_HOST: redis
       ENV_REDIS_PORT: 6379
-      ENV_REDIS_PASSWORD: k2tNrsL8vet
+      ENV_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SPRING_PROFILES_ACTIVE: test

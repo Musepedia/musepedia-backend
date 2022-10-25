@@ -1,7 +1,7 @@
 package com.mimiter.mgs.core.config;
 
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.teaopenapi.models.Config;
+import com.tencentcloudapi.common.Credential;
+import com.tencentcloudapi.sms.v20210111.SmsClient;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,21 +12,20 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "mgs.sms")
 public class SMSConfig {
 
-    private String accessKeyId;
+    private String secretId;
 
-    private String accessKeySecret;
+    private String secretKey;
+
+    private String sdkAppId;
+
+    private String signName;
+
+    private String templateId;
 
     @Bean
-    public Client createClient(){
-        Config config = new Config()
-                .setAccessKeyId(accessKeyId)
-                .setAccessKeySecret(accessKeySecret)
-                .setEndpoint("dysmsapi.aliyuncs.com");
-        try {
-            return new Client(config);
-        } catch (Exception e){
-            return null;
-        }
+    public SmsClient createClient(){
+        Credential cred = new Credential(secretId, secretKey);
+        return new SmsClient(cred, "ap-nanjing");
     }
 
 }

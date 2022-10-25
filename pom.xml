@@ -135,14 +135,10 @@
                 <version>5.3.4</version>
             </dependency>
             <dependency>
-                <groupId>com.aliyun</groupId>
-                <artifactId>tea-openapi</artifactId>
-                <version>0.2.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.aliyun</groupId>
-                <artifactId>dysmsapi20170525</artifactId>
-                <version>2.0.12</version>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-sms</artifactId>
+                <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
+                <version>3.1.611</version>
             </dependency>
             <!-- utils -->
             <!-- test -->

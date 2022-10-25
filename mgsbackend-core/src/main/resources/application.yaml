@@ -82,5 +82,8 @@ mgs:
     appid: wxf2920630b976e003
     secret: 2c8a3a5109c68d9f1a76bc906ee869da
   sms:
-    access-key-id: LTAI5tHFCH7RfPHqSFHJYnZ5
-    access-key-secret: dj1wFZG0xRT57XM7fPHM064ECCrHXd
+    secretId: AKIDxmdMtFRhuxulT8yjItFRQCoMhogPxOgn
+    secretKey: 0sBIG5g6KK5f2MVZSCoPtHfu0ynSxMdj
+    sdkAppId: 1400746566
+    signName: 米弥特
+    templateId: 1580939

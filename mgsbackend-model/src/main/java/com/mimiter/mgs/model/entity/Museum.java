@@ -29,6 +29,12 @@ public class Museum extends BaseEntity {
     @TableField(value = "museum_logo_url")
     private String logoUrl;
 
+    @TableField(value = "museum_image_url")
+    private String imageUrl;
+
+    @TableField(value = "address")
+    private String address;
+
     @TableField(value = "museum_is_service")
     private Boolean service;
 

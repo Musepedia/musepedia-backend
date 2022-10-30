@@ -13,6 +13,10 @@ public class MuseumDTO {
 
     private String logoUrl;
 
+    private String imageUrl;
+
+    private String address;
+
     private Boolean service;
 
     private Double longitude;

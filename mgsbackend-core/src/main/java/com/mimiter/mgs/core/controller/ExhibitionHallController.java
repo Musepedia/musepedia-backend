@@ -25,6 +25,6 @@ public class ExhibitionHallController {
     @AnonymousAccess
     @GetMapping
     public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall(){
-        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.selectAll(ThreadContextHolder.getCurrentMuseumId())));
+        return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(exhibitionHallRepository.listByMuseumId(ThreadContextHolder.getCurrentMuseumId())));
     }
 }

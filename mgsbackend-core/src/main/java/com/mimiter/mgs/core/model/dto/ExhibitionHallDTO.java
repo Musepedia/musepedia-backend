@@ -10,4 +10,6 @@ public class ExhibitionHallDTO {
     private String name;
 
     private String description;
+
+    private String imageUrl;
 }

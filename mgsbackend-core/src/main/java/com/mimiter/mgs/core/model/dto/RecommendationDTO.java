@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 提问时后端推荐的问题
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

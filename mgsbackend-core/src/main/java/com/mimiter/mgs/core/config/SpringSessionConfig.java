@@ -10,7 +10,7 @@ import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 public class SpringSessionConfig {
 
     @Bean
-    public HeaderHttpSessionIdResolver headerHttpSessionIdResolver(){
+    public HeaderHttpSessionIdResolver headerHttpSessionIdResolver() {
         return new HeaderHttpSessionIdResolver("x-auth-token");
     }
 }

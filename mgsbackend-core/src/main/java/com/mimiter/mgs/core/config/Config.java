@@ -9,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.annotation.Resource;
 import java.io.File;
 
+/**
+ * 后端整体配置，包括拦截器和静态资源配置。
+ */
 @Configuration
 public class Config implements WebMvcConfigurer {
 

@@ -52,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
         String openid = resp.getUnionid();
         User wxUser = getByOpenId(openid);
-        if(wxUser == null){
+        if (wxUser == null) {
             // 未绑定微信，验证短信并绑定微信
             wxUser = loginPhone(param);
             UserWxOpenid openid1 = new UserWxOpenid();
@@ -66,19 +66,19 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     @Override
     public User loginPhone(PhoneLoginParam param) {
-        if(!EnvironmentUtil.isTestEnv()){
+        if (!EnvironmentUtil.isTestEnv()) {
             // 测试环境跳过验证短信
             Assert.isTrue(smsService.verifyCode(param.getPhoneNumber(), param.getVc(), param.getSms()), "短信验证码错误");
         }
 
         User user = getBaseMapper().getByPhoneNumber(param.getPhoneNumber());
-        if(user == null){
+        if (user == null) {
             // 手机号未注册 通过手机号注册
             user = new User();
             user.setPhoneNumber(param.getPhoneNumber());
-            user.setNickname("umt_"+param.getPhoneNumber());
+            user.setNickname("umt_" + param.getPhoneNumber());
             user.setAvatarUrl("");
-            if(param instanceof WxLoginParam){
+            if (param instanceof WxLoginParam) {
                 WxLoginParam wxParam = (WxLoginParam) param;
                 user.setNickname(wxParam.getNickname());
                 user.setAvatarUrl(wxParam.getAvatarUrl());
@@ -110,15 +110,15 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     @Override
     public boolean isUserAtEndOfExhibitionHall(Long userId) {
         Long userLocation = getUserLocation(userId);
-        if(userLocation == null){
+        if (userLocation == null) {
             return false;
         }
-        double percentage = 0.1;
+        final double percentage = 0.1;
         List<Long> exhibits = exhibitRepository.selectExhibitIdsInSameExhibitionHall(userLocation);
 
-        int countOfExhibits = (int)Math.ceil(percentage * exhibits.size());
+        int countOfExhibits = (int) Math.ceil(percentage * exhibits.size());
 
-        for (int i=exhibits.size()-1; countOfExhibits >= 0; --i, --countOfExhibits) {
+        for (int i = exhibits.size() - 1; countOfExhibits >= 0; --i, --countOfExhibits) {
             if (userLocation.equals(exhibits.get(i))) {
                 return true;
             }
@@ -139,11 +139,11 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         return (Boolean) status;
     }
 
-    private void checkDuplicatePhone(String phone){
+    private void checkDuplicatePhone(String phone) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("phone_number", phone);
         Long l = getBaseMapper().selectCount(wrapper);
-        if(l != null && l > 0){
+        if (l != null && l > 0) {
             throw new BadRequestException("手机号已被注册");
         }
     }

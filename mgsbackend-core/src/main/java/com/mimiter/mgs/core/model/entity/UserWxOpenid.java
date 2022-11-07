@@ -10,6 +10,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * <p>用户微信unionId到用户的一对一映射</p>
+ * <p>注：openId字段实际为unionId</p>
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

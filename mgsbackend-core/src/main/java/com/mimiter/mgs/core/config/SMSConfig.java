@@ -23,7 +23,7 @@ public class SMSConfig {
     private String templateId;
 
     @Bean
-    public SmsClient createClient(){
+    public SmsClient createClient() {
         Credential cred = new Credential(secretId, secretKey);
         return new SmsClient(cred, "ap-nanjing");
     }

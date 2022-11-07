@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 用于获取每个请求携带的当前博物馆ID并存入ThreadLocal
+ */
 @Component
 public class MuseumHeaderFilter extends OncePerRequestFilter {
 
@@ -19,7 +22,7 @@ public class MuseumHeaderFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String museum = httpServletRequest.getHeader("x-museum");
         try {
-            if(museum != null){
+            if (museum != null) {
                 ThreadContextHolder.setCurrentMuseumId(Long.valueOf(museum));
             }
         } catch (NumberFormatException ignore) {

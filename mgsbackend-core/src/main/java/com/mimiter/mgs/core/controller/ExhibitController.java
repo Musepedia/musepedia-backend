@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
+/**
+ * 展品controller
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/exhibit")
@@ -32,6 +34,11 @@ public class ExhibitController {
 
     private final ExhibitDTOMapper exhibitDTOMapper;
 
+    private static final int LIMIT_PER_EXHIBITION_HALL = 4;
+
+    /**
+     * 获取展品详细信息，用于问答
+     */
     @ApiOperation("获取展品详细信息，用于问答")
     @AnonymousAccess
     @GetMapping("/info")
@@ -40,7 +47,6 @@ public class ExhibitController {
         Exhibit exhibit = exhibitService.getExhibitInfoById(id);
 
         // 根据问题更新用户所在位置
-        System.out.println(exhibit.getHallId());
         userService.setUserLocation(SecurityUtil.getCurrentUserId(), exhibit.getHallId());
 
         ExhibitDTO dto = exhibitDTOMapper.toDto(exhibit);
@@ -55,7 +61,8 @@ public class ExhibitController {
     @GetMapping("/random")
     public BaseResponse<List<ExhibitDTO>> getRandomExhibitPreference() {
 
-        List<Exhibit> exhibits = exhibitService.getRandomExhibits(4, ThreadContextHolder.getCurrentMuseumId());
+        List<Exhibit> exhibits = exhibitService.getRandomExhibits(
+                LIMIT_PER_EXHIBITION_HALL, ThreadContextHolder.getCurrentMuseumId());
         return BaseResponse.ok("ok", exhibitDTOMapper.toDto(exhibits));
     }
 }

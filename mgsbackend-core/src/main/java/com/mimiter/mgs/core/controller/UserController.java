@@ -35,7 +35,7 @@ public class UserController {
     @ApiOperation(value = "获取用户个人信息", notes = "未登录返回null")
     @AnonymousAccess
     @GetMapping("/info")
-    public BaseResponse<UserDTO> getUserInfo(){
+    public BaseResponse<UserDTO> getUserInfo() {
         Long userId = SecurityUtil.getCurrentUserId();
         UserDTO dto = userId == null ? null : userDTOMapper.toDto(userService.getById(userId));
         return BaseResponse.ok("ok", dto);
@@ -44,9 +44,9 @@ public class UserController {
     @ApiOperation("通过手机号登录")
     @AnonymousAccess
     @PostMapping("/login-phone")
-    public BaseResponse<UserDTO> loginPhone(PhoneLoginParam param, HttpServletRequest request){
+    public BaseResponse<UserDTO> loginPhone(PhoneLoginParam param, HttpServletRequest request) {
         User user = userService.loginPhone(param);
-        if(user != null){
+        if (user != null) {
             request.getSession().setAttribute("userId", user.getId());
         }
         return BaseResponse.ok("登录成功", userDTOMapper.toDto(user));
@@ -55,9 +55,9 @@ public class UserController {
     @ApiOperation("通过微信登录")
     @AnonymousAccess
     @PostMapping("/login-wx")
-    public BaseResponse<UserDTO> login(@Validated @RequestBody WxLoginParam param, HttpServletRequest request){
+    public BaseResponse<UserDTO> login(@Validated @RequestBody WxLoginParam param, HttpServletRequest request) {
         User user = userService.loginWx(param);
-        if(user != null){
+        if (user != null) {
             request.getSession().setAttribute("userId", user.getId());
         }
         return BaseResponse.ok("登录成功", userDTOMapper.toDto(user));
@@ -65,7 +65,7 @@ public class UserController {
 
     @ApiOperation("更新用户个人信息")
     @PutMapping("/profile")
-    public BaseResponse<?> updateProfile(@RequestBody UserDTO dto){
+    public BaseResponse<?> updateProfile(@RequestBody UserDTO dto) {
         // 只更新性别和年龄信息
         User user = new User();
         user.setId(SecurityUtil.getCurrentUserId());
@@ -76,16 +76,17 @@ public class UserController {
         return BaseResponse.ok();
     }
 
+    @ApiOperation("测试环境下登录")
     @AnonymousAccess
     @PostMapping("/login-any")
-    public BaseResponse<?> loginAny(HttpServletRequest request){
-        if(!EnvironmentUtil.isTestEnv()){
+    public BaseResponse<?> loginAny(HttpServletRequest request) {
+        if (!EnvironmentUtil.isTestEnv()) {
             throw new UnsupportedOperationException();
         }
         Page<User> page = new Page<>();
         page.setSize(1);
         User u = userService.page(page).getRecords().get(0);
-        request.getSession().setAttribute("userId", 10000L);
+        request.getSession().setAttribute("userId", u.getId());
         return BaseResponse.ok("ok", u);
     }
 

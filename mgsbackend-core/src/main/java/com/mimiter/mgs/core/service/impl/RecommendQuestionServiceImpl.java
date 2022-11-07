@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service("recommendQuestionService")
-public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionRepository, RecommendQuestion> implements RecommendQuestionService {
+public class RecommendQuestionServiceImpl
+        extends ServiceImpl<RecommendQuestionRepository, RecommendQuestion>
+        implements RecommendQuestionService {
 
     /**
      * MuseumId到问题的映射
@@ -44,9 +46,11 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
         if (cachedMuseumQuestions == null) {
             QueryWrapper<RecommendQuestion> wrapper = new QueryWrapper<>();
             wrapper.eq("museum_id", museumId);
-            wrapper.ne("answer_type", 0);
+            wrapper.ne("answer_type", QAServiceImpl.TYPE_DEFAULT_ANSWER);
             Page<RecommendQuestion> page = new Page<>();
-            page.setSize(100);
+            // TODO 修改缓存策略
+            final int cacheSize = 200;
+            page.setSize(cacheSize);
 
             cachedMuseumQuestions = page(page, wrapper)
                     .getRecords()
@@ -61,6 +65,7 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
             return cachedMuseumQuestions;
         }
 
+        // 随机选择不重复的问题
         List<String> recommendQuestions = new ArrayList<>();
         HashSet<Integer> selectedQuestions = new HashSet<>();
         Random random = new Random();
@@ -119,6 +124,7 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
         return cached;
     }
 
+    private static final int RANDOM_QUESTION_COUNT = 3;
 
     private long[] findNearest(List<Long> allId) {
         long[] re = {0, 0};
@@ -130,15 +136,15 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
 
     private List<String> preSelect(List<Long> idNear) {
         long[] near = findNearest(idNear);
-        if (near[0] == 0 && near[1] == 0) {//only on exhibit in local hall
-            return getRandomQuestions(3, ThreadContextHolder.getCurrentMuseumId());
+        if (near[0] == 0 && near[1] == 0) { // only on exhibit in local hall
+            return getRandomQuestions(RANDOM_QUESTION_COUNT, ThreadContextHolder.getCurrentMuseumId());
         }
 
         List<String> recommendQuestions = new ArrayList<>();
         for (long l : near) {
             if (l != 0) {
                 RecommendQuestion question = getRandomQuestionWithSameExhibitId(l);
-                if(question != null){
+                if (question != null) {
                     recommendQuestions.add(question.getQuestionText());
                 }
             }
@@ -150,7 +156,7 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
 
     private static final int NO_EXHIBIT = 2;
 
-    private static final int CANT_ANSWER_BUT_EXHIBIT_EXISTS = 3;
+    private static final int CAN_NOT_ANSWER_BUT_EXHIBIT_EXISTS = 3;
 
     @Override
     public List<String> selectRecommendQuestions(String originalQuestion, Long museumId) {
@@ -169,12 +175,15 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
 
         //judge answerable
         int reMode;
-        if (answerType != QAServiceImpl.TYPE_DEFAULT_ANSWER) { //can answer
+        if (answerType != QAServiceImpl.TYPE_DEFAULT_ANSWER) {
+            //can answer
             reMode = CAN_ANSWER;
-        } else if (exhibitId == null) { //random, can't locate
+        } else if (exhibitId == null) {
+            //random, can't locate
             reMode = NO_EXHIBIT;
-        } else {//can't answer, can locate
-            reMode = CANT_ANSWER_BUT_EXHIBIT_EXISTS;
+        } else {
+            // can't answer, can locate
+            reMode = CAN_NOT_ANSWER_BUT_EXHIBIT_EXISTS;
         }
 
         //do Recommendation
@@ -187,10 +196,10 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
         }
         //no exhibit and random recommend
         case NO_EXHIBIT: {
-            return getRandomQuestions(3, ThreadContextHolder.getCurrentMuseumId());
+            return getRandomQuestions(RANDOM_QUESTION_COUNT, ThreadContextHolder.getCurrentMuseumId());
         }
         //can answer the question, so recommend another question about local question
-        case CANT_ANSWER_BUT_EXHIBIT_EXISTS: {
+        case CAN_NOT_ANSWER_BUT_EXHIBIT_EXISTS: {
             List<Long> idNear = exhibitService.selectPreviousAndNextExhibitById(exhibitId)
                     .stream().map(Exhibit::getId).collect(Collectors.toList());
             recommendQuestions = preSelect(idNear);
@@ -201,6 +210,7 @@ public class RecommendQuestionServiceImpl extends ServiceImpl<RecommendQuestionR
             }
             break;
         }
+        default:
         }
         return recommendQuestions;
     }

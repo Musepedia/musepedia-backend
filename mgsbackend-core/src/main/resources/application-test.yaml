@@ -12,9 +12,6 @@ env:
 
 logging:
   level:
-    com:
-      mimiter:
-        mgs:
-          core:
-            repository: debug
-            service: debug
+    com.mimiter.mgs.core:
+      repository: debug
+      service: debug

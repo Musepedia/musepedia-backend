@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
+/**
+ * 博物馆服务
+ */
 public interface MuseumService extends IService<Museum> {
 
     List<Museum> selectAllMuseums();

@@ -14,11 +14,8 @@ server:
 
 logging:
   level:
-    com:
-      mimiter:
-        mgs:
-          core:
-            repository: debug
+    com.mimiter.mgs.core:
+      repository: info
   file:
     path: logs
     max-history: 30

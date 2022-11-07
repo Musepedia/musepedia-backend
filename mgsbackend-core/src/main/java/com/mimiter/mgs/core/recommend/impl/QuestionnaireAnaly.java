@@ -7,8 +7,13 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@SuppressWarnings("MissingJavadocType")
 @Data
 public class QuestionnaireAnaly implements AddOperation {
+
+    public HashMap<String, Integer> dic; //展区在问卷结果中出现的频数表
+
+    @SuppressWarnings("MissingJavadocMethod")
     public QuestionnaireAnaly(String... areaNames) {
         dic = new HashMap<>();
         for (String name : areaNames) {
@@ -21,9 +26,10 @@ public class QuestionnaireAnaly implements AddOperation {
         }
     }
 
-    public HashMap<String, Integer> dic; //展区在问卷结果中出现的频数表
-
-    /** 基于问卷的列表操作：问卷中出现的展区若列表中没有则加入，优先级增加2*频数 */
+    /**
+     * 基于问卷的列表操作：问卷中出现的展区若列表中没有则加入，优先级增加2*频数
+     */
+    @SuppressWarnings("MagicNumber")
     @Override
     public void listOperation(ArrayList<EAPriority> areaList) {
         for (String name : dic.keySet()) {

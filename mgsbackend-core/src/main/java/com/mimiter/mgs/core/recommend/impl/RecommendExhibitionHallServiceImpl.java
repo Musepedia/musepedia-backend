@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 推荐展厅服务实现类。
+ */
 @RequiredArgsConstructor
 @Service("recommendExhibitionHallService")
 public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHallService {
@@ -25,7 +28,12 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
 
     private final UserService userService;
 
-    public ExhibitionHall getRecommendExhibitionHall(Long museumId, List<ExhibitionHall> userPreference, ExhibitionHall pos) throws JsonProcessingException {
+    /**
+     * {@inheritDoc}
+     */
+    public ExhibitionHall getRecommendExhibitionHall(Long museumId,
+                                                     List<ExhibitionHall> userPreference,
+                                                     ExhibitionHall pos) throws JsonProcessingException {
         List<ExhibitionHall> exhibitionHalls = exhibitionHallService.list(
                 new LambdaQueryWrapper<>(ExhibitionHall.class)
                         .eq(ExhibitionHall::getMuseumId, museumId));
@@ -40,12 +48,12 @@ public class RecommendExhibitionHallServiceImpl implements RecommendExhibitionHa
             map.put(name, i);
             sorter.nameMap.put(name, new ExhibitionArea(name, 0, neighbors.get(name))); //存入展区名与展区的映射表
         }
-        String[] QtnrRes = new String[len2];
+        String[] qtnrRes = new String[len2];
         for (int i = 0; i < len2; i++) {
-            QtnrRes[i] = userPreference.get(i).getId().toString();
+            qtnrRes[i] = userPreference.get(i).getId().toString();
         }
         String curName = pos.getId().toString();
-        QuestionnaireAnaly qa = new QuestionnaireAnaly(QtnrRes); //问卷分析
+        QuestionnaireAnaly qa = new QuestionnaireAnaly(qtnrRes); //问卷分析
         qa.listOperation(sorter.areaList); //根据问卷结果操作列表
         OperationByPosition obp = new OperationByPosition(sorter.nameMap.get(curName)); //当前位置分析
         obp.listOperation(sorter.areaList); //根据位置操作列表

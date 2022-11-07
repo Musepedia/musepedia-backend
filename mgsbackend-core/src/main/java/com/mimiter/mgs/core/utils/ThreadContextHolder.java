@@ -1,21 +1,24 @@
 package com.mimiter.mgs.core.utils;
 
+/**
+ * 保存当前线程的用户信息，博物馆信息
+ */
 public class ThreadContextHolder {
 
-    final static ThreadLocal<Long> currentUserId = new ThreadLocal<>();
+    protected static final ThreadLocal<Long> CURRENT_USER_ID = new ThreadLocal<>();
 
-    final static ThreadLocal<Long> currentMuseumId = new ThreadLocal<>();
+    protected static final ThreadLocal<Long> CURRENT_MUSEUM_ID = new ThreadLocal<>();
 
-    public static void setCurrentMuseumId(Long id){
-        currentMuseumId.set(id);
+    public static void setCurrentMuseumId(Long id) {
+        CURRENT_MUSEUM_ID.set(id);
     }
 
-    public static Long getCurrentMuseumId(){
-        return currentMuseumId.get();
+    public static Long getCurrentMuseumId() {
+        return CURRENT_MUSEUM_ID.get();
     }
 
-    public static void removeAll(){
-        currentUserId.remove();
-        currentMuseumId.remove();
+    public static void removeAll() {
+        CURRENT_USER_ID.remove();
+        CURRENT_MUSEUM_ID.remove();
     }
 }

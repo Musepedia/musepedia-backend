@@ -7,6 +7,7 @@ import com.mimiter.mgs.core.service.RecommendQuestionService;
 import com.mimiter.mgs.core.service.mapstruct.RecommendationDTOMapper;
 import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.core.utils.ThreadContextHolder;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,9 @@ public class RecommendQuestionController {
 
     private final RecommendationDTOMapper recommendationDTOMapper;
 
+    @ApiOperation("获取用户当前博物馆的历史提问，不包括负面反馈的问题")
     @GetMapping("/mine")
-    public BaseResponse<List<RecommendationDTO>> getRecommendQuestion() {
+    public BaseResponse<List<RecommendationDTO>> getHistoryQuestionsInCurrentMuseum() {
         List<RecommendQuestion> recommendations = recommendQuestionService.selectNonDislikeUserQuestion(
                 SecurityUtil.getCurrentUserId(), ThreadContextHolder.getCurrentMuseumId());
 

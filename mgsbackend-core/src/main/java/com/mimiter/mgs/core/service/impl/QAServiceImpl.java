@@ -42,7 +42,8 @@ public class QAServiceImpl implements QAService {
 
     public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[\\[A-Z\\]]");
 
-    public static final Pattern URL_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(.*)");
+    public static final Pattern URL_PATTERN = Pattern.compile(
+            "https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(.*)");
 
     private static final String DEFAULT_ANSWER_TEXT = "暂时无法回答这个问题";
 

@@ -2,6 +2,9 @@ package com.mimiter.mgs.core.model.dto;
 
 import lombok.Data;
 
+/**
+ * 前端展示的博物馆信息
+ */
 @Data
 public class MuseumDTO {
 

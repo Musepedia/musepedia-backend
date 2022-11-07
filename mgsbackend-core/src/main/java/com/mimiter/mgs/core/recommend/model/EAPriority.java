@@ -3,11 +3,14 @@ package com.mimiter.mgs.core.recommend.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 用于排序的区域。
+ */
 @Data
 @EqualsAndHashCode(of = "areaName")
 public class EAPriority implements Comparable<EAPriority> {
 
-    public EAPriority(String name){
+    public EAPriority(String name) {
         this(name, 0);
     }
 

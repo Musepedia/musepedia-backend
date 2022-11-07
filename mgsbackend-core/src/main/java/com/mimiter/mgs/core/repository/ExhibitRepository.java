@@ -9,12 +9,13 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-
 @Mapper
 public interface ExhibitRepository extends BaseMapper<Exhibit> {
 
     @ResultMap("mybatis-plus_Exhibit")
-    @Select("select exhibition_hall_id, exhibit_label, exhibit_description, exhibit_url from tbl_exhibit where exhibit_id = #{id}")
+    @Select("select exhibition_hall_id, exhibit_label, exhibit_description, exhibit_url " +
+            "from tbl_exhibit " +
+            "where exhibit_id = #{id}")
     Exhibit selectInfoById(@Param("id") Long id);
 
     @Select("select substring_index(group_concat(t1.exhibit_id order by rand()), ',', #{limit}) " +
@@ -77,7 +78,10 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
     @ResultMap("mybatis-plus_Exhibit")
     @Select("select t2.exhibit_id, t2.exhibit_label, t2.exhibit_figure_url, t2.exhibit_description " +
             "from tbl_recommend_question t1, tbl_exhibit t2 " +
-            "where t1.exhibit_id = t2.exhibit_id and t1.answer_type != 0 and t1.exhibit_id is not null and t1.museum_id = #{museumId} " +
+            "where t1.exhibit_id = t2.exhibit_id " +
+            "   and t1.answer_type != 0 " +
+            "   and t1.exhibit_id is not null " +
+            "   and t1.museum_id = #{museumId} " +
             "group by t1.exhibit_id " +
             "order by sum(t1.question_freq) desc " +
             "limit #{count}")

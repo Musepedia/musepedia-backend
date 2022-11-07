@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
 @Service("userPreferenceService")
-public class UserPreferenceServiceImpl extends ServiceImpl<UserPreferenceRepository, UserPreference> implements UserPreferenceService {
+public class UserPreferenceServiceImpl
+        extends ServiceImpl<UserPreferenceRepository, UserPreference>
+        implements UserPreferenceService {
 
     @Override
     public void deleteByUserId(Long userId, Long museumId) {
@@ -33,11 +34,10 @@ public class UserPreferenceServiceImpl extends ServiceImpl<UserPreferenceReposit
     @Override
     public boolean updateUserPreference(Long userId, List<Long> hallIds, Long museumId) {
         deleteByUserId(userId, museumId);
-        if(hallIds.isEmpty()){
-            return true;
-        } else {
+        if (!hallIds.isEmpty()) {
             int insertedRows = createByUserId(userId, hallIds);
             return insertedRows == hallIds.size();
         }
+        return true;
     }
 }

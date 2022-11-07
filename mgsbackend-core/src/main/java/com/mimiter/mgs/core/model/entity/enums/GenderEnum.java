@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 用户性别枚举
+ */
 @Getter
 @AllArgsConstructor
 @JsonDeserialize(using = GenderEnumConverter.class)

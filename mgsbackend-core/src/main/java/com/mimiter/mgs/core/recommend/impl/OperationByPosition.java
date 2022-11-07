@@ -6,6 +6,7 @@ import com.mimiter.mgs.core.recommend.model.ExhibitionArea;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("MissingJavadocType")
 public class OperationByPosition implements AddOperation {
 
     public OperationByPosition(ExhibitionArea ea) {
@@ -18,6 +19,7 @@ public class OperationByPosition implements AddOperation {
      * 游客当前所在展区不放入展区推荐列表，如果在列表中则删除
      * 将当前所在展区的邻近展区放入列表，优先级增加3*(len-i)
      */
+    @SuppressWarnings("MagicNumber")
     @Override
     public void listOperation(ArrayList<EAPriority> areaList) {
         EAPriority eap = new EAPriority(position.name);

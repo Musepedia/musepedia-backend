@@ -22,7 +22,8 @@ public class QuestionFeedbackServiceImpl
 
     @Override
     public void updateFeedback(QuestionFeedback feedback) {
-        getBaseMapper().updateUserFeedbackOnQuestion(feedback.getUserId(), feedback.getQuestionId(), feedback.getFeedback());
+        getBaseMapper().updateUserFeedbackOnQuestion(
+                feedback.getUserId(), feedback.getQuestionId(), feedback.getFeedback());
     }
 
     @Override

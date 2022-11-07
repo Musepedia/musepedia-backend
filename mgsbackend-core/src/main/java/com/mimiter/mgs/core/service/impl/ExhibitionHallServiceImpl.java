@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * {@inheritDoc}
+ */
 @Service("exhibitionHallService")
-public class ExhibitionHallServiceImpl extends ServiceImpl<ExhibitionHallRepository, ExhibitionHall> implements ExhibitionHallService {
+public class ExhibitionHallServiceImpl
+        extends ServiceImpl<ExhibitionHallRepository, ExhibitionHall> implements ExhibitionHallService {
 
     @Override
     public List<Integer> selectExhibitionHallIds(Long id) {

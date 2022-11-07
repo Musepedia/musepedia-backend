@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
+/**
+ * 推荐问题服务
+ */
 public interface RecommendQuestionService extends IService<RecommendQuestion> {
 
     List<String> getRandomQuestions(int count, Long museumId);

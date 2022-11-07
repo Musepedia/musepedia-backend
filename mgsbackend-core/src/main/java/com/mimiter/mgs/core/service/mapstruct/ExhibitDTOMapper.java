@@ -6,6 +6,9 @@ import com.mimiter.mgs.model.entity.Exhibit;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+/**
+ * 展品DTO映射
+ */
 @Mapper(componentModel = "spring",
         uses = {ExhibitionHallDTOMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)

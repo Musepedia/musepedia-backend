@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
+/**
+ * 展品文本服务
+ */
 public interface ExhibitTextService extends IService<ExhibitText> {
 
     int MAX_TEXTS_COUNT = 15;  // 允许至多抽取的text数量

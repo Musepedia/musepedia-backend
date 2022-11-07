@@ -11,19 +11,24 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 接口访问权限拦截器，用于权限校验。
+ */
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(handler instanceof HandlerMethod){
-            HandlerMethod method = (HandlerMethod)handler;
-            if(method.hasMethodAnnotation(AnonymousAccess.class)){
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws Exception {
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod method = (HandlerMethod) handler;
+            if (method.hasMethodAnnotation(AnonymousAccess.class)) {
                 return true;
             }
             Long userId = SecurityUtil.getCurrentUserId();
-            if(userId == null){
+            if (userId == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
             }
@@ -32,7 +37,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler, Exception ex) throws Exception {
         ThreadContextHolder.removeAll();
     }
 }

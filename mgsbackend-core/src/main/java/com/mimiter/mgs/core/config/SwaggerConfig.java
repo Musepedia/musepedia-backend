@@ -19,9 +19,10 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.mimiter.mgs.core.controller"))
-//                .paths(PathSelectors.any())// 选择所有的API,如果你想只为部分API生成文档，可以配置这里
+                // .paths(PathSelectors.any()) // 选择所有的API,如果你想只为部分API生成文档，可以配置这里
                 .build();
     }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("api docs")

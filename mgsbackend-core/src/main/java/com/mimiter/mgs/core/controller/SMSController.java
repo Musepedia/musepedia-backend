@@ -25,14 +25,14 @@ public class SMSController {
 
     private final RedisUtil redisUtil;
 
-    @ApiOperation("获取短信验证码")
+    @ApiOperation("获取短信验证码，返回后端随机生成的codeId")
     @GetMapping
     @AnonymousAccess
-    public BaseResponse<?> sendSMS(String phone, HttpServletRequest request){
+    public BaseResponse<?> sendSMS(String phone, HttpServletRequest request) {
         String ip = RequestUtil.getIp(request);
         String key = "limit:sms:" + ip;
 
-        if(redisUtil.get(key) != null){
+        if (redisUtil.get(key) != null) {
             throw new BadRequestException("请求过于频繁，请稍后再试");
         }
         SMSCode code = smsService.sendSMSCode(phone);

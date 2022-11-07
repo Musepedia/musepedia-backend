@@ -2,10 +2,14 @@ package com.mimiter.mgs.core.service;
 
 import com.mimiter.mgs.core.model.support.SMSCode;
 
+/**
+ * 短信服务
+ */
 public interface SMSService {
 
     /**
      * 发送短信验证码
+     *
      * @param phone not null
      * @return 验证码对应id
      */

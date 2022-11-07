@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
+/**
+ * 用户服务
+ */
 public interface UserService extends IService<User> {
 
     User getByOpenId(String openid);

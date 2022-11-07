@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * <p>枚举字典控制器，用于获取枚举字典。</p>
+ */
 @Slf4j
 @RequestMapping("/api/edict")
 @RestController

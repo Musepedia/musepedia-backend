@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NLPConfig {
 
-    public final String DICT_KEY = "custom";
+    public final String dictKey = "custom";
 
     @Bean
     public void initCustomDictionary() {
-        Forest forest = DicLibrary.get(DICT_KEY);
+        Forest forest = DicLibrary.get(dictKey);
         if (forest == null) {
-            DicLibrary.put(DICT_KEY, DICT_KEY, new Forest());
+            DicLibrary.put(dictKey, dictKey, new Forest());
         }
     }
 }

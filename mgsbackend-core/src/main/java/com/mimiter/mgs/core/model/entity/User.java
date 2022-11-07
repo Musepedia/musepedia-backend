@@ -12,6 +12,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 用户实体类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-
+/**
+ * 展品Service
+ */
 public interface ExhibitService extends IService<Exhibit> {
 
     Exhibit getExhibitInfoById(Long id);

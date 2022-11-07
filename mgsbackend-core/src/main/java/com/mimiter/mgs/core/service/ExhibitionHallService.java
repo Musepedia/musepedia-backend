@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 展区Service
+ */
 public interface ExhibitionHallService extends IService<ExhibitionHall> {
 
     List<Integer> selectExhibitionHallIds(@Param("id") Long id);

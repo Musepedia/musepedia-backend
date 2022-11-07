@@ -13,10 +13,12 @@ import java.util.List;
 
 @Service("exhibitTextService")
 @RequiredArgsConstructor
-public class ExhibitTextServiceImpl extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements ExhibitTextService {
+public class ExhibitTextServiceImpl
+        extends ServiceImpl<ExhibitTextRepository, ExhibitText> implements ExhibitTextService {
 
     private final NLPUtil nlpUtil;
 
+    @Override
     public List<String> getLabel(List<String> labels, String question) {
         nlpUtil.updateCustomDictionary(labels);
         List<String> res = nlpUtil.getTextSegmentation(question);

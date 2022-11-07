@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 用户偏好展区，一个用户可以选择多个偏好展区
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

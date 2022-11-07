@@ -28,7 +28,8 @@ public class SMSServiceImpl implements SMSService {
 
     private static final String CODE_PREFIX = "SMSCODE:";
 
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$");
+    private static final Pattern PHONE_PATTERN = Pattern.compile(
+            "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$");
 
     private static final int CODE_EXPIRE_MINUTES = 10;
 
@@ -82,31 +83,35 @@ public class SMSServiceImpl implements SMSService {
     }
 
     @Override
-    public boolean verifyCode(String phone, String codeId, String code){
-        if(phone == null || codeId == null || code == null){
+    public boolean verifyCode(String phone, String codeId, String code) {
+        if (phone == null || codeId == null || code == null) {
             return false;
         }
         String correctCode = (String) redisUtil.get(getRedisCodeKey(phone, codeId));
         boolean res = code.equals(correctCode);
-        if(res) {
+        if (res) {
             invalidateCode(phone, codeId);
         }
         return res;
     }
 
     @Override
-    public void invalidateCode(String phone, String codeId){
+    public void invalidateCode(String phone, String codeId) {
         redisUtil.del(getRedisCodeKey(phone, codeId));
     }
 
-    private SMSCode generateAndSetCode(String phone){
-        String verCode = StringUtils.leftPad(new Random().nextInt(1000000)+"", 6, "0");
+    private static final int CODE_LENGTH = 6;
+
+    private static final int CODE_RANGE = 1000000;
+
+    private SMSCode generateAndSetCode(String phone) {
+        String verCode = StringUtils.leftPad(new Random().nextInt(CODE_RANGE) + "", CODE_LENGTH, "0");
         String codeId = UUID.randomUUID().toString().replaceAll("-", "");
         redisUtil.set(getRedisCodeKey(phone, codeId), verCode, CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         return new SMSCode(verCode, codeId);
     }
 
-    private String getRedisCodeKey(String phone, String codeId){
+    private String getRedisCodeKey(String phone, String codeId) {
         return CODE_PREFIX + phone + ":" + codeId;
     }
 }

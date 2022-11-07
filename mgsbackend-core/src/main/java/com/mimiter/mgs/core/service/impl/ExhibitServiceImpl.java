@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * {@inheritDoc}
+ */
 @Service("exhibitService")
 public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> implements ExhibitService {
 
@@ -36,7 +38,7 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
 
     @Override
     public List<Exhibit> selectRandomExhibits(List<Integer> ids) {
-        if(ids == null || ids.isEmpty()){
+        if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
         return baseMapper.selectRandomExhibits(ids);

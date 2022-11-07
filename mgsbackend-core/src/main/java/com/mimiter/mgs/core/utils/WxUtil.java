@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 
+/**
+ * 微信小程序相关工具类
+ */
 @Component
 @RequiredArgsConstructor
 public class WxUtil {
@@ -18,17 +21,16 @@ public class WxUtil {
 
     private final WeixinMpConfig config;
 
-    public Code2SessionResponse code2Session(WxLoginParam param){
+    /**
+     * 通过小程序前端获取的jscode向微信请求Session相关信息
+     */
+    public Code2SessionResponse code2Session(WxLoginParam param) {
         Assert.notNull(param, "WxLoginParam不能为空");
-        String url = "https://api.weixin.qq.com/sns/jscode2session?" +
-                "appid=" + config.getAppid() +
-                "&secret=" + config.getSecret() +
-                "&js_code=" + param.getCode() +
-                "&grant_type=authorization_code";
-        return restTemplate.getForObject(url , Code2SessionResponse.class, new HashMap<>());
-//        String iv = param.getIv();
-//        String encryptedData = param.getEncryptedData();
-//        String phoneNumber = CipherUtil.decryptPhoneNumber(resp.getSession_key(), encryptedData, iv);
-
+        String url = "https://api.weixin.qq.com/sns/jscode2session?"
+                + "appid=" + config.getAppid()
+                + "&secret=" + config.getSecret()
+                + "&js_code=" + param.getCode()
+                + "&grant_type=authorization_code";
+        return restTemplate.getForObject(url, Code2SessionResponse.class, new HashMap<>());
     }
 }

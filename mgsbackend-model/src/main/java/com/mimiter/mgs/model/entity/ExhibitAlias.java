@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 展品别名，一个展品可以通过多个展品别名定位到一个展品
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

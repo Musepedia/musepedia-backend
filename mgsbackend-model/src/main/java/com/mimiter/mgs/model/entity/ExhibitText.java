@@ -1,6 +1,5 @@
 package com.mimiter.mgs.model.entity;
 
-
 import com.mimiter.mgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 展品文本信息，一个展品对应多个展品文本信息
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

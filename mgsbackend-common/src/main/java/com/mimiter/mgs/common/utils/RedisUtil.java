@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author /
+ * Redis 工具类。
  */
 @Slf4j
 @Component

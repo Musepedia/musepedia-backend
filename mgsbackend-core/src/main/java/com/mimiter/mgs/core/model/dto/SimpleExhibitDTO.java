@@ -2,6 +2,9 @@ package com.mimiter.mgs.core.model.dto;
 
 import lombok.Data;
 
+/**
+ * 展品DTO。
+ */
 @Data
 public class SimpleExhibitDTO {
 

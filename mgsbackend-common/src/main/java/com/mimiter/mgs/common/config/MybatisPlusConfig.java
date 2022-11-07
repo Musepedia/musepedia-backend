@@ -6,9 +6,17 @@ import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MybatisPlus配置。
+ */
 @Configuration
 public class MybatisPlusConfig {
 
+    /**
+     * 为mybatis增加枚举处理器。
+     *
+     * @return /
+     */
     @Bean
     public MybatisPlusPropertiesCustomizer mybatisPlusPropertiesCustomizer() {
         return properties -> {

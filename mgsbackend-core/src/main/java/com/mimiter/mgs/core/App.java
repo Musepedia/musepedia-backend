@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 核心后端模块
+ * 核心后端模块。
  */
 @RestController
 @RequestMapping("/api")
@@ -24,7 +24,7 @@ public class App {
 
     @AnonymousAccess
     @GetMapping
-    public String hello(){
+    public String hello() {
         return "Hello MGS";
     }
 }

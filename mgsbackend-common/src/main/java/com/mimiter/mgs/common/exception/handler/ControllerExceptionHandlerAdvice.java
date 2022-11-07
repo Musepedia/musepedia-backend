@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
+/**
+ * 全局异常处理，在service, controller层抛出的未处理的异常都会由这个类处理。
+ */
 @Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandlerAdvice {
@@ -25,13 +28,14 @@ public class ControllerExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public BaseResponse<?> validExceptionHandler(MethodArgumentNotValidException exception) {
-        return BaseResponse.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return BaseResponse.error(
+                exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ResourceNotFoundException.class})
-    public BaseResponse<?> resourceNotFoundExceptionHandler(Exception exception){
-        return new BaseResponse<>(404, exception.getMessage(), null);
+    public BaseResponse<?> resourceNotFoundExceptionHandler(Exception exception) {
+        return BaseResponse.error(HttpStatus.NOT_FOUND.value(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -39,40 +43,34 @@ public class ControllerExceptionHandlerAdvice {
             BadRequestException.class,
             IllegalArgumentException.class,
             MultipartException.class})
-    public BaseResponse<?> badRequestExceptionHandler(Exception exception){
+    public BaseResponse<?> badRequestExceptionHandler(Exception exception) {
         return BaseResponse.error(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(UploadFailureException.class)
-    public BaseResponse<?> uploadFailureExceptionHandler(UploadFailureException exception){
-        return new BaseResponse<>(500,exception.getMessage(),null);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InternalException.class)
-    public BaseResponse<?> internalExceptionHandler(InternalException exception){
+    public BaseResponse<?> internalExceptionHandler(InternalException exception) {
         log.error("InternalException: ", exception);
-        return new BaseResponse<>(500, exception.getMessage(), null);
+        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)
-    public BaseResponse<?> forbiddenExceptionHandler(ForbiddenException exception){
-        return new BaseResponse<>(403, exception.getMessage(), null);
+    public BaseResponse<?> forbiddenExceptionHandler(ForbiddenException exception) {
+        return BaseResponse.error(HttpStatus.FORBIDDEN.value(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthenticatedException.class)
-    public BaseResponse<?> internalExceptionHandler(UnauthenticatedException exception){
-        return new BaseResponse<>(401, exception.getMessage(), null);
+    public BaseResponse<?> internalExceptionHandler(UnauthenticatedException exception) {
+        return BaseResponse.error(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public BaseResponse<?> unhandledExceptionHandler(Exception exception){
+    public BaseResponse<?> unhandledExceptionHandler(Exception exception) {
         log.error("InternalException: ", exception);
-        return new BaseResponse<>(500, exception.getMessage(), null);
+        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
     }
 
 }

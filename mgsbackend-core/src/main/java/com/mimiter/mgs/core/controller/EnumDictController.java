@@ -32,19 +32,20 @@ public class EnumDictController {
     @ApiOperation("获取后端枚举字典")
     @AnonymousAccess
     @GetMapping
-    public BaseResponse<?> getDict(String name){
+    public BaseResponse<?> getDict(String name) {
         return BaseResponse.ok("ok", dict.get(name));
     }
 
-    private void initDict(){
+    private void initDict() {
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AssignableTypeFilter(BaseEnum.class));
         Set<BeanDefinition> components = provider.findCandidateComponents("com.mimiter.mgs.core.model");
         for (BeanDefinition component : components) {
             try {
-                Class<? extends BaseEnum> cls = (Class<? extends BaseEnum>) Class.forName(component.getBeanClassName());
+                Class<? extends BaseEnum> cls =
+                        (Class<? extends BaseEnum>) Class.forName(component.getBeanClassName());
                 Field field = ReflectionUtils.findField(cls, "DICT_NAME", String.class);
-                if(field != null){
+                if (field != null) {
                     BaseEnum[] enums = cls.getEnumConstants();
                     Map<String, String> dictContent = new HashMap<>();
                     for (BaseEnum e : enums) {

@@ -1,13 +1,16 @@
 package com.mimiter.mgs.core.model.entity.enums;
 
-import com.mimiter.mgs.common.model.BaseEnum;
-import com.mimiter.mgs.core.config.converter.AgeEnumConverter;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.mimiter.mgs.common.model.BaseEnum;
+import com.mimiter.mgs.core.config.converter.AgeEnumConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 用户年龄枚举类。保存用户年龄时是保存分类，不保存具体年龄。
+ */
 @Getter
 @AllArgsConstructor
 @JsonDeserialize(using = AgeEnumConverter.class)

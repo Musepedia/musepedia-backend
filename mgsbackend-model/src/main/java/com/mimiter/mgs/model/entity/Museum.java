@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 博物馆实体类，一个博物馆有多个展区，每个展区有多个展品
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

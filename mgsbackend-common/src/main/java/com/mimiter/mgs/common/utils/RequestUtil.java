@@ -6,11 +6,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * 请求工具类，获取真实IP等。
+ */
 @Slf4j
 public class RequestUtil {
 
     private static final String UNKNOWN = "unknown";
 
+    /**
+     * 获取请求真实IP地址。
+     *
+     * @param request /
+     * @return 真实IP
+     */
     public static String getIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {

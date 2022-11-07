@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 展品实体类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

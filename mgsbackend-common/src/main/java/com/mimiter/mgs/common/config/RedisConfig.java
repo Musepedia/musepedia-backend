@@ -12,9 +12,18 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * Redis配置。
+ */
 @Configuration
 public class RedisConfig {
 
+    /**
+     * RedisTemplate配置。
+     *
+     * @param connectionFactory /
+     * @return /
+     */
     @Bean(name = "template")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -29,12 +38,21 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    /**
+     * RedisCacheManager配置。
+     *
+     * @param redisTemplate /
+     * @return /
+     */
     @Bean(name = "cacheManager")
     @Primary
     public RedisCacheManager redisCacheManager(RedisTemplate<String, Object> redisTemplate) {
-        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisTemplate.getConnectionFactory());
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getValueSerializer()));
-        return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
+        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(
+                redisTemplate.getConnectionFactory());
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration
+                .defaultCacheConfig()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(redisTemplate.getValueSerializer()));
+        return new RedisCacheManager(redisCacheWriter, cacheConfig);
     }
 }

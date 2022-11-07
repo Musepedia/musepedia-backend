@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 展厅实体类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -8,6 +8,7 @@ import java.util.Collections;
 
 @Data
 public class AreaSorter {
+
     public AreaSorter(HashMap<String, ExhibitionArea> hm) {
         nameMap = hm;
         areaList = new ArrayList<>();

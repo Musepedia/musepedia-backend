@@ -24,11 +24,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         HttpSession session = httpServletRequest.getSession();
         Long userId = (Long) session.getAttribute("userId");
-        if(userId != null){
+        if (userId != null) {
             SecurityUtil.setCurrentUserId(userId);
         }
 
-        filterChain.doFilter(httpServletRequest,httpServletResponse);
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
 }

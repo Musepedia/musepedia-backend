@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * <p>问题反馈，每个用户可以对问题进行反馈，用{@link #feedback}布尔值表示。</p>
+ * <p>true表示正面反馈，false表示负面反馈。</p>
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -10,11 +10,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * 代表用户提出的一个问题，相同{@link #questionText}视为一个问题。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_recommend_question", autoResultMap = true, excludeProperty = "exhibitFigureUrl")
+@TableName(
+        value = "tbl_recommend_question",
+        autoResultMap = true,
+        excludeProperty = "exhibitFigureUrl")
 public class RecommendQuestion extends BaseEntity {
 
     @TableId(value = "question_id", type = IdType.AUTO)

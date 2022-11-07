@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * 判断当前开发环境工具类。
+ */
 @Component
 public class EnvironmentUtil implements ApplicationContextAware {
 
@@ -15,7 +18,13 @@ public class EnvironmentUtil implements ApplicationContextAware {
 
     private static boolean testEnv;
 
-    public static boolean isTestEnv(){
+    /**
+     * 判断当前是否是测试环境。<br>
+     * 项目简化开发环境和测试环境统一为测试环境。
+     *
+     * @return /
+     */
+    public static boolean isTestEnv() {
         return testEnv;
     }
 

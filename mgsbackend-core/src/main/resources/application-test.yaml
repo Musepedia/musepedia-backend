@@ -8,7 +8,7 @@ env:
     port: 6379
     password: k2tNrsL8vet
   grpc:
-    host: 106.14.42.183:5555
+    host: 81.68.137.146:5555
 
 logging:
   level:

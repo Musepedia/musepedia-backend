@@ -19,5 +19,6 @@
 
 ## 开发说明
 
+- 需要IDEA插件：lombok，checkstyle
 - 使用IDEA第一次打开项目时会自动下载maven所有依赖
-- 点击**mgsbackend-admin**/src/main/java/com.mimiter.mgs.admin/App.java main()函数旁边的<span style="color:green">▶</span>启动项目
+- 点击**mgsbackend-admin/edu**/src/main/java/com.mimiter.mgs.admin/App.java main()函数旁边的<span style="color:green">▶</span>启动项目

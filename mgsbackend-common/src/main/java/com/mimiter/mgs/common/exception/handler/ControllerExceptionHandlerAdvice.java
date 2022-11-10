@@ -51,7 +51,7 @@ public class ControllerExceptionHandlerAdvice {
     @ExceptionHandler(InternalException.class)
     public BaseResponse<?> internalExceptionHandler(InternalException exception) {
         log.error("InternalException: ", exception);
-        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
+        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务异常，请稍后重试");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -61,16 +61,16 @@ public class ControllerExceptionHandlerAdvice {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(UnauthenticatedException.class)
-    public BaseResponse<?> internalExceptionHandler(UnauthenticatedException exception) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public BaseResponse<?> internalExceptionHandler(UnauthorizedException exception) {
         return BaseResponse.error(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public BaseResponse<?> unhandledExceptionHandler(Exception exception) {
-        log.error("InternalException: ", exception);
-        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
+        log.error("Unhandled InternalException: ", exception);
+        return BaseResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务异常，请稍后重试");
     }
 
 }

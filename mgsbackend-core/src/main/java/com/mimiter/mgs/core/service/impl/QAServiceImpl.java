@@ -64,6 +64,7 @@ public class QAServiceImpl implements QAService {
     }
 
     @Override
+    @SuppressWarnings("MethodLength") // 历史遗留问题
     public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);

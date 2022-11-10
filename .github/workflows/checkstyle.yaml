@@ -1,9 +1,7 @@
 name: Checkstyle
-on:
-  push:
-    branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
+
+on: ["push", "pull_request"]
+
 jobs:
   checkstyle:
     name: Checkstyle

@@ -14,6 +14,7 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
             "where question_text = #{text} and museum_id = #{museumId}")
     void updateQuestionFreqByText(@Param("text") String question, @Param("museumId") Long museumId);
 
+    @SuppressWarnings("ParameterNumber") // 历史遗留问题
     @Insert("insert into tbl_recommend_question " +
             "(question_text, answer_type, answer_text, exhibit_id, exhibit_text_id, museum_id) " +
             "values " +

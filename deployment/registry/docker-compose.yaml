@@ -15,3 +15,13 @@ services:
     volumes:
       - ./auth:/auth
       - ./data:/data
+  ui:
+    image: joxit/docker-registry-ui:latest
+    ports:
+      - 5001:80
+    environment:
+      - REGISTRY_TITLE=Mimiter Docker Registry
+      - REGISTRY_URL=https://registry.musepedia.cn
+      - SINGLE_REGISTRY=true
+    depends_on:
+      - registry

@@ -1,3 +1,6 @@
+[![Checkstyle](https://github.com/AbstractMGS/musepedia-backend/actions/workflows/checkstyle.yaml/badge.svg?branch=dev)](https://github.com/AbstractMGS/musepedia-backend/actions/workflows/checkstyle.yaml)
+
+
 # MGS
 
 本仓库包括MGS后端各部分，具体可查看各模块的README

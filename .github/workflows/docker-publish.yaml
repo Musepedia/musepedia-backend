@@ -1,7 +1,6 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Build and deploy
+name: Build and push to docker
 
 on:
   push:
@@ -52,7 +51,7 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build and push Docker image mgs/backend-core
         uses: docker/build-push-action@v3.2.0
         with:
           context: ./mgsbackend-core

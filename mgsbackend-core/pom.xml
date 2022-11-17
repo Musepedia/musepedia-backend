@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mgsbackend</artifactId>
-        <groupId>cn.abstractmgs</groupId>
+        <groupId>com.mimiter.mgs</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 <!--    <packaging>jar</packaging>-->
@@ -21,12 +21,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.abstractmgs</groupId>
-            <artifactId>mgsbackend-common</artifactId>
+            <groupId>com.mimiter.mgs</groupId>
+            <artifactId>mgsbackend-model</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
         <!-- api docs -->
         <dependency>
@@ -65,7 +70,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
-            <version>0.2.0</version>
         </dependency>
         <!-- mapstruct -->
         <!-- grpc -->
@@ -86,18 +90,30 @@
             <artifactId>grpc-client-spring-boot-starter</artifactId>
         </dependency>
         <!-- grpc -->
-        <!-- hanlp -->
+        <!-- nlp -->
         <dependency>
             <groupId>com.hankcs</groupId>
             <artifactId>hanlp</artifactId>
-            <version>portable-1.8.2</version>
         </dependency>
-        <!-- hanlp -->
+        <dependency>
+            <groupId>com.huaban</groupId>
+            <artifactId>jieba-analysis</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+            <version>5.1.6</version>
+        </dependency>
+        <!-- nlp -->
         <!-- utils -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java-sms</artifactId>
         </dependency>
         <!-- utils -->
         <!-- test -->
@@ -129,6 +145,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <!-- 复制第三方 jar 到项目目录下的 target/lib/ 下 -->
@@ -150,7 +173,7 @@
                     <archive>
                         <manifest>
                             <!-- 指定 Spring Boot 启动类，实际测试中必须 -->
-                            <mainClass>cn.abstractmgs.core.App</mainClass>
+                            <mainClass>com.mimiter.mgs.core.App</mainClass>
                             <!-- 将所有第三方 jar 添加到项目 jar 的 MANIFEST.MF 文件中，这样运行 jar 时依赖包才能被加载 -->
                             <addClasspath>true</addClasspath>
                             <!-- 指定复制第三方 jar 的目标目录为 target/lib/-->
@@ -199,40 +222,5 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>spring</id>
-            <url>https://maven.aliyun.com/repository/spring</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 
 </project>

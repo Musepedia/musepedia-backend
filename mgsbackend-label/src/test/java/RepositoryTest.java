@@ -1,17 +1,14 @@
-import cn.abstractmgs.label.App;
-import cn.abstractmgs.label.model.entity.Paragraph;
-import cn.abstractmgs.label.model.entity.Question;
-import cn.abstractmgs.label.repository.QuestionRepository;
-import cn.abstractmgs.label.service.ParagraphService;
-import cn.abstractmgs.label.service.QuestionService;
-import cn.abstractmgs.label.service.impl.QuestionServiceImpl;
+import com.mimiter.mgs.label.App;
+import com.mimiter.mgs.label.model.entity.Paragraph;
+import com.mimiter.mgs.label.model.entity.Question;
+import com.mimiter.mgs.label.service.ParagraphService;
+import com.mimiter.mgs.label.service.QuestionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

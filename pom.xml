@@ -4,13 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.abstractmgs</groupId>
+    <groupId>com.mimiter.mgs</groupId>
     <artifactId>mgsbackend</artifactId>
     <version>0.1-SNAPSHOT</version>
     <modules>
         <module>mgsbackend-core</module>
         <module>mgsbackend-common</module>
         <module>mgsbackend-label</module>
+        <module>mgsbackend-model</module>
+        <module>mgsbackend-admin</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -29,12 +31,17 @@
         <dependencies>
             <!-- other modules -->
             <dependency>
-                <groupId>cn.abstractmgs</groupId>
+                <groupId>com.mimiter.mgs</groupId>
                 <artifactId>mgsbackend</artifactId>
                 <version>0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>cn.abstractmgs</groupId>
+                <groupId>com.mimiter.mgs</groupId>
+                <artifactId>mgsbackend-model</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mimiter.mgs</groupId>
                 <artifactId>mgsbackend-common</artifactId>
                 <version>0.1-SNAPSHOT</version>
             </dependency>
@@ -45,6 +52,11 @@
                 <version>2021.0.2</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>1.9.3</version>
             </dependency>
             <!-- api docs -->
             <dependency>
@@ -86,6 +98,11 @@
                 <artifactId>javax.inject</artifactId>
                 <version>1</version>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-mapstruct-binding</artifactId>
+                <version>0.2.0</version>
+            </dependency>
             <!-- mapstruct -->
             <!-- grpc -->
             <dependency>
@@ -104,11 +121,24 @@
                 <version>2.12.0.RELEASE</version>
             </dependency>
             <!-- grpc -->
+            <!-- nlp -->
+            <dependency>
+                <groupId>com.hankcs</groupId>
+                <artifactId>hanlp</artifactId>
+                <version>portable-1.8.2</version>
+            </dependency>
+            <!-- nlp -->
             <!-- utils -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>5.3.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-sms</artifactId>
+                <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
+                <version>3.1.611</version>
             </dependency>
             <!-- utils -->
             <!-- test -->
@@ -177,11 +207,27 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
         <!-- core -->
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
@@ -192,31 +238,6 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
-        <repository>
-            <id>spring</id>
-            <url>https://maven.aliyun.com/repository/spring</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 
 </project>

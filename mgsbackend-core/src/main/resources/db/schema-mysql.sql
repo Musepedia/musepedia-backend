@@ -10,6 +10,8 @@ CREATE TABLE tbl_museum
     museum_logo_url VARCHAR(1023) DEFAULT '',
     museum_is_service BOOL NOT NULL DEFAULT FALSE,
     museum_floor_plan_filepath VARCHAR(255) NOT NULL,
+    longitude DECIMAL(11,8) DEFAULT NULL,
+    latitude DECIMAL(10,8) DEFAULT NULL,
     create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`museum_id`) USING BTREE
@@ -37,6 +39,7 @@ CREATE TABLE tbl_exhibit
 (
     exhibit_id       BIGINT(20)   NOT NULL AUTO_INCREMENT,
     exhibition_hall_id BIGINT(20) DEFAULT NULL,
+    museum_id BIGINT(20) DEFAULT NULL,
     exhibit_figure_url VARCHAR(1023) DEFAULT '',
     exhibit_label    VARCHAR(255) NOT NULL,
     exhibit_description VARCHAR(511),
@@ -48,6 +51,7 @@ CREATE TABLE tbl_exhibit
     update_time      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`exhibit_id`) USING BTREE,
     FOREIGN KEY fk_exhibition_hall_id (exhibition_hall_id) REFERENCES tbl_exhibition_hall (exhibition_hall_id),
+    FOREIGN KEY fk_museum_id (museum_id) REFERENCES tbl_museum (museum_id),
     INDEX idx_exhibits_label (exhibit_label)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -62,11 +66,13 @@ CREATE TABLE tbl_recommend_question
     answer_text VARCHAR(255),
     exhibit_id BIGINT(20),
     exhibit_text_id BIGINT(20),
+    museum_id BIGINT(20) NOT NULL,
     question_freq INT NOT NULL DEFAULT 1,
     create_time   DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`question_id`) USING BTREE,
-    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id)
+    FOREIGN KEY fk_exhibit_id (exhibit_id) REFERENCES tbl_exhibit (exhibit_id),
+    FOREIGN KEY fk_museum_id (museum_id) REFERENCES tbl_museum (museum_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -158,7 +164,8 @@ CREATE TABLE tbl_user_question
     update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_question_id`) USING BTREE,
     FOREIGN KEY fk_user_id (`user_id`) REFERENCES tbl_user (`user_id`),
-    FOREIGN KEY fk_question_id (`question_id`) REFERENCES tbl_recommend_question (`question_id`)
+    FOREIGN KEY fk_question_id (`question_id`) REFERENCES tbl_recommend_question (`question_id`),
+    UNIQUE KEY `uk_user_question` (user_id, question_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

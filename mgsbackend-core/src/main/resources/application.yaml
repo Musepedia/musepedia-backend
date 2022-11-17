@@ -1,22 +1,33 @@
+env:
+  mysql:
+    host: localhost:3306
+    username: root
+    password: root
+  redis:
+    host: localhost
+    port: 6379
+  grpc:
+    host: 106.14.42.183:5555
+
 server:
-  port: 80
+  port: 16002
 
 logging:
   level:
-    cn:
-      abstractmgs:
-        core:
-          repository: debug
+    com.mimiter.mgs.core:
+      repository: info
   file:
-    path: log
+    path: logs
     max-history: 30
 
 
 spring:
+  application:
+    name: mgsbackend-core
   datasource:
-    url: jdbc:mysql://localhost:3306/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
-    username: root
-    password: root
+    url: jdbc:mysql://${env.mysql.host}/mgs?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong
+    username: ${env.mysql.username}
+    password: ${env.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -35,27 +46,41 @@ spring:
       repositories:
         enabled: false
   redis:
-    host: localhost
-    port: 6379
+    host: ${env.redis.host}
+    port: ${env.redis.port}
+    password: ${env.redis.password}
     database: 0
   cache:
     type: redis
   profiles:
     active: default
 
-mgs:
-  weixin:
-    appid: wxfe9a49b9f26c289d
-    secret: 60232f676e1215a24a8e357d2b1c76dc
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  type-enums-package: com.mimiter.mgs.core.model.entity.enums
 
 grpc:
   client:
     myService:
-      address: static://localhost:5555
+      address: static://${env.grpc.host}
       negotiationType=: PLAINTEXT
 
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/*.xml
-  type-aliases-package: cn.abstactmgs.repository.TextRepository
-  type-handlers-package: cn.abstractmgs.core.model.handler
-  type-enums-package: cn.abstractmgs.core.model.entity.enums
+mgs:
+  weixin:
+    appid: wxf2920630b976e003
+    secret: 2c8a3a5109c68d9f1a76bc906ee869da
+  sms:
+    secretId: AKIDxmdMtFRhuxulT8yjItFRQCoMhogPxOgn
+    secretKey: 0sBIG5g6KK5f2MVZSCoPtHfu0ynSxMdj
+    sdkAppId: 1400746566
+    signName: 米弥特
+    templateId: 1580939

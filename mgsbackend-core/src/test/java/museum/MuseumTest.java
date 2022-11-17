@@ -1,7 +1,7 @@
 package museum;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.service.MuseumService;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.service.MuseumService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

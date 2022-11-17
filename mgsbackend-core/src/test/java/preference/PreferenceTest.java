@@ -1,18 +1,15 @@
 package preference;
 
-import cn.abstractmgs.common.model.BaseResponse;
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.controller.ExhibitController;
-import cn.abstractmgs.core.model.entity.Exhibit;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
-import cn.abstractmgs.core.model.entity.User;
-import cn.abstractmgs.core.repository.ExhibitRepository;
-import cn.abstractmgs.core.repository.ExhibitionHallRepository;
-import cn.abstractmgs.core.repository.UserRepository;
-import cn.abstractmgs.core.service.ExhibitService;
-import cn.abstractmgs.core.service.UserPreferenceService;
-import io.cucumber.java.an.E;
-import org.junit.Assert;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.controller.ExhibitController;
+import com.mimiter.mgs.model.entity.Exhibit;
+import com.mimiter.mgs.model.entity.ExhibitionHall;
+import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.core.repository.ExhibitRepository;
+import com.mimiter.mgs.core.repository.ExhibitionHallRepository;
+import com.mimiter.mgs.core.repository.UserRepository;
+import com.mimiter.mgs.core.service.ExhibitService;
+import com.mimiter.mgs.core.service.UserPreferenceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,26 +78,21 @@ public class PreferenceTest {
     }
 
     @Test
-    public void randomExhibit(){
-        BaseResponse<?> res = exhibitController.getRandomExhibitPreference();
-    }
-
-    @Test
     public void updateUserPreference(){
         List<Long> hallIds = new ArrayList<>();
         hallIds.add(halls.get(0).getId());
         hallIds.add(halls.get(2).getId());
         hallIds.add(halls.get(6).getId());
-        userPreferenceService.updateUserPreference(user.getId(), hallIds);
+        userPreferenceService.updateUserPreference(user.getId(), hallIds, 1L);
 
-        List<ExhibitionHall> preferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId());
+        List<ExhibitionHall> preferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId(), 1L);
 
         List<Long> newHallIds = new ArrayList<>();
         newHallIds.add(halls.get(0).getId());
         newHallIds.add(halls.get(10).getId());
-        userPreferenceService.updateUserPreference(user.getId(), newHallIds);
+        userPreferenceService.updateUserPreference(user.getId(), newHallIds, 1L);
 
-        List<ExhibitionHall> newPreferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId());
+        List<ExhibitionHall> newPreferredHalls = userPreferenceService.getPreferredHallByUserId(user.getId(), 1L);
 
     }
 }

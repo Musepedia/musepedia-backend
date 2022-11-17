@@ -1,13 +1,11 @@
 package user;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.model.entity.User;
-import cn.abstractmgs.core.model.entity.UserWxOpenid;
-import cn.abstractmgs.core.model.entity.enums.AgeEnum;
-import cn.abstractmgs.core.model.entity.enums.GenderEnum;
-import cn.abstractmgs.core.repository.UserRepository;
-import cn.abstractmgs.core.repository.UserWxOpenidRepository;
-import cn.abstractmgs.core.service.UserService;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.core.model.entity.UserWxOpenid;
+import com.mimiter.mgs.core.repository.UserRepository;
+import com.mimiter.mgs.core.repository.UserWxOpenidRepository;
+import com.mimiter.mgs.core.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -66,5 +64,18 @@ public class UserTest {
     @Test
     public void testInsertQuestion() {
         // userService.insertUserQuestion(10003L, 353L);
+    }
+
+    @Test
+    public void testUserRecommendStatus() {
+//        userService.setUserRecommendStatus(10000L, true);
+//        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 1L);
+        userService.setUserRecommendStatus(10000L, false);
+        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 1L);
+        System.out.println(userService.getUserRecommendStatus(10000L));
+        userService.setUserLocation(10000L, 2L);
+        System.out.println(userService.getUserRecommendStatus(10000L));
     }
 }

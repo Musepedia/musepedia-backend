@@ -1,10 +1,9 @@
 package question;
 
-import cn.abstractmgs.core.App;
-import cn.abstractmgs.core.model.dto.AnswerWithTextIdDTO;
-import cn.abstractmgs.core.model.entity.ExhibitionHall;
-import cn.abstractmgs.core.service.*;
-import cn.abstractmgs.core.utils.SecurityUtil;
+import com.mimiter.mgs.core.App;
+import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
+import com.mimiter.mgs.core.service.*;
+import com.mimiter.mgs.core.utils.SecurityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,15 +35,7 @@ public class RecommendQuestionTest {
 
     @Test
     public void testUpdate() {
-        service.updateQuestionFreqByText("测试问题");
-    }
-
-    @Test
-    public void testInsert() {
-        service.insertQuestion("测试问题2", 1, "测试答案2", 100L, null);
-
-        // answer_type = 0表示该答案暂时无法回答
-        service.insertQuestion("测试问题3", 0, null, 100L, null);
+        service.updateQuestionFreqByText("测试问题", 1L);
     }
 
     @Test
@@ -65,7 +56,6 @@ public class RecommendQuestionTest {
         String question = "狼和狗有什么关系";
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, 1L);
         String answer = awt.getAnswer();
-        int status = qaService.getStatus(answer);
 
         System.out.println(answer);
     }

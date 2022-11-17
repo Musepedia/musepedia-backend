@@ -3,10 +3,11 @@ server:
 
 logging:
   level:
-    cn:
-      abstractmgs:
-        label:
-          repository: debug
+    com:
+      mimiter:
+        mgs:
+          label:
+            repository: debug
 
 spring:
   datasource:

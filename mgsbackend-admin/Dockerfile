@@ -1,0 +1,21 @@
+FROM openjdk:8
+
+ARG PORT=16003
+ARG WORKDIR=/opt/mgsbackend-admin
+
+ENV TZ=Asia/Shanghai
+ENV SPRING_PROFILES_ACTIVE=prod
+ENV ENV_MYSQL_HOST=mysql:3306
+ENV ENV_MYSQL_USER=root
+ENV ENV_MYSQL_PASSWORD=k2tNrsL8vet
+ENV ENV_REDIS_HOST=redis
+ENV ENV_REDIS_PORT=6379
+ENV ENV_REDIS_PASSWORD=k2tNrsL8vet
+
+WORKDIR ${WORKDIR}
+COPY target/*.jar backend-admin.jar
+COPY target/lib ./lib
+
+EXPOSE ${PORT}
+
+ENTRYPOINT java -jar backend-admin.jar

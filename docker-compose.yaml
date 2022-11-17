@@ -143,10 +143,7 @@ services:
       ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
 
   mgsbackend-core:
-    build:
-      context: ./mgsbackend-core
-      args:
-        - WORKDIR=/opt/mgsbackend-core
+    image: register.musepedia.cn/mgs/backend-core:latest
     container_name: mgsbackend-core
     restart: always
     labels:

@@ -9,14 +9,20 @@ import com.mimiter.mgs.core.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
+@ActiveProfiles("test")
 public class UserTest {
 
     @Resource
@@ -77,5 +83,13 @@ public class UserTest {
         System.out.println(userService.getUserRecommendStatus(10000L));
         userService.setUserLocation(10000L, 2L);
         System.out.println(userService.getUserRecommendStatus(10000L));
+    }
+
+    @Test
+    public void testNewUserCount() {
+        Map<LocalDate, Integer> map = userService.getNewUserCount(1L, LocalDate.parse("2022-10-21"), LocalDate.parse("2022-11-30"));
+        for (Map.Entry<LocalDate, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "\t" + entry.getValue());
+        }
     }
 }

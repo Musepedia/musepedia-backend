@@ -6,8 +6,8 @@ import com.mimiter.mgs.core.service.ExhibitService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * {@inheritDoc}
@@ -80,5 +80,25 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
         return baseMapper.selectMostFrequentExhibits(count, museumId);
     }
 
+    @Override
+    public Map<Exhibit, Integer> getTopKHotExhibit(Long museumId, int k) {
+        Map<Exhibit, Integer> topKExhibits = new HashMap<>();
+        List<Exhibit> questionCount = baseMapper.getQuestionCountPerExhibit(museumId);
+        int sumQuestion = questionCount.stream().mapToInt(Exhibit::getQuestionCount).sum();
+
+        questionCount.sort(new Comparator<Exhibit>() {
+            @Override
+            public int compare(Exhibit exhibit1, Exhibit exhibit2) {
+                return exhibit2.getQuestionCount() - exhibit1.getQuestionCount();
+            }
+        });
+
+        k = Math.min(k, questionCount.size());
+        for (int i=0; i<k; ++i) {
+            topKExhibits.put(questionCount.get(i), (int) ((double) questionCount.get(i).getQuestionCount() / sumQuestion * 10000));
+        }
+
+        return topKExhibits;
+    }
 
 }

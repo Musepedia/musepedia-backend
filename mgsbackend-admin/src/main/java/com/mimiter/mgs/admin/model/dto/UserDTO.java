@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 public class UserDTO {
 
-    private Long userId;
+    private Long id;
 
-    private String realName;
+    private String nickname;
 
     private String email;
 

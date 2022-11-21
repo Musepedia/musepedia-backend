@@ -15,7 +15,6 @@ public class UserQuery extends BaseQuery<AdminUser> {
 
     private String realName;
 
-    private Long departmentId;
 
 
     @Override
@@ -26,9 +25,6 @@ public class UserQuery extends BaseQuery<AdminUser> {
         }
         if (StringUtils.hasText(realName)) {
             wrapper.like("real_name", realName);
-        }
-        if (departmentId != null && departmentId > 0) {
-            wrapper.eq("department_id", departmentId);
         }
         return wrapper;
     }

@@ -1,6 +1,7 @@
 package com.mimiter.mgs.admin.model.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,6 +14,12 @@ import java.util.List;
  */
 @Data
 public class BaseQuery<T> {
+
+    public static final int DEFAULT_PAGE_SIZE = 10;
+
+    private int size = DEFAULT_PAGE_SIZE;
+
+    private int current = 1;
 
     private List<Date> createTime;
 
@@ -40,5 +47,9 @@ public class BaseQuery<T> {
             }
         }
         return queryWrapper;
+    }
+
+    public Page<T> toPage() {
+        return new Page<>(current, size);
     }
 }

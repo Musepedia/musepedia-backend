@@ -143,7 +143,7 @@ services:
       ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
 
   mgsbackend-core:
-    image: register.musepedia.cn/mgs/backend-core:dev
+    image: registry.musepedia.cn/mgs/backend-core:dev
     container_name: mgsbackend-core
     restart: always
     labels:
@@ -170,7 +170,7 @@ services:
       ENV_GRPC_HOST: mgs-core:5555
       SPRING_PROFILES_ACTIVE: test
   mgsbackend-admin:
-    image: register.musepedia.cn/mgs/backend-admin:dev
+    image: registry.musepedia.cn/mgs/backend-admin:dev
     container_name: mgsbackend-admin
     restart: always
     labels:

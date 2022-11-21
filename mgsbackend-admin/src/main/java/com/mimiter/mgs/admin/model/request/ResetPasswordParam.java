@@ -1,4 +1,4 @@
-package com.mimiter.mgs.admin.model.param;
+package com.mimiter.mgs.admin.model.request;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;

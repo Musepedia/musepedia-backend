@@ -19,10 +19,17 @@ import org.springframework.web.multipart.MultipartException;
 @RestControllerAdvice
 public class ControllerExceptionHandlerAdvice {
 
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({BindException.class, MissingServletRequestParameterException.class})
-    public BaseResponse<?> validExceptionHandler(Exception exception) {
-        return BaseResponse.error(exception.getMessage());
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public BaseResponse<?> missingParamExceptionHandler(MissingServletRequestParameterException exception) {
+        return BaseResponse.error(exception.getParameterName() + "不能为空");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BindException.class)
+    public BaseResponse<?> validExceptionHandler(BindException exception) {
+        return BaseResponse.error(exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

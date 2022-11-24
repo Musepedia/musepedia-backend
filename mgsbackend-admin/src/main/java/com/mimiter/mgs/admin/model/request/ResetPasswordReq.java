@@ -5,9 +5,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-@ApiModel(value = "重置密码请求参数")
 @Data
-public class ResetPasswordParam {
+@ApiModel(value = "用户重置密码请求参数")
+public class ResetPasswordReq {
 
     @NotBlank(message = "原密码不能为空")
     private String oldPassword;

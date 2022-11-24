@@ -3,7 +3,7 @@ package com.mimiter.mgs.admin.service;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
-import com.mimiter.mgs.admin.model.request.ResetPasswordParam;
+import com.mimiter.mgs.admin.model.request.UpdateUserReq;
 import com.mimiter.mgs.admin.service.base.CrudService;
 import com.mimiter.mgs.common.exception.BadRequestException;
 
@@ -20,6 +20,14 @@ public interface AdminUserService extends CrudService<AdminUser> {
      */
     AdminUser addUser(AddUserReq req);
 
+    /**
+     * 更新用户
+     *
+     * @param req 更新用户请求
+     * @return 是否更新成功
+     */
+    boolean updateById(UpdateUserReq req);
+
     AdminUser findByUsername(String username);
 
     /**
@@ -35,8 +43,25 @@ public interface AdminUserService extends CrudService<AdminUser> {
     /**
      * 用户设置新密码
      *
-     * @param param /
+     * @param password 未加密的密码
      */
-    void resetPassword(Long userId, ResetPasswordParam param);
+    void setPassword(Long userId, String password);
+
+    /**
+     * 切换用户禁用状态
+     *
+     * @param userId 用户ID
+     */
+    void setEnable(Long userId, boolean enable);
+
+    /**
+     * 校验用户密码是否正确
+     *
+     * @param userId 用户ID
+     * @param password 未加密的密码
+     * @return 密码是否匹配
+     */
+    boolean checkPassword(Long userId, String password);
+
 
 }

@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String[] roles = roleRepository.findByUserId(user.getId())
                 .stream().map(Role::getName).toArray(String[]::new);
 
-        SecurityUtil.setCurrentUser(user);
+        SecurityUtil.setCurrentUserId(user.getId());
 
         return User.builder()
                 .username(user.getUsername())

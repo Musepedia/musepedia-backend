@@ -8,6 +8,7 @@ import com.mimiter.mgs.admin.repository.RoleRepository;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Collections;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InitCheckService {
 
     private final AdminUserService userService;
@@ -55,6 +57,8 @@ public class InitCheckService {
             req.setNickname("MGS管理员");
             req.setRoleIds(Collections.singletonList(sysAdmin.getId()));
             AdminUser admin = userService.addUser(req);
+
+            log.info("系统管理员账号已创建，用户名：{}，密码：{}", admin.getUsername(), req.getPassword());
         }
     }
 }

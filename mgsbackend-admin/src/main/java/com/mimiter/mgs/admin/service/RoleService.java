@@ -10,8 +10,11 @@ import java.util.List;
  */
 public interface RoleService extends CrudService<Role> {
 
-    Role SYS_ADMIN = new Role(null, "sys_admin", "系统管理员");
-    Role MUSEUM_ADMIN = new Role(null, "museum_admin", "博物馆管理员");
+    String STR_SYS_ADMIN = "sys_admin";
+
+    String STR_MUSEUM_ADMIN = "museum_admin";
+    Role SYS_ADMIN = new Role(null, STR_SYS_ADMIN, "系统管理员");
+    Role MUSEUM_ADMIN = new Role(null, STR_MUSEUM_ADMIN, "博物馆管理员");
 
     Role[] DEFAULT_ROLES = new Role[]{SYS_ADMIN, MUSEUM_ADMIN};
 

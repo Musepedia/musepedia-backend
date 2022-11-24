@@ -1,17 +1,20 @@
 package com.mimiter.mgs.admin.controller;
 
+import com.mimiter.mgs.admin.mapstruct.AdminUserMapper;
+import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.request.LoginReq;
+import com.mimiter.mgs.admin.model.request.ResetPasswordReq;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.RoleService;
+import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,21 +25,44 @@ public class UserController {
 
     private final AdminUserService userService;
 
+    private final AdminUserMapper userMapper;
+
     private final RoleService roleService;
 
-    @ApiOperation("获取当前用户信息")
-    @PostMapping("/info")
+    @ApiOperation(value = "获取当前用户信息", notes = "如果未登录，data为null")
+    @GetMapping("/info")
     @AnonymousAccess
-    public BaseResponse<?> info() {
-        // TODO
-        return BaseResponse.ok();
+    public BaseResponse<UserDTO> info() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        if (userId == null) {
+            return BaseResponse.ok();
+        }
+        AdminUser user = userService.getById(userId);
+        if (user == null) {
+            return BaseResponse.ok();
+        }
+        UserDTO userDto = userMapper.toDto(user);
+        userDto.setRoles(roleService.listUserRoles(userId));
+        return BaseResponse.ok(userDto);
     }
 
     @ApiOperation("通过密码登录")
     @PostMapping("/login")
     @AnonymousAccess
-    public BaseResponse<?> loginPassword(@Validated LoginReq req) {
+    public BaseResponse<?> loginPassword(@RequestBody @Validated LoginReq req, HttpServletRequest request) {
         AdminUser user = userService.loginPassword(req);
+        request.getSession().setAttribute("userId", user.getId());
+        UserDTO userDto = userMapper.toDto(user);
+        userDto.setRoles(roleService.listUserRoles(user.getId()));
+        return BaseResponse.ok(userDto);
+    }
+
+    @ApiOperation("重置密码")
+    @PostMapping("/resetPassword")
+    public BaseResponse<?> resetPassword(@RequestBody @Validated ResetPasswordReq req) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Assert.isTrue(userService.checkPassword(userId, req.getOldPassword()), "原密码错误");
+        userService.setPassword(userId, req.getNewPassword());
         return BaseResponse.ok();
     }
 

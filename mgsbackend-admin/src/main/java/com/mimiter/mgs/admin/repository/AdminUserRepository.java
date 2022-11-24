@@ -14,22 +14,11 @@ public interface AdminUserRepository extends BaseMapper<AdminUser> {
     @Update("UPDATE sys_user SET password = #{password} WHERE user_id = #{userId}")
     void setPassword(Long userId, String password);
 
-    /**
-     * 查询重复手机号
-     */
-    @Select("SELECT COUNT(*) FROM sys_user WHERE phone = #{phone} AND user_id != #{userId}")
-    long countByPhone(Long userId, String phone);
-
-    /**
-     * 查询重复邮箱
-     */
-    @Select("SELECT COUNT(*) FROM sys_user WHERE email = #{email} AND user_id != #{userId}")
-    long countByEmail(Long userId, String email);
-
     @ResultMap("mybatis-plus_AdminUser")
     @Select("SELECT * FROM sys_user WHERE username=#{username}")
     AdminUser findByUsername(String username);
 
-    @Select("SELECT * FROM sys_user wHERE phone=#{phone}")
-    AdminUser findByPhone(String phone);
+    @ResultMap("mybatis-plus_AdminUser")
+    @Update("UPDATE sys_user SET is_enabled = !is_enabled WHERE user_id = #{userId}")
+    void toggleEnable(Long userId);
 }

@@ -1,12 +1,17 @@
 package user;
 
 import com.mimiter.mgs.admin.App;
+import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
+import com.mimiter.mgs.model.entity.Museum;
+import com.mimiter.mgs.admin.model.request.AddMuseumReq;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
 import com.mimiter.mgs.admin.model.support.Captcha;
+import com.mimiter.mgs.admin.service.AdminMuseumService;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.CaptchaService;
+import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -19,6 +24,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
@@ -129,5 +140,4 @@ public class UserLoginTest {
                 .log().headers()
                 .statusCode(200);
     }
-
 }

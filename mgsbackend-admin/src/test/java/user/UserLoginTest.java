@@ -1,24 +1,43 @@
 package user;
 
 import com.mimiter.mgs.admin.App;
+import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
+import com.mimiter.mgs.model.entity.Museum;
+import com.mimiter.mgs.admin.model.request.AddMuseumReq;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
 import com.mimiter.mgs.admin.model.support.Captcha;
+import com.mimiter.mgs.admin.service.AdminMuseumService;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.CaptchaService;
+import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.exception.BadRequestException;
+import com.mimiter.mgs.common.utils.EnvironmentUtil;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
@@ -32,10 +51,19 @@ public class UserLoginTest {
     @Resource
     CaptchaService captchaService;
 
+    @Resource
+    private WebApplicationContext webApplicationContext;
+
     AddUserReq userToLogin;
 
     @Before
-    public void insertUserToLogin(){
+    public void setupMockMvc() {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        RestAssuredMockMvc.mockMvc(mockMvc);
+    }
+
+    @Before
+    public void insertUserToLogin() {
         userToLogin = new AddUserReq();
         userToLogin.setUsername("__toLogin__");
         userToLogin.setPassword("usr2lgn");
@@ -44,7 +72,7 @@ public class UserLoginTest {
     }
 
     @Test
-    public void testSuccessLogin(){
+    public void testSuccessLogin() {
         Captcha captcha = captchaService.generateCaptcha();
 
         LoginReq req = new LoginReq();
@@ -60,7 +88,7 @@ public class UserLoginTest {
     }
 
     @Test
-    public void testWrongPassword(){
+    public void testWrongPassword() {
         Captcha captcha = captchaService.generateCaptcha();
 
         LoginReq req = new LoginReq();
@@ -69,11 +97,11 @@ public class UserLoginTest {
         req.setCode(captcha.getCode());
         req.setUuid(captcha.getUuid());
 
-        Assert.assertThrows(BadCredentialsException.class, () -> userService.loginPassword(req));
+        Assert.assertThrows(IllegalArgumentException.class, () -> userService.loginPassword(req));
     }
 
     @Test
-    public void testInvalidCaptcha(){
+    public void testInvalidCaptcha() {
         Captcha captcha = captchaService.generateCaptcha();
 
         LoginReq req = new LoginReq();
@@ -86,11 +114,30 @@ public class UserLoginTest {
     }
 
     @Test
-    public void testNoCaptcha(){
+    public void testNoCaptcha() {
         LoginReq req = new LoginReq();
         req.setUsername(userToLogin.getUsername());
         req.setPassword(userToLogin.getPassword());
 
         Assert.assertThrows(IllegalArgumentException.class, () -> userService.loginPassword(req));
+    }
+
+    @Test
+    public void testLoginApi2() throws Exception {
+        Captcha captcha = captchaService.generateCaptcha();
+
+        LoginReq req = new LoginReq();
+        req.setUsername(userToLogin.getUsername());
+        req.setPassword(userToLogin.getPassword());
+        req.setCode(captcha.getCode());
+        req.setUuid(captcha.getUuid());
+        RestAssuredMockMvc.given()
+                .contentType("application/json")
+                .body(req)
+                .when()
+                .post("/api/user/login")
+                .then()
+                .log().headers()
+                .statusCode(200);
     }
 }

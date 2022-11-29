@@ -1,7 +1,7 @@
 package com.mimiter.mgs.admin.model.request;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -17,9 +17,9 @@ public class LoginReq {
     private String password;
 
     @NotBlank(message = "验证码不能为空")
-    @ApiParam(value = "验证码答案")
+    @ApiModelProperty(value = "验证码答案")
     private String code;
 
-    @ApiParam(value = "验证码uuid")
+    @ApiModelProperty(value = "验证码uuid")
     private String uuid;
 }

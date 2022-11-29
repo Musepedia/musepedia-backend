@@ -2,18 +2,17 @@ package com.mimiter.mgs.admin.model.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import java.util.List;
 
-@ApiModel(value = "添加用户请求参数")
 @Data
-public class AddUserReq {
+@ApiModel(value = "更新用户请求参数")
+public class UpdateUserReq {
+
+    private Long id;
 
     private String username;
-
-    private String password;
 
     private String email;
 
@@ -24,5 +23,4 @@ public class AddUserReq {
 
     @ApiModelProperty(value = "角色ID列表")
     private List<Long> roleIds;
-
 }

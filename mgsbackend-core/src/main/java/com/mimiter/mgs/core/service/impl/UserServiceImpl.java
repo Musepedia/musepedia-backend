@@ -163,7 +163,7 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     @Override
     public Map<LocalDate, Integer> getNewUserCount(Long museumId, LocalDate beginDate, LocalDate endDate) {
         Map<LocalDate, Integer> dateWithNewUserCount = new HashMap<>();
-        for (LocalDate date = beginDate; date.isBefore(endDate.plusDays(1)); date=date.plusDays(1)) {
+        for (LocalDate date = beginDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
             dateWithNewUserCount.put(date, baseMapper.getNewUserCount(museumId, date));
         }
         return dateWithNewUserCount;

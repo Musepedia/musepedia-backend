@@ -33,6 +33,7 @@ public interface ExhibitService extends IService<Exhibit> {
 
     /**
      * 获取博物馆的前K个热门展品，热度由展品的提问量计算得到
+     *
      * @param museumId 博物馆id
      * @param k 限定查询热门展品的数量
      * @return 博物馆前K个热门展品，key为展品，value为展品的热度

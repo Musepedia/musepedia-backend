@@ -34,6 +34,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取<code>date</code>日期当天博物馆的用户新增数量
+     *
      * @param museumId 博物馆id
      * @param date 查询的日期
      * @return 查询日期当天博物馆的用户新增数量
@@ -42,6 +43,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取从<code>beginDate</code>到<code>endDate</code>范围内，每天博物馆的用户新增数量
+     *
      * @param museumId 博物馆id
      * @param beginDate 开始日期
      * @param endDate 终止日期

@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @Service("exhibitService")
 public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> implements ExhibitService {
 
+    private static final int TRENDING = 10000;
+
     private List<Integer> exhibitIdToInteger(List<String> exhibitIds) {
         List<Integer> res = new ArrayList<>();
         for (String ids : exhibitIds) {
@@ -94,8 +96,9 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
         });
 
         k = Math.min(k, questionCount.size());
-        for (int i=0; i<k; ++i) {
-            topKExhibits.put(questionCount.get(i), (int) ((double) questionCount.get(i).getQuestionCount() / sumQuestion * 10000));
+        for (int i = 0; i < k; ++i) {
+            topKExhibits.put(questionCount.get(i),
+                    (int) ((double) questionCount.get(i).getQuestionCount() / sumQuestion * TRENDING));
         }
 
         return topKExhibits;

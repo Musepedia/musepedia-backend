@@ -28,7 +28,8 @@ public interface ExhibitionHallRepository extends BaseMapper<ExhibitionHall> {
 
 
     @ResultMap("mybatis-plus_ExhibitionHall")
-    @Select("select t2.exhibition_hall_id, sum(t1.question_freq) question_count from tbl_recommend_question t1, tbl_exhibit t2\n" +
+    @Select("select t2.exhibition_hall_id, sum(t1.question_freq) question_count " +
+            "from tbl_recommend_question t1, tbl_exhibit t2\n" +
             "where t1.museum_id = #{museumId} and t1.exhibit_id = t2.exhibit_id\n" +
             "group by t2.exhibition_hall_id")
     List<ExhibitionHall> getQuestionCountPerExhibitionHall(@Param("museumId") Long museumId);

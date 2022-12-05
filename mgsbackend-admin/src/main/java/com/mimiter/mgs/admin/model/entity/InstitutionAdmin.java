@@ -1,5 +1,7 @@
 package com.mimiter.mgs.admin.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.mimiter.mgs.admin.model.enums.InstitutionType;
 import com.mimiter.mgs.common.model.BaseEntity;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 @TableName(value = "sys_institution_admin", autoResultMap = true)
 public class InstitutionAdmin extends BaseEntity {
 
+    @TableId
     private Long userId;
 
     /**
@@ -27,5 +30,6 @@ public class InstitutionAdmin extends BaseEntity {
     /**
      * 所属机构类型
      */
+    @TableField("institution_type")
     private InstitutionType type;
 }

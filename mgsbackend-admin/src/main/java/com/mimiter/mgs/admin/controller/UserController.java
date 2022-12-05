@@ -13,6 +13,7 @@ import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,6 @@ public class UserController {
     @AnonymousAccess
     public BaseResponse<UserDTO> loginPassword(@RequestBody @Validated LoginReq req, HttpServletRequest request) {
         AdminUser user = userService.loginPassword(req);
-        request.getSession().setAttribute("userId", user.getId());
         UserDTO userDto = userMapper.toDto(user);
         userDto.setRoles(roleService.listUserRoles(user.getId()));
         return BaseResponse.ok(userDto);
@@ -86,6 +86,6 @@ public class UserController {
         user.setPhone(req.getPhone());
         userService.updateById(user);
 
-        return BaseResponse.ok("修改成 功");
+        return BaseResponse.ok("修改成功");
     }
 }

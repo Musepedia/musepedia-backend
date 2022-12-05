@@ -22,6 +22,11 @@ public class CodeAuthenticationToken extends AbstractAuthenticationToken {
         this.principal = null;
     }
 
+    public CodeAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal) {
+        super(authorities);
+        this.principal = principal;
+    }
+
     @Override
     public Object getCredentials() {
         return null;

@@ -21,15 +21,21 @@ import com.mimiter.mgs.admin.service.base.AbstractCrudService;
 import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionDestroyedEvent;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.events.SessionExpiredEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +58,8 @@ public class AdminUserServiceImpl
     private final InstitutionAdminRepository institutionAdminRepository;
 
     private final PasswordEncoder encoder;
+
+    private final SessionRegistry sessionRegistry;
 
     @Override
     @Transactional
@@ -143,7 +151,9 @@ public class AdminUserServiceImpl
     public AdminUser loginPassword(LoginReq req) {
         Assert.notNull(req, "登录请求不能为空");
         // 校验验证码
-        captchaService.verifyCaptcha(req.getUuid(), req.getCode());
+        if (!EnvironmentUtil.isTestEnv()) {
+            captchaService.verifyCaptcha(req.getUuid(), req.getCode());
+        }
 
         AdminUser user = findByUsername(req.getUsername());
         Assert.notNull(user, "用户名或密码错误");
@@ -156,7 +166,7 @@ public class AdminUserServiceImpl
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
-        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities);
+        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities, user.getId());
         successToken.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(successToken);
 
@@ -177,6 +187,16 @@ public class AdminUserServiceImpl
         user.setId(userId);
         user.setEnabled(enable);
         updateById(user);
+
+        if (!enable) {
+            sessionRegistry.getAllSessions(userId, false)
+                    .forEach(SessionInformation::expireNow);
+        }
+    }
+
+    @EventListener
+    public void onSessionDestroyed(SessionExpiredEvent event) {
+        int i = 0;
     }
 
     @Override

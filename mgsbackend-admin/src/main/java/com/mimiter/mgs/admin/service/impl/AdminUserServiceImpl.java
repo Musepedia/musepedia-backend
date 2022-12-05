@@ -3,17 +3,22 @@ package com.mimiter.mgs.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
+import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
 import com.mimiter.mgs.admin.model.entity.Role;
 import com.mimiter.mgs.admin.model.entity.UserRole;
+import com.mimiter.mgs.admin.model.enums.InstitutionType;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
 import com.mimiter.mgs.admin.model.request.UpdateUserReq;
 import com.mimiter.mgs.admin.repository.AdminUserRepository;
+import com.mimiter.mgs.admin.repository.InstitutionAdminRepository;
 import com.mimiter.mgs.admin.repository.RoleRepository;
 import com.mimiter.mgs.admin.repository.UserRoleRepository;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.CaptchaService;
+import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.admin.service.base.AbstractCrudService;
+import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +49,7 @@ public class AdminUserServiceImpl
 
     private final UserRoleRepository userRoleRepository;
 
-    private final AuthenticationManager authenticationManager;
+    private final InstitutionAdminRepository institutionAdminRepository;
 
     private final PasswordEncoder encoder;
 
@@ -62,22 +67,51 @@ public class AdminUserServiceImpl
         user.setEnabled(true);
         save(user);
 
-        setRoles(user.getId(), req.getRoleIds());
+        setRoles(user.getId(), req.getRoleIds(), req.getInstitutionId());
 
         return user;
     }
 
-    private void setRoles(Long userId, List<Long> roleIds) {
+    private void setRoles(Long userId, List<Long> roleIds, Long institutionId) {
         Assert.notNull(userId, "用户ID不能为空");
         QueryWrapper<UserRole> ur = new QueryWrapper<>();
         ur.eq("user_id", userId);
         userRoleRepository.delete(ur);
 
+        InstitutionAdmin ia = new InstitutionAdmin();
+        ia.setUserId(userId);
+        ia.setInstitutionId(institutionId);
+
         if (roleIds != null) {
+            boolean isMuseumAdmin = false;
+            boolean isSchoolAdmin = false;
+
             for (Long roleId : roleIds) {
                 Role role = roleRepository.selectById(roleId);
                 Assert.notNull(role, "角色ID: " + roleId + " 不存在");
                 userRoleRepository.insert(new UserRole(userId, roleId));
+
+                if (RoleService.STR_MUSEUM_ADMIN.equals(role.getName())) {
+                    ia.setType(InstitutionType.MUSEUM);
+                    isMuseumAdmin = true;
+                } else if (RoleService.STR_SCHOOL_ADMIN.equals(role.getName())) {
+                    ia.setType(InstitutionType.SCHOOL);
+                    isSchoolAdmin = true;
+                }
+            }
+
+            if (isMuseumAdmin && isSchoolAdmin) {
+                throw new BadRequestException("不能同时设置为博物馆管理员和学校管理员");
+            }
+
+        }
+
+        // 保存机构管理员信息
+        if (ia.getInstitutionId() != null && ia.getType() != null) {
+            if (institutionAdminRepository.selectById(userId) == null) {
+                institutionAdminRepository.insert(ia);
+            } else {
+                institutionAdminRepository.updateById(ia);
             }
         }
     }
@@ -93,7 +127,7 @@ public class AdminUserServiceImpl
         user.setEmail(req.getEmail());
         updateById(user);
 
-        setRoles(user.getId(), req.getRoleIds());
+        setRoles(user.getId(), req.getRoleIds(), req.getInstitutionId());
 
         return true;
     }

@@ -5,6 +5,7 @@ import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.request.LoginReq;
 import com.mimiter.mgs.admin.model.request.ResetPasswordReq;
+import com.mimiter.mgs.admin.model.request.UpdateUserInfoReq;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
@@ -58,7 +59,7 @@ public class UserController {
     }
 
     @ApiOperation("重置密码")
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset-password")
     public BaseResponse<?> resetPassword(@RequestBody @Validated ResetPasswordReq req) {
         Long userId = SecurityUtil.getCurrentUserId();
         Assert.isTrue(userService.checkPassword(userId, req.getOldPassword()), "原密码错误");
@@ -71,5 +72,20 @@ public class UserController {
     public BaseResponse<?> logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return BaseResponse.ok();
+    }
+
+    @ApiOperation("修改个人信息")
+    @PutMapping("/info")
+    public BaseResponse<?> updateInfo(@RequestBody UpdateUserInfoReq req) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        // 对于user中其他为null的信息不会修改
+        AdminUser user = new AdminUser();
+        user.setId(userId);
+        user.setNickname(req.getNickname());
+        user.setEmail(req.getEmail());
+        user.setPhone(req.getPhone());
+        userService.updateById(user);
+
+        return BaseResponse.ok("修改成 功");
     }
 }

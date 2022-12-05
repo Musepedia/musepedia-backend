@@ -50,7 +50,7 @@ public class UserController {
     @ApiOperation("通过密码登录")
     @PostMapping("/login")
     @AnonymousAccess
-    public BaseResponse<?> loginPassword(@RequestBody @Validated LoginReq req, HttpServletRequest request) {
+    public BaseResponse<UserDTO> loginPassword(@RequestBody @Validated LoginReq req, HttpServletRequest request) {
         AdminUser user = userService.loginPassword(req);
         request.getSession().setAttribute("userId", user.getId());
         UserDTO userDto = userMapper.toDto(user);

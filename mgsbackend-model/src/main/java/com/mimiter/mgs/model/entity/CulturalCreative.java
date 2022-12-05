@@ -1,7 +1,9 @@
 package com.mimiter.mgs.model.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.mimiter.mgs.common.model.BaseEntity;
@@ -22,7 +24,7 @@ import java.util.List;
 @TableName(value = "tbl_creative", autoResultMap = true)
 public class CulturalCreative extends BaseEntity {
 
-    @TableField("creative_id")
+    @TableId(value = "creative_id", type = IdType.AUTO)
     private Long id;
 
     private String name;

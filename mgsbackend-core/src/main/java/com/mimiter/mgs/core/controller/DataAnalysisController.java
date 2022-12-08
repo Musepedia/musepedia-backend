@@ -43,21 +43,27 @@ public class DataAnalysisController {
 
     @ApiOperation("获取某天的用户新增数量")
     @GetMapping("/user/date")
-    public BaseResponse<Integer> getNewUserCount(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public BaseResponse<DataAnalysisUserCountDTO> getNewUserCount(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
 
-        return BaseResponse.ok(userService.getNewUserCount(museumId, date));
+        return BaseResponse.ok(new DataAnalysisUserCountDTO(date, userService.getNewUserCount(museumId, date)));
     }
 
     @ApiOperation("获取一段时间的用户新增数量")
     @GetMapping("/user")
-    public BaseResponse<Map<LocalDate, Integer>> getNewUserCount(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
-                                                                 LocalDate beginDate,
-                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
-                                                                 LocalDate endDate) {
+    public BaseResponse<List<DataAnalysisUserCountDTO>> getNewUserCount(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate beginDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        List<DataAnalysisUserCountDTO> userCounts = new ArrayList<>();
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
 
-        return BaseResponse.ok(userService.getNewUserCount(museumId, beginDate, endDate));
+        Map<LocalDate, Integer> newUserCount = userService.getNewUserCount(museumId, beginDate, endDate);
+        for (Map.Entry<LocalDate, Integer> entry : newUserCount.entrySet()) {
+            userCounts.add(new DataAnalysisUserCountDTO(entry.getKey(), entry.getValue()));
+        }
+
+        return BaseResponse.ok(userCounts);
     }
 
     @ApiOperation("获取前K个热门展品及其热度值")

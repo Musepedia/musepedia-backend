@@ -65,9 +65,9 @@ public class ExhibitController {
     }
 
     @ApiOperation(value = "删除展品", notes = "超级管理员和博物馆管理员可调用")
-    @DeleteMapping("/{id:\\d+}")
+    @DeleteMapping
     @PreAuthorize("pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
-    public BaseResponse<?> deleteExhibit(@PathVariable Long id) {
+    public BaseResponse<?> deleteExhibit(@RequestBody List<Long> ids) {
         // 非超级管理员删除展品时，需要检查展区对应博物馆id是否属于当前用户
         // 暂时决定有RecommendQuestion时不允许删除(有外键)，即该展品已经被提过问
         // 删除展品同时需要将展品下的所有展品文本和展品别名删除

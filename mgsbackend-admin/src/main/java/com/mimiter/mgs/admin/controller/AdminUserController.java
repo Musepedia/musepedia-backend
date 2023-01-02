@@ -14,6 +14,7 @@ import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import static com.mimiter.mgs.admin.service.RoleService.STR_SYS_ADMIN;
 @RestController
 @RequestMapping("/api/admin/user")
 @RequiredArgsConstructor
+@Api(value = "管理用户API", tags = {"管理用户API"})
 @PreAuthorize("@pm.check('" + STR_SYS_ADMIN + "')")
 public class AdminUserController {
 

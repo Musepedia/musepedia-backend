@@ -23,4 +23,8 @@ public class UpdateUserReq {
 
     @ApiModelProperty(value = "角色ID列表")
     private List<Long> roleIds;
+
+    @ApiModelProperty(value = "如果是博物馆/学校管理员，需要填写博物馆/学校ID",
+            notes = "假设一位用户不会同时是博物馆和学校管理员")
+    private Long institutionId;
 }

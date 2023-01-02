@@ -6,25 +6,18 @@ import lombok.Data;
 import org.springframework.util.StringUtils;
 
 /**
- * 管理员查询用户信息参数封装类
+ * 查询用户信息参数封装类
  */
 @Data
 public class UserQuery extends BaseQuery<AdminUser> {
 
-    private String userId;
-
-    private String realName;
-
-
+    private String nickname;
 
     @Override
     public QueryWrapper<AdminUser> toQueryWrapper() {
         QueryWrapper<AdminUser> wrapper = super.toQueryWrapper();
-        if (StringUtils.hasText(userId)) {
-            wrapper.eq("user_id", userId);
-        }
-        if (StringUtils.hasText(realName)) {
-            wrapper.like("real_name", realName);
+        if (StringUtils.hasText(nickname)) {
+            wrapper.like("nickname", nickname);
         }
         return wrapper;
     }

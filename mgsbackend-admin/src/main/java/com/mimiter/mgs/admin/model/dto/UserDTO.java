@@ -24,4 +24,7 @@ public class UserDTO {
     private String phone;
 
     private List<Role> roles;
+
+    @ApiModelProperty("如果是博物馆/学校管理员，对应的博物馆/学校id")
+    private Long institutionId;
 }

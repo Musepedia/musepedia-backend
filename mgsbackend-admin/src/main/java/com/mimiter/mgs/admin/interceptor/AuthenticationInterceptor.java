@@ -2,6 +2,7 @@ package com.mimiter.mgs.admin.interceptor;
 
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,7 +21,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) throws Exception {
         try {
-            Long id = (Long) request.getSession().getAttribute("userId");
+            Long id = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             SecurityUtil.setCurrentUserId(id);
         } catch (Exception ignore) {
 

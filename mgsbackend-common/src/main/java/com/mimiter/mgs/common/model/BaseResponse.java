@@ -37,7 +37,7 @@ public class BaseResponse<T> {
      * @return /
      */
     public static <T> BaseResponse<T> ok() {
-        return ok(null);
+        return ok("ok", null);
     }
 
     /**

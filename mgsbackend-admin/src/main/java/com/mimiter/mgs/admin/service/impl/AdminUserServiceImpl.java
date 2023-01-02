@@ -3,28 +3,39 @@ package com.mimiter.mgs.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
+import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
 import com.mimiter.mgs.admin.model.entity.Role;
 import com.mimiter.mgs.admin.model.entity.UserRole;
+import com.mimiter.mgs.admin.model.enums.InstitutionType;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
 import com.mimiter.mgs.admin.model.request.UpdateUserReq;
 import com.mimiter.mgs.admin.repository.AdminUserRepository;
+import com.mimiter.mgs.admin.repository.InstitutionAdminRepository;
 import com.mimiter.mgs.admin.repository.RoleRepository;
 import com.mimiter.mgs.admin.repository.UserRoleRepository;
 import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.CaptchaService;
+import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.admin.service.base.AbstractCrudService;
+import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionDestroyedEvent;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.events.SessionExpiredEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,9 +55,11 @@ public class AdminUserServiceImpl
 
     private final UserRoleRepository userRoleRepository;
 
-    private final AuthenticationManager authenticationManager;
+    private final InstitutionAdminRepository institutionAdminRepository;
 
     private final PasswordEncoder encoder;
+
+    private final SessionRegistry sessionRegistry;
 
     @Override
     @Transactional
@@ -62,22 +75,51 @@ public class AdminUserServiceImpl
         user.setEnabled(true);
         save(user);
 
-        setRoles(user.getId(), req.getRoleIds());
+        setRoles(user.getId(), req.getRoleIds(), req.getInstitutionId());
 
         return user;
     }
 
-    private void setRoles(Long userId, List<Long> roleIds) {
+    private void setRoles(Long userId, List<Long> roleIds, Long institutionId) {
         Assert.notNull(userId, "用户ID不能为空");
         QueryWrapper<UserRole> ur = new QueryWrapper<>();
         ur.eq("user_id", userId);
         userRoleRepository.delete(ur);
 
+        InstitutionAdmin ia = new InstitutionAdmin();
+        ia.setUserId(userId);
+        ia.setInstitutionId(institutionId);
+
         if (roleIds != null) {
+            boolean isMuseumAdmin = false;
+            boolean isSchoolAdmin = false;
+
             for (Long roleId : roleIds) {
                 Role role = roleRepository.selectById(roleId);
                 Assert.notNull(role, "角色ID: " + roleId + " 不存在");
                 userRoleRepository.insert(new UserRole(userId, roleId));
+
+                if (RoleService.STR_MUSEUM_ADMIN.equals(role.getName())) {
+                    ia.setType(InstitutionType.MUSEUM);
+                    isMuseumAdmin = true;
+                } else if (RoleService.STR_SCHOOL_ADMIN.equals(role.getName())) {
+                    ia.setType(InstitutionType.SCHOOL);
+                    isSchoolAdmin = true;
+                }
+            }
+
+            if (isMuseumAdmin && isSchoolAdmin) {
+                throw new BadRequestException("不能同时设置为博物馆管理员和学校管理员");
+            }
+
+        }
+
+        // 保存机构管理员信息
+        if (ia.getInstitutionId() != null && ia.getType() != null) {
+            if (institutionAdminRepository.selectById(userId) == null) {
+                institutionAdminRepository.insert(ia);
+            } else {
+                institutionAdminRepository.updateById(ia);
             }
         }
     }
@@ -93,7 +135,7 @@ public class AdminUserServiceImpl
         user.setEmail(req.getEmail());
         updateById(user);
 
-        setRoles(user.getId(), req.getRoleIds());
+        setRoles(user.getId(), req.getRoleIds(), req.getInstitutionId());
 
         return true;
     }
@@ -109,7 +151,9 @@ public class AdminUserServiceImpl
     public AdminUser loginPassword(LoginReq req) {
         Assert.notNull(req, "登录请求不能为空");
         // 校验验证码
-        captchaService.verifyCaptcha(req.getUuid(), req.getCode());
+        if (!EnvironmentUtil.isTestEnv()) {
+            captchaService.verifyCaptcha(req.getUuid(), req.getCode());
+        }
 
         AdminUser user = findByUsername(req.getUsername());
         Assert.notNull(user, "用户名或密码错误");
@@ -122,7 +166,7 @@ public class AdminUserServiceImpl
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
-        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities);
+        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities, user.getId());
         successToken.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(successToken);
 
@@ -143,6 +187,16 @@ public class AdminUserServiceImpl
         user.setId(userId);
         user.setEnabled(enable);
         updateById(user);
+
+        if (!enable) {
+            sessionRegistry.getAllSessions(userId, false)
+                    .forEach(SessionInformation::expireNow);
+        }
+    }
+
+    @EventListener
+    public void onSessionDestroyed(SessionExpiredEvent event) {
+        int i = 0;
     }
 
     @Override

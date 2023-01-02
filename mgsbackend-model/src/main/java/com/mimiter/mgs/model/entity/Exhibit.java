@@ -34,9 +34,6 @@ public class Exhibit extends BaseEntity {
     @TableField(value = "exhibit_label")
     private String label;
 
-    @TableField(value = "exhibit_category")
-    private String category;
-
     @TableField(value = "exhibit_description")
     private String description;
 

@@ -23,7 +23,7 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @ApiOperation(value = "获取角色列表")
+    @ApiOperation(value = "获取角色列表", notes = "仅超级管理员可调用")
     @GetMapping("/list")
     public BaseResponse<List<Role>> listRoles() {
         return BaseResponse.ok(roleService.list());

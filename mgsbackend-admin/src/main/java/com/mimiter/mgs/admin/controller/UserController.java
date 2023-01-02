@@ -11,9 +11,9 @@ import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Api(value = "一般用户API", tags = {"一般用户API"})
 public class UserController {
 
     private final AdminUserService userService;

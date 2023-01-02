@@ -6,5 +6,5 @@ import com.mimiter.mgs.model.entity.CulturalCreative;
 /**
  * 文创产品服务
  */
-public interface CulturalCreativeSerivce extends CrudService<CulturalCreative> {
+public interface CulturalCreativeService extends CrudService<CulturalCreative> {
 }

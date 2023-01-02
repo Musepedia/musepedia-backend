@@ -3,9 +3,7 @@ package museum;
 import com.mimiter.mgs.admin.App;
 import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
 import com.mimiter.mgs.admin.model.request.AddMuseumReq;
-import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.service.AdminMuseumService;
-import com.mimiter.mgs.admin.service.AdminUserService;
 import com.mimiter.mgs.admin.service.CaptchaService;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -23,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Generated;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
@@ -56,12 +53,11 @@ public class MuseumTest {
         museum = new AddMuseumReq();
         museum.setName("String");
         museum.setDescription("Description");
-        museum.setLogUrl("logoUrl");
+        museum.setLogoUrl("logoUrl");
         museum.setImageUrl("imageUrl");
         museum.setLatitude(0.0);
         museum.setLongitude(0.0);
         museum.setAddress("String");
-        museum.setFloorPlanFilepath("String");
         museumService.addMuseum(museum);
 
     }
@@ -79,12 +75,11 @@ public class MuseumTest {
         AddMuseumReq req = new AddMuseumReq();
         req.setName("String");
         req.setDescription("Description");
-        req.setLogUrl("logoUrl");
+        req.setLogoUrl("logoUrl");
         req.setImageUrl("imageUrl");
         req.setLatitude(0.0);
         req.setLongitude(0.0);
         req.setAddress("String");
-        req.setFloorPlanFilepath("String");
 
         RestAssuredMockMvc.given()
                 .contentType("application/json")

@@ -4,6 +4,7 @@ import com.mimiter.mgs.admin.model.support.Captcha;
 import com.mimiter.mgs.admin.service.CaptchaService;
 import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/captcha")
 @RequiredArgsConstructor
+@Api(value = "验证码API", tags = {"验证码API"})
 public class CaptchaController {
 
     private final CaptchaService captchaService;

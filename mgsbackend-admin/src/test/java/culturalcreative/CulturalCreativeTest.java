@@ -1,7 +1,7 @@
 package culturalcreative;
 
 import com.mimiter.mgs.admin.App;
-import com.mimiter.mgs.admin.service.CulturalCreativeSerivce;
+import com.mimiter.mgs.admin.service.CulturalCreativeService;
 import com.mimiter.mgs.model.entity.CulturalCreative;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class CulturalCreativeTest {
 
     @Resource
-    CulturalCreativeSerivce culturalCreativeService;
+    CulturalCreativeService culturalCreativeService;
 
     @Test
     public void testAdd() {

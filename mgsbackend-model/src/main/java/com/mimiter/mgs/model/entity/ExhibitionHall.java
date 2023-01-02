@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_exhibition_hall", autoResultMap = true)
+@TableName(value = "tbl_exhibition_hall", autoResultMap = true, excludeProperty = {"exhibitCount", "questionCount"})
 public class ExhibitionHall extends BaseEntity {
 
     @TableId(value = "exhibition_hall_id", type = IdType.AUTO)
@@ -35,4 +35,7 @@ public class ExhibitionHall extends BaseEntity {
     @TableField(value = "museum_id")
     private Long museumId;
 
+    private Integer exhibitCount;
+
+    private Integer questionCount;
 }

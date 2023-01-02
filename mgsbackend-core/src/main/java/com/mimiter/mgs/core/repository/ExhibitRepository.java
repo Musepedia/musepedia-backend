@@ -86,4 +86,10 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "order by sum(t1.question_freq) desc " +
             "limit #{count}")
     List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("museumId") Long museumId);
+
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select("select t2.*, sum(t1.question_freq) question_count from tbl_recommend_question t1, tbl_exhibit t2\n" +
+            "where t1.museum_id = #{museumId} and t1.exhibit_id = t2.exhibit_id\n" +
+            "group by t1.exhibit_id")
+    List<Exhibit> getQuestionCountPerExhibit(@Param("museumId") Long museumId);
 }

@@ -22,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service("userService")
@@ -150,6 +153,20 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     public List<User> ageWithLabels(Long museumId) {
         return baseMapper.ageWithLabels(museumId);
+    }
+
+    @Override
+    public int getNewUserCount(Long museumId, LocalDate date) {
+        return baseMapper.getNewUserCount(museumId, date);
+    }
+
+    @Override
+    public Map<LocalDate, Integer> getNewUserCount(Long museumId, LocalDate beginDate, LocalDate endDate) {
+        Map<LocalDate, Integer> dateWithNewUserCount = new HashMap<>();
+        for (LocalDate date = beginDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+            dateWithNewUserCount.put(date, baseMapper.getNewUserCount(museumId, date));
+        }
+        return dateWithNewUserCount;
     }
 
 }

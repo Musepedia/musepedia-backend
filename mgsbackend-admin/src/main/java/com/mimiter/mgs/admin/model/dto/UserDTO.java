@@ -27,4 +27,6 @@ public class UserDTO {
 
     @ApiModelProperty("如果是博物馆/学校管理员，对应的博物馆/学校id")
     private Long institutionId;
+
+    private Boolean enabled;
 }

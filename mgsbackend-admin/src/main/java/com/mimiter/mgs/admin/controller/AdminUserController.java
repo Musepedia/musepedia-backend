@@ -23,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mimiter.mgs.admin.service.RoleService.STR_SYS_ADMIN;
 
@@ -35,10 +36,6 @@ public class AdminUserController {
 
     private final AdminUserService adminUserService;
 
-    private final RoleService roleService;
-
-    private final AdminUserMapper adminUserMapper;
-
     //-----------Admin Operation------------
 
     @ApiOperation(value = "获取用户信息", notes = "仅超级管理员可调用")
@@ -49,27 +46,23 @@ public class AdminUserController {
             throw new ResourceNotFoundException("用户不存在");
         }
 
-        UserDTO dto = adminUserMapper.toDto(user);
-        dto.setRoles(roleService.listUserRoles(dto.getId()));
-        return BaseResponse.ok("ok", dto);
+        return BaseResponse.ok("ok", adminUserService.toDto(user));
     }
 
     @ApiOperation(value = "查询用户列表", notes = "仅超级管理员可调用")
     @GetMapping("/list")
     public BaseResponse<PageDTO<UserDTO>> listUser(@ApiParam UserQuery query) {
         Page<AdminUser> p = adminUserService.page(query.toPage(), query.toQueryWrapper());
-        List<UserDTO> dtos = adminUserMapper.toDto(p.getRecords());
-        for (UserDTO dto : dtos) {
-            dto.setRoles(roleService.listUserRoles(dto.getId()));
-        }
+
+        List<UserDTO> dtos = p.getRecords().stream().map(adminUserService::toDto).collect(Collectors.toList());
         return BaseResponse.ok("ok", new PageDTO<>(dtos, p.getTotal()));
     }
 
-    @ApiOperation(value = "添加用户", notes = "仅超级管理员可调用")
+    @ApiOperation(value = "添加用户", notes = "仅超级管理员可调用，返回新插入的用户ID")
     @PostMapping
-    public BaseResponse<?> addUser(@RequestBody @Validated AddUserReq user) {
-        adminUserService.addUser(user);
-        return BaseResponse.ok();
+    public BaseResponse<Long> addUser(@RequestBody @Validated AddUserReq user) {
+        AdminUser u = adminUserService.addUser(user);
+        return BaseResponse.ok(u.getId());
     }
 
     @ApiOperation(value = "更新单个用户信息", notes = "仅超级管理员可调用")

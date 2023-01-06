@@ -28,10 +28,6 @@ public class UserController {
 
     private final AdminUserService userService;
 
-    private final AdminUserMapper userMapper;
-
-    private final RoleService roleService;
-
     @ApiOperation(value = "获取当前用户信息", notes = "如果未登录，data为null")
     @GetMapping("/info")
     @AnonymousAccess
@@ -41,12 +37,7 @@ public class UserController {
             return BaseResponse.ok();
         }
         AdminUser user = userService.getById(userId);
-        if (user == null) {
-            return BaseResponse.ok();
-        }
-        UserDTO userDto = userMapper.toDto(user);
-        userDto.setRoles(roleService.listUserRoles(userId));
-        return BaseResponse.ok(userDto);
+        return BaseResponse.ok(userService.toDto(user));
     }
 
     @ApiOperation("通过密码登录")
@@ -54,9 +45,7 @@ public class UserController {
     @AnonymousAccess
     public BaseResponse<UserDTO> loginPassword(@RequestBody @Validated LoginReq req, HttpServletRequest request) {
         AdminUser user = userService.loginPassword(req);
-        UserDTO userDto = userMapper.toDto(user);
-        userDto.setRoles(roleService.listUserRoles(user.getId()));
-        return BaseResponse.ok(userDto);
+        return BaseResponse.ok(userService.toDto(user));
     }
 
     @ApiOperation("重置密码")

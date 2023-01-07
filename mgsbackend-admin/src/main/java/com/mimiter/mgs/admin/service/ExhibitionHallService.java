@@ -1,0 +1,25 @@
+package com.mimiter.mgs.admin.service;
+
+import com.mimiter.mgs.admin.model.request.UpsertExhibitionHallReq;
+import com.mimiter.mgs.admin.service.base.CrudService;
+import com.mimiter.mgs.model.entity.ExhibitionHall;
+
+/**
+ * 展区服务
+ */
+public interface ExhibitionHallService extends CrudService<ExhibitionHall> {
+
+    /**
+     *
+     * @param req 添加展区请求
+     * @return 添加的展区
+     */
+    ExhibitionHall addExhibitionHall(UpsertExhibitionHallReq req);
+
+    /**
+     *
+     * @param req 更新展区请求
+     * @return 是否更新成功
+     */
+    boolean updateExhibitionHall(UpsertExhibitionHallReq req);
+}

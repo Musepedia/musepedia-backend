@@ -2,7 +2,6 @@ package com.mimiter.mgs.admin.model.query;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mimiter.mgs.model.entity.Exhibit;
-import com.mimiter.mgs.model.entity.Museum;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 

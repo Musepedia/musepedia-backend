@@ -38,3 +38,10 @@ spring:
 
 mybatis-plus:
   type-enums-package: com.mimiter.mgs.admin.model.enums
+
+mgs.admin:
+  cos:
+    secret-id: ${env.cos.secret-id:WarningCosSecretIdNotSet}
+    secret-key: ${env.cos.secret-key:WarningCosSecretKeyNotSet}
+    region: ${env.cos.region:ap-shanghai}
+    bucket: ${env.cos.bucket:image-1314089900}

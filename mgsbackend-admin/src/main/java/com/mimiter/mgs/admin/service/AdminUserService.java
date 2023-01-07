@@ -1,5 +1,6 @@
 package com.mimiter.mgs.admin.service;
 
+import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.request.AddUserReq;
 import com.mimiter.mgs.admin.model.request.LoginReq;
@@ -57,11 +58,19 @@ public interface AdminUserService extends CrudService<AdminUser> {
     /**
      * 校验用户密码是否正确
      *
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param password 未加密的密码
      * @return 密码是否匹配
      */
     boolean checkPassword(Long userId, String password);
+
+    /**
+     * 转换为UserDTO，添加角色，InstitutionId信息
+     *
+     * @param user /
+     * @return null如果user是null，否则返回转换后的UserDTO
+     */
+    UserDTO toDto(AdminUser user);
 
 
 }

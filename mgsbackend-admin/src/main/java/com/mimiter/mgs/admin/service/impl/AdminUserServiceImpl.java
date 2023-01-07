@@ -2,6 +2,8 @@ package com.mimiter.mgs.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
+import com.mimiter.mgs.admin.mapstruct.AdminUserMapper;
+import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
 import com.mimiter.mgs.admin.model.entity.Role;
@@ -60,6 +62,8 @@ public class AdminUserServiceImpl
     private final PasswordEncoder encoder;
 
     private final SessionRegistry sessionRegistry;
+
+    private final AdminUserMapper adminUserMapper;
 
     @Override
     @Transactional
@@ -205,4 +209,16 @@ public class AdminUserServiceImpl
         return encoder.matches(password, user.getPassword());
     }
 
+    @Override
+    public UserDTO toDto(AdminUser user) {
+        if (user == null) {
+            return null;
+        }
+        UserDTO dto = adminUserMapper.toDto(user);
+        dto.setRoles(roleRepository.findByUserId(user.getId()));
+
+        InstitutionAdmin ia = institutionAdminRepository.selectById(user.getId());
+        dto.setInstitutionId(ia == null ? null : ia.getInstitutionId());
+        return dto;
+    }
 }

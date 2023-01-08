@@ -1,7 +1,6 @@
 package com.mimiter.mgs.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.mimiter.mgs.admin.mapstruct.AdminUserMapper;
 import com.mimiter.mgs.admin.model.dto.PageDTO;
 import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
@@ -11,7 +10,6 @@ import com.mimiter.mgs.admin.model.request.SetEnableReq;
 import com.mimiter.mgs.admin.model.request.SetPasswordReq;
 import com.mimiter.mgs.admin.model.request.UpdateUserReq;
 import com.mimiter.mgs.admin.service.AdminUserService;
-import com.mimiter.mgs.admin.service.RoleService;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
 import io.swagger.annotations.Api;

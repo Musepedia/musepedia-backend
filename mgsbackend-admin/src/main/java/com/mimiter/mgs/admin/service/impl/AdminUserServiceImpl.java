@@ -2,7 +2,7 @@ package com.mimiter.mgs.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mimiter.mgs.admin.config.security.CodeAuthenticationToken;
-import com.mimiter.mgs.admin.mapstruct.AdminUserMapper;
+import com.mimiter.mgs.admin.mapstruct.AdminUserDTOMapper;
 import com.mimiter.mgs.admin.model.dto.UserDTO;
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
@@ -24,11 +24,9 @@ import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +60,7 @@ public class AdminUserServiceImpl
 
     private final SessionRegistry sessionRegistry;
 
-    private final AdminUserMapper adminUserMapper;
+    private final AdminUserDTOMapper adminUserMapper;
 
     @Override
     @Transactional

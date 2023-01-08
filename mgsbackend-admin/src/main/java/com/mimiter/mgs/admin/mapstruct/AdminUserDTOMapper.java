@@ -6,5 +6,5 @@ import com.mimiter.mgs.common.mapstruct.BaseDTOMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface AdminUserMapper extends BaseDTOMapper<UserDTO, AdminUser> {
+public interface AdminUserDTOMapper extends BaseDTOMapper<UserDTO, AdminUser> {
 }

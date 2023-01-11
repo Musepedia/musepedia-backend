@@ -1,6 +1,8 @@
 package com.mimiter.mgs.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mimiter.mgs.admin.mapstruct.ExhibitDTOMapper;
+import com.mimiter.mgs.admin.model.dto.ExhibitDTO;
 import com.mimiter.mgs.admin.model.request.UpsertExhibitReq;
 import com.mimiter.mgs.admin.repository.ExhibitRepository;
 import com.mimiter.mgs.admin.repository.ExhibitionHallRepository;
@@ -19,6 +21,8 @@ public class ExhibitServiceImpl extends
         AbstractCrudService<ExhibitRepository, Exhibit> implements ExhibitService {
 
     private final ExhibitionHallRepository exhibitionHallRepository;
+
+    private final ExhibitDTOMapper exhibitDTOMapper;
 
     @Override
     public Exhibit addExhibit(UpsertExhibitReq req) {
@@ -62,5 +66,13 @@ public class ExhibitServiceImpl extends
         updateById(exhibit);
 
         return true;
+    }
+
+    @Override
+    public ExhibitDTO toDTO(Exhibit exhibit) {
+        if (exhibit == null) {
+            return null;
+        }
+        return exhibitDTOMapper.toDto(exhibit);
     }
 }

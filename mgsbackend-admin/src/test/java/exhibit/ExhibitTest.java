@@ -299,14 +299,19 @@ public class ExhibitTest {
     public void setExhibitionHallEnable_MUSEUM() {
         TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
         SetEnableReq req = new SetEnableReq();
-        req.setId(1L);
+        req.setId(2L);
         req.setEnable(false);
         exhibitionHallController.enableExhibitionHall(req);
-        assertEquals(req.getEnable(), exhibitionHallService.getById(1L).getEnabled());
+        assertEquals(req.getEnable(), exhibitionHallService.getById(req.getId()).getEnabled());
+
+        QueryWrapper<Exhibit> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("exhibition_hall_id",req.getId());
+        assertTrue(exhibitRepository.selectList(queryWrapper).stream().allMatch(e -> e.getEnabled().equals(req.getEnable())));
 
         req.setEnable(true);
         exhibitionHallController.enableExhibitionHall(req);
-        assertEquals(req.getEnable(), exhibitionHallService.getById(1L).getEnabled());
+        assertEquals(req.getEnable(), exhibitionHallService.getById(req.getId()).getEnabled());
+        assertTrue(exhibitRepository.selectList(queryWrapper).stream().allMatch(e -> e.getEnabled().equals(req.getEnable())));
     }
 
     @Test

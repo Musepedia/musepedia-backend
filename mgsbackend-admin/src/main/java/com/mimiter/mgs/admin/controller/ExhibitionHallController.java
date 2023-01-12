@@ -99,7 +99,8 @@ public class ExhibitionHallController {
         return BaseResponse.ok();
     }
 
-    @ApiOperation(value = "设置展区启用状态", notes = "超级管理员和博物馆管理员可调用")
+    @ApiOperation(value = "设置展区启用状态", notes = "超级管理员和博物馆管理员可调用, \n"
+            + "同时会设置展区下所有展品的启用状态")
     @PutMapping("/enable")
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
     public BaseResponse<?> enableExhibitionHall(@RequestBody @Validated SetEnableReq req) {
@@ -107,10 +108,7 @@ public class ExhibitionHallController {
             assertHallManageable(req.getId());
         }
 
-        ExhibitionHall hall = new ExhibitionHall();
-        hall.setId(req.getId());
-        hall.setEnabled(req.getEnable());
-        exhibitionHallService.updateById(hall);
+        exhibitionHallService.setExhibitionHallEnable(req);
 
         return BaseResponse.ok();
     }

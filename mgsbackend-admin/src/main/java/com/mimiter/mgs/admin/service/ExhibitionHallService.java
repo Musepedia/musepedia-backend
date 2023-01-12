@@ -1,6 +1,7 @@
 package com.mimiter.mgs.admin.service;
 
 import com.mimiter.mgs.admin.model.dto.ExhibitionHallDTO;
+import com.mimiter.mgs.admin.model.request.SetEnableReq;
 import com.mimiter.mgs.admin.model.request.UpsertExhibitionHallReq;
 import com.mimiter.mgs.admin.service.base.CrudService;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
@@ -25,6 +26,13 @@ public interface ExhibitionHallService extends CrudService<ExhibitionHall> {
      * @return 是否更新成功
      */
     boolean updateExhibitionHall(UpsertExhibitionHallReq req);
+
+    /**
+     * 设置展区是否启用
+     *
+     * @param req 设置展区是否启用请求
+     */
+    void setExhibitionHallEnable(SetEnableReq req);
 
     /**
      * 转换为ExhibitionHallDTO

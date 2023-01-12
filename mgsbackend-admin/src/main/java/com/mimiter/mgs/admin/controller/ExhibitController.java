@@ -1,12 +1,14 @@
 package com.mimiter.mgs.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mimiter.mgs.admin.config.security.Permissions;
 import com.mimiter.mgs.admin.model.dto.ExhibitDTO;
 import com.mimiter.mgs.admin.model.dto.PageDTO;
 import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
 import com.mimiter.mgs.admin.model.query.ExhibitQuery;
+import com.mimiter.mgs.admin.model.request.SetEnableReq;
 import com.mimiter.mgs.admin.model.request.UpdateExhibitAliasReq;
 import com.mimiter.mgs.admin.model.request.UpdateExhibitTextReq;
 import com.mimiter.mgs.admin.model.request.UpsertExhibitReq;
@@ -17,6 +19,7 @@ import com.mimiter.mgs.admin.repository.QuestionRepository;
 import com.mimiter.mgs.admin.service.*;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.exception.BadRequestException;
+import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.model.entity.Exhibit;
@@ -57,8 +60,6 @@ public class ExhibitController {
     private final ExhibitAliasService exhibitAliasService;
 
     private final InstitutionAdminRepository institutionAdminRepository;
-
-    private final QuestionRepository questionRepository;
 
     private final ExhibitionHallService exhibitionHallService;
 
@@ -111,14 +112,7 @@ public class ExhibitController {
     public BaseResponse<?> updateExhibit(@RequestBody @Validated UpsertExhibitReq req) {
         // 非超级管理员更新展品时，需要检查展品对应博否物馆id是属于当前用户
         if (permissions.contains(STR_MUSEUM_ADMIN)) {
-            Long userId = SecurityUtil.getCurrentUserId();
-            ExhibitionHall exhibitionHall = exhibitionHallService.getById(req.getHallId());
-            InstitutionAdmin institutionAdmin = institutionAdminRepository.findById(userId);
-
-            Long museumId = exhibitionHall.getMuseumId();
-            if (!institutionAdmin.getInstitutionId().equals(museumId)) {
-                throw new IllegalArgumentException("更新的展品与用户管理的博物馆不对应");
-            }
+            assertExhibitManageable(req.getId());
         }
 
         exhibitService.updateExhibit(req);
@@ -126,42 +120,21 @@ public class ExhibitController {
         return BaseResponse.ok();
     }
 
-    @ApiOperation(value = "删除展品", notes = "超级管理员和博物馆管理员可调用")
-    @DeleteMapping
+    @ApiOperation(value = "设置展品启用状态", notes = "超级管理员和博物馆管理员可调用")
+    @PutMapping("/enable")
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
-    public BaseResponse<?> deleteExhibit(@RequestBody List<Long> ids) {
-        // 非超级管理员删除展品时，需要检查展区对应博物馆id是否属于当前用户
-        // 暂时决定有RecommendQuestion时不允许删除(有外键)，即该展品已经被提过问
-        // 删除展品同时需要将展品下的所有展品文本和展品别名删除
-
-        // 非超级管理员删除
+    public BaseResponse<?> enableExhibit(@RequestBody @Validated SetEnableReq req) {
         if (permissions.contains(STR_MUSEUM_ADMIN)) {
-            Long userId = SecurityUtil.getCurrentUserId();
-            for (Long id : ids) {
-                Long hallId = exhibitService.getById(id).getHallId();
-
-                Long museumId = exhibitionHallService.getById(hallId).getMuseumId();
-                InstitutionAdmin institutionAdmin = institutionAdminRepository.findById(userId);
-
-                if (!institutionAdmin.getInstitutionId().equals(museumId)) {
-                    throw new IllegalArgumentException("删除的展品中有展品与用户管理的博物馆不对应");
-                }
-            }
+            assertExhibitManageable(req.getId());
         }
 
-        // 删除展品和展品下所有文本和别名，有RecommendQuestion时不允许删除
-        for (Long id : ids) {
-            if (questionRepository.findByExhibitId(id) != null) {
-                throw new BadRequestException("当前有展品已被提问，不能删除");
-            }
-            exhibitAliasRepository.deleteByExhibitId(id);
-            exhibitTextRepository.deleteByExhibitId(id);
-        }
-        exhibitService.removeByIds(ids);
+        Exhibit exhibit = new Exhibit();
+        exhibit.setId(req.getId());
+        exhibit.setEnabled(req.getEnable());
+        exhibitService.updateById(exhibit);
 
         return BaseResponse.ok();
     }
-
 
     //------------展品信息------------
 
@@ -186,15 +159,7 @@ public class ExhibitController {
     public BaseResponse<?> updateExhibitAlias(@RequestBody @Validated UpdateExhibitAliasReq req) {
         // 如果是博物馆管理员，需要判断展品是否属于自己的博物馆
         if (permissions.contains(STR_MUSEUM_ADMIN)) {
-            Long userId = SecurityUtil.getCurrentUserId();
-            Long hallId = exhibitService.getById(req.getExhibitId()).getHallId();
-
-            Long museumId = exhibitionHallService.getById(hallId).getMuseumId();
-            InstitutionAdmin institutionAdmin = institutionAdminRepository.findById(userId);
-
-            if (!institutionAdmin.getInstitutionId().equals(museumId)) {
-                throw new IllegalArgumentException("更新的展品与用户管理的博物馆不对应");
-            }
+            assertExhibitManageable(req.getExhibitId());
         }
 
         exhibitAliasService.updateExhibitAlias(req);
@@ -223,19 +188,23 @@ public class ExhibitController {
     public BaseResponse<?> updateExhibitText(@RequestBody @Validated UpdateExhibitTextReq req) {
         // 如果是博物馆管理员，需要判断展品是否属于自己的博物馆
         if (permissions.contains(STR_MUSEUM_ADMIN)) {
-            Long userId = SecurityUtil.getCurrentUserId();
-            Long hallId = exhibitService.getById(req.getExhibitId()).getHallId();
-
-            Long museumId = exhibitionHallService.getById(hallId).getMuseumId();
-            InstitutionAdmin institutionAdmin = institutionAdminRepository.findById(userId);
-
-            if (!institutionAdmin.getInstitutionId().equals(museumId)) {
-                throw new IllegalArgumentException("更新的展品与用户管理的博物馆不对应");
-            }
+            assertExhibitManageable(req.getExhibitId());
         }
 
         exhibitTextService.updateExhibitText(req);
 
         return BaseResponse.ok();
+    }
+
+    private void assertExhibitManageable(Long exhibitId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Long hallId = exhibitService.getById(exhibitId).getHallId();
+
+        Long museumId = exhibitionHallService.getById(hallId).getMuseumId();
+        InstitutionAdmin institutionAdmin = institutionAdminRepository.findById(userId);
+
+        if (!institutionAdmin.getInstitutionId().equals(museumId)) {
+            throw new ForbiddenException("更新的展品与用户管理的博物馆不对应");
+        }
     }
 }

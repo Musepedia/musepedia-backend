@@ -22,4 +22,7 @@ public class ExhibitionHallDTO {
 
     @ApiModelProperty("展区所在博物馆信息")
     private Museum museum;
+
+    @ApiModelProperty("展区是否启用")
+    private Boolean enabled;
 }

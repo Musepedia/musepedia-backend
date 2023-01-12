@@ -18,11 +18,6 @@ public class ExhibitionHallServiceImpl
     private static final int TRENDING = 10000;
 
     @Override
-    public List<Integer> selectExhibitionHallIds(Long id) {
-        return baseMapper.selectExhibitionHallIds(id);
-    }
-
-    @Override
     public Map<ExhibitionHall, Integer> getTopKHotExhibitionHall(Long museumId, int k) {
         Map<ExhibitionHall, Integer> topKExhibitionHalls = new HashMap<>();
         List<ExhibitionHall> exhibitCount = baseMapper.getExhibitCountPerExhibitionHall(museumId);

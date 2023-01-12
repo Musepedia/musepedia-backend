@@ -80,7 +80,7 @@ public class AdminUserController {
     @ApiOperation(value = "切换单个用户启用状态", notes = "仅超级管理员可调用")
     @PutMapping("/enable")
     public BaseResponse<?> setEnable(@RequestBody @Validated SetEnableReq req) {
-        adminUserService.setEnable(req.getUserId(), req.getEnable());
+        adminUserService.setEnable(req.getId(), req.getEnable());
         return BaseResponse.ok();
     }
 }

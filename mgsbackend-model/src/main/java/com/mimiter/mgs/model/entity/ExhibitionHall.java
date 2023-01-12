@@ -1,10 +1,7 @@
 package com.mimiter.mgs.model.entity;
 
+import com.baomidou.mybatisplus.annotation.*;
 import com.mimiter.mgs.common.model.BaseEntity;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +31,9 @@ public class ExhibitionHall extends BaseEntity {
 
     @TableField(value = "museum_id")
     private Long museumId;
+
+    @TableField(value = "is_enabled")
+    private Boolean enabled;
 
     private Integer exhibitCount;
 

@@ -6,10 +6,7 @@ import com.mimiter.mgs.admin.controller.ExhibitController;
 import com.mimiter.mgs.admin.controller.ExhibitionHallController;
 import com.mimiter.mgs.admin.model.query.ExhibitQuery;
 import com.mimiter.mgs.admin.model.query.ExhibitionHallQuery;
-import com.mimiter.mgs.admin.model.request.UpdateExhibitAliasReq;
-import com.mimiter.mgs.admin.model.request.UpdateExhibitTextReq;
-import com.mimiter.mgs.admin.model.request.UpsertExhibitReq;
-import com.mimiter.mgs.admin.model.request.UpsertExhibitionHallReq;
+import com.mimiter.mgs.admin.model.request.*;
 import com.mimiter.mgs.admin.repository.ExhibitAliasRepository;
 import com.mimiter.mgs.admin.repository.ExhibitRepository;
 import com.mimiter.mgs.admin.repository.ExhibitTextRepository;
@@ -17,22 +14,16 @@ import com.mimiter.mgs.admin.service.ExhibitAliasService;
 import com.mimiter.mgs.admin.service.ExhibitService;
 import com.mimiter.mgs.admin.service.ExhibitTextService;
 import com.mimiter.mgs.admin.service.ExhibitionHallService;
-import com.mimiter.mgs.common.exception.BadRequestException;
+import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.model.entity.Exhibit;
 import com.mimiter.mgs.model.entity.ExhibitAlias;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 import util.TestUtil;
 
 import javax.annotation.Resource;
@@ -156,42 +147,6 @@ public class ExhibitTest {
     }
 
     @Test
-    public void deleteExhibitRight() {
-        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
-        ArrayList<Long> ids = new ArrayList<>();
-        ids.add(8L);
-
-        exhibitController.deleteExhibit(ids);
-
-        assertNull(exhibitService.getById(8L));
-        assertNull(exhibitAliasService.getById(8L));
-        assertNull(exhibitTextService.getById(26L));
-    }
-
-    @Test
-    public void deleteExhibitWrong1() {
-        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
-        ArrayList<Long> ids = new ArrayList<>();
-        ids.add(5L);
-
-
-        assertThrows(BadRequestException.class, () -> exhibitController.deleteExhibit(ids));
-    }
-
-    @Test
-    public void deleteExhibitWrong2() {
-        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
-        ArrayList<Long> ids = new ArrayList<>();
-        ids.add(126L);
-        ids.add(127L);
-
-        assertThrows(IllegalArgumentException.class, () -> exhibitController.deleteExhibit(ids));
-        assertNotNull(exhibitService.getById(126L));
-        assertNotNull(exhibitService.getById(127L));
-
-    }
-
-    @Test
     public void getExhibitAlias() {
         TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
         assertNotNull(exhibitController.getExhibitAlias(1L));
@@ -257,6 +212,24 @@ public class ExhibitTest {
         assertNotNull(exhibitController.getExhibitText(1L));
     }
 
+    @Test
+    public void enableExhibit_MUSEUM() {
+        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
+        SetEnableReq req = new SetEnableReq();
+        req.setId(1L);
+        req.setEnable(false);
+        exhibitController.enableExhibit(req);
+        Exhibit exhibit = exhibitRepository.selectById(1L);
+        assertNotNull(exhibit);
+        assertEquals(req.getEnable(),exhibit.getEnabled());
+
+        req.setEnable(true);
+        exhibitController.enableExhibit(req);
+        exhibit = exhibitRepository.selectById(1L);
+        assertNotNull(exhibit);
+        assertEquals(req.getEnable(),exhibit.getEnabled());
+    }
+
     //--------------------------------------------------------------------------------------------------
 
     @Test
@@ -286,7 +259,10 @@ public class ExhibitTest {
         req.setImageUrl("testUrl");
         req.setMuseumId(11L);
         req.setName("testName");
-        assertThrows(IllegalArgumentException.class, () -> exhibitionHallController.addExhibitionHall(req));
+        Long id = exhibitionHallController.addExhibitionHall(req).getData();
+
+        ExhibitionHall exhibitionHall = exhibitionHallService.getNotNullById(id);
+        assertEquals(1L,exhibitionHall.getMuseumId().longValue());
     }
 
     @Test
@@ -319,28 +295,27 @@ public class ExhibitTest {
         assertEquals(3L, exhibitionHallService.getById(1L).getMuseumId().longValue());
     }
 
-
     @Test
-    public void deleteExhibitionHallRight() {
-        ArrayList<Long> ids = new ArrayList<>();
-        ids.add(2L);
+    public void setExhibitionHallEnable_MUSEUM() {
+        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
+        SetEnableReq req = new SetEnableReq();
+        req.setId(1L);
+        req.setEnable(false);
+        exhibitionHallController.enableExhibitionHall(req);
+        assertEquals(req.getEnable(), exhibitionHallService.getById(1L).getEnabled());
 
-        assertThrows(BadRequestException.class, () -> exhibitionHallController.deleteExhibitionHall(ids));
-//        exhibitionHallController.deleteExhibitionHall(ids);
-//        assertNull(exhibitionHallService.getById(2L));
-//        assertNull(exhibitService.getById(1L).getHallId());
+        req.setEnable(true);
+        exhibitionHallController.enableExhibitionHall(req);
+        assertEquals(req.getEnable(), exhibitionHallService.getById(1L).getEnabled());
     }
 
     @Test
-    public void deleteExhibitionHallWrong() {
-        ArrayList<Long> ids = new ArrayList<>();
-        ids.add(2L);
-
-        assertThrows(BadRequestException.class, () -> exhibitionHallController.deleteExhibitionHall(ids));
-//        exhibitionHallController.deleteExhibitionHall(ids);
-//        assertNotNull(exhibitionHallService.getById(2L));
-//        assertNotNull(exhibitService.getById(1L).getHallId());
-//        assertThrows(IllegalArgumentException.class, () -> exhibitionHallController.deleteExhibitionHall(ids));
+    public void setExhibitionHallWrong() {
+        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
+        SetEnableReq req = new SetEnableReq();
+        req.setId(12L);
+        req.setEnable(false);
+        assertThrows(ForbiddenException.class, () -> exhibitionHallController.enableExhibitionHall(req));
     }
 
 }

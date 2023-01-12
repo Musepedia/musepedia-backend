@@ -9,7 +9,4 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface ExhibitionHallRepository extends BaseMapper<ExhibitionHall> {
 
-    @ResultMap("mybatis-plus_ExhibitionHall")
-    @Select("SELECT * FROM tbl_exhibition_hall WHERE exhibition_hall_name=#{name}")
-    ExhibitionHall findByName(String name);
 }

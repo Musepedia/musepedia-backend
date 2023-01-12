@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public interface ExhibitionHallService extends IService<ExhibitionHall> {
 
-    List<Integer> selectExhibitionHallIds(@Param("id") Long id);
-
     /**
      * 获取博物馆的前K个热门展区，热度由展区中展品的平均提问量计算得到
      *

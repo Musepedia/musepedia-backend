@@ -17,9 +17,6 @@ public interface ExhibitionHallRepository extends BaseMapper<ExhibitionHall> {
     @Select("select * from tbl_exhibition_hall where museum_id = #{id}")
     List<ExhibitionHall> listByMuseumId(@Param("id") Long id);
 
-    @Select("select exhibition_hall_id from tbl_exhibition_hall where museum_id = #{id}")
-    List<Integer> selectExhibitionHallIds(@Param("id") Long id);
-
     @ResultMap("mybatis-plus_ExhibitionHall")
     @Select("select t2.*, count(t1.exhibit_id) exhibit_count from tbl_exhibit t1, tbl_exhibition_hall t2\n" +
             "where t1.museum_id = #{museumId} and t1.exhibition_hall_id = t2.exhibition_hall_id\n" +

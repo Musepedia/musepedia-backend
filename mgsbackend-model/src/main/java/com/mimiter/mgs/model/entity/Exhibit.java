@@ -49,5 +49,8 @@ public class Exhibit extends BaseEntity {
     @TableField(value = "exhibit_next_id")
     private Long nextId;
 
+    @TableField(value = "is_enabled")
+    private Boolean enabled;
+
     private Integer questionCount;
 }

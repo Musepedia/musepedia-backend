@@ -29,6 +29,7 @@ public class ExhibitionHallController {
     @AnonymousAccess
     @GetMapping
     public BaseResponse<List<ExhibitionHallDTO>> listExhibitionHall() {
+        // TODO hall
         Long currentMuseumId = ThreadContextHolder.getCurrentMuseumId();
         List<ExhibitionHall> halls = exhibitionHallRepository.listByMuseumId(currentMuseumId);
         return BaseResponse.ok("ok", exhibitionHallDTOMapper.toDto(halls));

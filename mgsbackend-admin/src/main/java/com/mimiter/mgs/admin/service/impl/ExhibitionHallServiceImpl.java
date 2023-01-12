@@ -20,8 +20,6 @@ public class ExhibitionHallServiceImpl extends
 
     @Override
     public ExhibitionHall addExhibitionHall(UpsertExhibitionHallReq req) {
-        Assert.isNull(getBaseMapper().findByName(req.getName()), "展区已存在");
-
         ExhibitionHall exhibitionHall = new ExhibitionHall();
         exhibitionHall.setName(req.getName());
         exhibitionHall.setDescription(req.getDescription());

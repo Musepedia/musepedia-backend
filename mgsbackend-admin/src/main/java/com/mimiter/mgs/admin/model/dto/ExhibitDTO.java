@@ -39,4 +39,7 @@ public class ExhibitDTO {
 
     @ApiModelProperty(value = "下一个展品ID")
     private Long nextId;
+
+    @ApiModelProperty(value = "展品是否启用")
+    private Boolean enabled;
 }

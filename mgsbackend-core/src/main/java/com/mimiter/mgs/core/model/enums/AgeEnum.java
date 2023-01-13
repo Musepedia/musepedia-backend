@@ -1,4 +1,4 @@
-package com.mimiter.mgs.core.model.entity.enums;
+package com.mimiter.mgs.core.model.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;

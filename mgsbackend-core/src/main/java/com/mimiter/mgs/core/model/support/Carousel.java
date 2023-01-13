@@ -1,5 +1,6 @@
 package com.mimiter.mgs.core.model.support;
 
+import com.mimiter.mgs.core.model.enums.CarouselType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,8 +18,8 @@ public class Carousel {
 
     private String img;
 
-    @ApiModelProperty(value = "轮播图类型", allowableValues = "creative, activity")
-    private String type;
+    @ApiModelProperty(value = "轮播图类型", allowableValues = "link, display")
+    private CarouselType type;
 
     private String link;
 }

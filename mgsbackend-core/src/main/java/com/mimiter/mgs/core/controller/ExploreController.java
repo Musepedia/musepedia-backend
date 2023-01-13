@@ -34,7 +34,7 @@ public class ExploreController {
 
     private final ExhibitDTOMapper exhibitDTOMapper;
 
-    @ApiOperation("根据数量随机获取推荐问题")
+    @ApiOperation("获取推荐展品")
     @GetMapping("/exhibit")
     public BaseResponse<List<ExhibitDTO>> getRecommendExhibit(@RequestParam int count) {
         List<Exhibit> exhibits =

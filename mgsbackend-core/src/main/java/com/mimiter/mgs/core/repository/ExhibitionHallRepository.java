@@ -14,7 +14,9 @@ import java.util.Map;
 public interface ExhibitionHallRepository extends BaseMapper<ExhibitionHall> {
 
     @ResultMap("mybatis-plus_ExhibitionHall")
-    @Select("select * from tbl_exhibition_hall where museum_id = #{id}")
+    @Select("select * from tbl_exhibition_hall " +
+            "where museum_id = #{id} " +
+            "   and is_enabled = true")
     List<ExhibitionHall> listByMuseumId(@Param("id") Long id);
 
     @ResultMap("mybatis-plus_ExhibitionHall")

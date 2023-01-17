@@ -21,7 +21,8 @@ spring:
     initialization-mode: never
   servlet:
     multipart:
-      max-file-size: 8MB
+      max-file-size: 20MB
+      max-request-size: 20MB
   data:
     redis:
       repositories:

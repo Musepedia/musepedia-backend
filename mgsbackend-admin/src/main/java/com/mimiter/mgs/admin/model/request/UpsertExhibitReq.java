@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-@ApiModel("添加/更新展品请求参数")
+@ApiModel("添加或更新展品请求参数")
 @Data
 public class UpsertExhibitReq {
 

@@ -17,7 +17,7 @@ public class ExhibitTextServiceImpl extends
         Long exhibitId = req.getExhibitId();
         getBaseMapper().deleteByExhibitId(exhibitId);
 
-        for (String text: req.getExhibitText()) {
+        for (String text : req.getExhibitText()) {
             ExhibitText exhibitText = new ExhibitText();
             exhibitText.setExhibitId(exhibitId);
             exhibitText.setText(text);

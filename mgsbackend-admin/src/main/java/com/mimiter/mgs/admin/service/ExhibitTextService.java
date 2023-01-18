@@ -10,6 +10,7 @@ import com.mimiter.mgs.model.entity.ExhibitText;
 public interface ExhibitTextService extends CrudService<ExhibitText> {
 
     /**
+     * 更新展品文本
      *
      * @param req 更新展品文本请求
      * @return 是否更新成功

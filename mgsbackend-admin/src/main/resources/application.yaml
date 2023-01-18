@@ -5,6 +5,7 @@ logging:
   level:
     com.mimiter.mgs.admin:
       repository: debug
+    io.swagger.models.parameters.AbstractSerializableParameter: error
   file:
     path: logs
     max-history: 30

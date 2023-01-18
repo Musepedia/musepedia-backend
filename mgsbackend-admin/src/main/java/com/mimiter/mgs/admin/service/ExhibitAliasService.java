@@ -10,6 +10,7 @@ import com.mimiter.mgs.model.entity.ExhibitAlias;
 public interface ExhibitAliasService extends CrudService<ExhibitAlias> {
 
     /**
+     * 更新展品别名
      *
      * @param req 更新展品文本请求参数
      * @return 是否更新成功

@@ -13,16 +13,16 @@ import java.time.LocalDate;
 public class GetNewUserCountReq {
 
     @NotNull(message = "博物馆ID不能为空")
-    @ApiModelProperty(value = "博物馆ID", notes = "超级管理员任意填写(非空)，其他管理员必须填写自己所属博物馆ID")
+    @ApiModelProperty(value = "博物馆ID，超级管理员任意填写(非空)，其他管理员必须填写自己所属博物馆ID")
     private Long museumId;
 
     @NotNull(message = "开始日期不能为空")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "开始日期(包括)", notes = "格式为yyyy-MM-dd")
+    @ApiModelProperty(value = "开始日期(包括), yyyy-MM-dd")
     private LocalDate beginDate;
 
     @NotNull(message = "结束日期不能为空")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "结束日期(包括)", notes = "格式为yyyy-MM-dd")
+    @ApiModelProperty(value = "结束日期(包括), yyyy-MM-dd")
     private LocalDate endDate;
 }

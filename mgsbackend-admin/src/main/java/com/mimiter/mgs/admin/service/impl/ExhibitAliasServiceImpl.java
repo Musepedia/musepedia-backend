@@ -16,7 +16,7 @@ public class ExhibitAliasServiceImpl extends
         Long exhibitId = req.getExhibitId();
         getBaseMapper().deleteByExhibitId(exhibitId);
 
-        for (String alias: req.getExhibitAlias()) {
+        for (String alias : req.getExhibitAlias()) {
             ExhibitAlias exhibitAlias = new ExhibitAlias();
             exhibitAlias.setExhibitId(exhibitId);
             exhibitAlias.setAlias(alias);

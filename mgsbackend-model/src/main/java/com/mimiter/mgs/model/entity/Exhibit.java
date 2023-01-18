@@ -1,11 +1,14 @@
 package com.mimiter.mgs.model.entity;
 
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.mimiter.mgs.common.model.BaseEntity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 展品实体类
@@ -30,6 +33,9 @@ public class Exhibit extends BaseEntity {
 
     @TableField(value = "exhibit_figure_url")
     private String figureUrl;
+
+    @TableField(value = "figure_url_list", typeHandler = JacksonTypeHandler.class)
+    private List<String> figureUrlList;
 
     @TableField(value = "exhibit_label")
     private String label;

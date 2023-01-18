@@ -31,7 +31,7 @@ public class CulturalCreativeTest {
         CulturalCreative cc = new CulturalCreative();
         cc.setName("Test Creative");
         cc.setDescription("This is a test creative");
-        cc.setImgs(Arrays.asList("img1.jpg", "img2.jpg"));
+        cc.setImageList(Arrays.asList("img1.jpg", "img2.jpg"));
         cc.setMuseumId(1L);
 
         // Call the add method to save the object to the database
@@ -41,7 +41,7 @@ public class CulturalCreativeTest {
         CulturalCreative result = culturalCreativeService.getById(cc.getId());
         assertEquals(cc.getName(), result.getName());
         assertEquals(cc.getDescription(), result.getDescription());
-        assertEquals(cc.getImgs(), result.getImgs());
+        assertEquals(cc.getImageList(), result.getImageList());
         assertEquals(cc.getMuseumId(), result.getMuseumId());
     }
 }

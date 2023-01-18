@@ -7,6 +7,7 @@
                type="com.mimiter.mgs.model.entity.Exhibit">
         <id property="id" column="exhibit_id"/>
         <result property="figureUrl" column="exhibit_figure_url"/>
+        <result property="figureUrlList" column="figure_url_list" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
         <result property="label" column="exhibit_label"/>
         <result property="hallId" column="exhibition_hall_id"/>
         <result property="description" column="exhibit_description"/>
@@ -24,7 +25,8 @@
 
     <select id="selectRandomExhibits" resultMap="exhibitMapper">
         select t1.exhibit_id, t1.exhibition_hall_id, t1.exhibit_label, t2.exhibition_hall_name,
-        t2.exhibition_hall_description, t1.exhibit_figure_url, t1.exhibit_is_hot, t1.exhibit_description, t1.exhibit_url
+               t2.exhibition_hall_description, t1.exhibit_figure_url, t1.figure_url_list,
+               t1.exhibit_is_hot, t1.exhibit_description, t1.exhibit_url
         from tbl_exhibit t1, tbl_exhibition_hall t2
         where t1.exhibition_hall_id = t2.exhibition_hall_id
         and t1.is_enabled = 1

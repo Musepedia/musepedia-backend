@@ -1,11 +1,14 @@
 package com.mimiter.mgs.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.mimiter.mgs.common.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 展厅实体类
@@ -28,6 +31,9 @@ public class ExhibitionHall extends BaseEntity {
 
     @TableField(value = "image_url")
     private String imageUrl;
+
+    @TableField(value = "image_list", typeHandler = JacksonTypeHandler.class)
+    private List<String> imageList;
 
     @TableField(value = "museum_id")
     private Long museumId;

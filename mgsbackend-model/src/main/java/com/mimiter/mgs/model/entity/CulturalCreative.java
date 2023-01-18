@@ -27,12 +27,15 @@ public class CulturalCreative extends BaseEntity {
     @TableId(value = "creative_id", type = IdType.AUTO)
     private Long id;
 
+    @TableField(value = "name")
     private String name;
 
+    @TableField(value = "description")
     private String description;
 
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> imgs;
+    @TableField(value = "imgs", typeHandler = JacksonTypeHandler.class)
+    private List<String> imageList;
 
+    @TableField(value = "museum_id")
     private Long museumId;
 }

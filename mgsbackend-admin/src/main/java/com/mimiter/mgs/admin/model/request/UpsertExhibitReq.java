@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @ApiModel("添加或更新展品请求参数")
 @Data
 public class UpsertExhibitReq {
@@ -15,8 +17,12 @@ public class UpsertExhibitReq {
     @ApiModelProperty(value = "展品对应展区ID", notes = "添加时必填")
     private Long hallId;
 
-    @ApiModelProperty("展品图片URL")
+    @Deprecated
+    @ApiModelProperty("展品图片URL(已过时)")
     private String figureUrl;
+
+    @ApiModelProperty("展品图片URL列表，第一张为封面")
+    private List<String> figureUrlList;
 
     @Length(max = 127, message = "展品名称长度不能超过127")
     @ApiModelProperty(value = "展品名称", notes = "添加时必填，长度不能超过127")

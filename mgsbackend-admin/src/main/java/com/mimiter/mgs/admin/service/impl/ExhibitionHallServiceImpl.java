@@ -32,6 +32,7 @@ public class ExhibitionHallServiceImpl extends
         exhibitionHall.setName(req.getName());
         exhibitionHall.setDescription(req.getDescription());
         exhibitionHall.setImageUrl(req.getImageUrl());
+        exhibitionHall.setImageList(req.getImageList());
         exhibitionHall.setMuseumId(req.getMuseumId());
         save(exhibitionHall);
 
@@ -46,6 +47,7 @@ public class ExhibitionHallServiceImpl extends
         exhibitionHall.setName(req.getName());
         exhibitionHall.setDescription(req.getDescription());
         exhibitionHall.setImageUrl(req.getImageUrl());
+        exhibitionHall.setImageList(req.getImageList());
         exhibitionHall.setMuseumId(req.getMuseumId());
         updateById(exhibitionHall);
 

@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ApiModel("展区信息")
 @Data
 public class ExhibitionHallDTO {
@@ -17,8 +20,12 @@ public class ExhibitionHallDTO {
     @ApiModelProperty("展区描述")
     private String description;
 
-    @ApiModelProperty("展区图片URL")
+    @Deprecated
+    @ApiModelProperty("展区图片URL(已过时)")
     private String imageUrl;
+
+    @ApiModelProperty("展区图片URL列表，第一张为封面")
+    private List<String> imageList = new ArrayList<>();
 
     @ApiModelProperty("展区所在博物馆信息")
     private Museum museum;

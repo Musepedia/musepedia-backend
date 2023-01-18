@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel("展品")
@@ -22,8 +23,12 @@ public class ExhibitDTO {
     @ApiModelProperty("展品所在展馆信息")
     private ExhibitionHall exhibitionHall;
 
-    @ApiModelProperty("展品图片URL")
+    @Deprecated
+    @ApiModelProperty("展品图片URL(已过时)")
     private String figureUrl;
+
+    @ApiModelProperty("展品图片URL列表，第一张为封面")
+    private List<String> figureUrlList = new ArrayList<>();
 
     @ApiModelProperty("展品标签，即展品名")
     private String label;

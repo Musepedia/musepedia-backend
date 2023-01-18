@@ -39,6 +39,7 @@ public class ExhibitServiceImpl extends
         exhibit.setLabel(req.getLabel());
         exhibit.setDescription(req.getDescription());
         exhibit.setFigureUrl(req.getFigureUrl());
+        exhibit.setFigureUrlList(req.getFigureUrlList());
         exhibit.setPrevId(req.getPrevId());
         exhibit.setNextId(req.getNextId());
         exhibit.setMuseumId(exhibitionHall.getMuseumId());
@@ -58,6 +59,7 @@ public class ExhibitServiceImpl extends
         exhibit.setId(req.getId());
         exhibit.setDescription(req.getDescription());
         exhibit.setFigureUrl(req.getFigureUrl());
+        exhibit.setFigureUrlList(req.getFigureUrlList());
         exhibit.setPrevId(req.getPrevId());
         exhibit.setHallId(req.getHallId());
         exhibit.setUrl(req.getUrl());

@@ -28,6 +28,7 @@ import util.TestUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 import static com.mimiter.mgs.admin.service.RoleService.STR_MUSEUM_ADMIN;
@@ -82,7 +83,7 @@ public class ExhibitTest {
         TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
 
         UpsertExhibitReq req = new UpsertExhibitReq();
-        req.setFigureUrl("testFUrl");
+        req.setFigureUrlList(Arrays.asList("testFUrl1", "testFUrl2"));
         req.setDescription("testDes");
         req.setHallId(1L);
         req.setLabel("testLab");
@@ -94,6 +95,7 @@ public class ExhibitTest {
         Exhibit exhibit = exhibitRepository.findByLabel("testLab");
         assertNotNull(exhibit);
         assertEquals(1L,exhibit.getHallId().longValue());
+        assertEquals(2, exhibit.getFigureUrlList().size());
     }
 
     @Test

@@ -31,6 +31,7 @@ public class Exhibit extends BaseEntity {
 
     private ExhibitionHall exhibitionHall;
 
+    @Deprecated
     @TableField(value = "exhibit_figure_url")
     private String figureUrl;
 

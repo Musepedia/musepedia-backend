@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
 @Service("exhibitService")
 public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> implements ExhibitService {
 
-    private static final int TRENDING = 10000;
-
     private List<Integer> exhibitIdToInteger(List<String> exhibitIds) {
         List<Integer> res = new ArrayList<>();
         for (String ids : exhibitIds) {
@@ -80,28 +78,6 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     @Override
     public List<Exhibit> getMostFrequentExhibits(int count, Long museumId) {
         return baseMapper.selectMostFrequentExhibits(count, museumId);
-    }
-
-    @Override
-    public Map<Exhibit, Integer> getTopKHotExhibit(Long museumId, int k) {
-        Map<Exhibit, Integer> topKExhibits = new HashMap<>();
-        List<Exhibit> questionCount = baseMapper.getQuestionCountPerExhibit(museumId);
-        int sumQuestion = questionCount.stream().mapToInt(Exhibit::getQuestionCount).sum();
-
-        questionCount.sort(new Comparator<Exhibit>() {
-            @Override
-            public int compare(Exhibit exhibit1, Exhibit exhibit2) {
-                return exhibit2.getQuestionCount() - exhibit1.getQuestionCount();
-            }
-        });
-
-        k = Math.min(k, questionCount.size());
-        for (int i = 0; i < k; ++i) {
-            topKExhibits.put(questionCount.get(i),
-                    (int) ((double) questionCount.get(i).getQuestionCount() / sumQuestion * TRENDING));
-        }
-
-        return topKExhibits;
     }
 
 }

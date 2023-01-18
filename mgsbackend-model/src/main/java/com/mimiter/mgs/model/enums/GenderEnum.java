@@ -1,7 +1,7 @@
-package com.mimiter.mgs.core.model.enums;
+package com.mimiter.mgs.model.enums;
 
 import com.mimiter.mgs.common.model.BaseEnum;
-import com.mimiter.mgs.core.config.converter.GenderEnumConverter;
+import com.mimiter.mgs.converter.GenderEnumConverter;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -3,7 +3,7 @@ package com.mimiter.mgs.core.controller;
 import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.core.model.dto.UserDTO;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.param.PhoneLoginParam;
 import com.mimiter.mgs.core.model.param.WxLoginParam;
 import com.mimiter.mgs.core.service.UserService;

@@ -14,11 +14,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @Service("exhibitService")
 @RequiredArgsConstructor
 public class ExhibitServiceImpl extends
         AbstractCrudService<ExhibitRepository, Exhibit> implements ExhibitService {
+
+    private static final int TRENDING = 10000;
 
     private final ExhibitionHallRepository exhibitionHallRepository;
 
@@ -76,5 +83,27 @@ public class ExhibitServiceImpl extends
             return null;
         }
         return exhibitDTOMapper.toDto(exhibit);
+    }
+
+    @Override
+    public Map<Exhibit, Integer> getTopKHotExhibit(Long museumId, int k) {
+        Map<Exhibit, Integer> topKExhibits = new HashMap<>();
+        List<Exhibit> questionCount = baseMapper.getQuestionCountPerExhibit(museumId);
+        int sumQuestion = questionCount.stream().mapToInt(Exhibit::getQuestionCount).sum();
+
+        questionCount.sort(new Comparator<Exhibit>() {
+            @Override
+            public int compare(Exhibit exhibit1, Exhibit exhibit2) {
+                return exhibit2.getQuestionCount() - exhibit1.getQuestionCount();
+            }
+        });
+
+        k = Math.min(k, questionCount.size());
+        for (int i = 0; i < k; ++i) {
+            topKExhibits.put(questionCount.get(i),
+                    (int) ((double) questionCount.get(i).getQuestionCount() / sumQuestion * TRENDING));
+        }
+
+        return topKExhibits;
     }
 }

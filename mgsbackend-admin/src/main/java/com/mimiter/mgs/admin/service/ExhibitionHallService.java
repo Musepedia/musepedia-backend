@@ -6,6 +6,8 @@ import com.mimiter.mgs.admin.model.request.UpsertExhibitionHallReq;
 import com.mimiter.mgs.admin.service.base.CrudService;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
 
+import java.util.Map;
+
 /**
  * 展区服务
  */
@@ -41,4 +43,13 @@ public interface ExhibitionHallService extends CrudService<ExhibitionHall> {
      * @return null如果ExhibitionHall是null，否则返回转换后的ExhibitionHallDTO
      */
     ExhibitionHallDTO toDTO(ExhibitionHall exhibitionHall);
+
+    /**
+     * 获取博物馆的前K个热门展区，热度由展区中展品的平均提问量计算得到
+     *
+     * @param museumId 博物馆id
+     * @param k 限定查询热门展区的数量
+     * @return 博物馆的前K个热门展区，key为展区，value为展区的热度
+     */
+    Map<ExhibitionHall, Integer> getTopKHotExhibitionHall(Long museumId, int k);
 }

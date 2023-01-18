@@ -1,7 +1,7 @@
 package com.mimiter.mgs.core.model.dto;
 
-import com.mimiter.mgs.core.model.enums.AgeEnum;
-import com.mimiter.mgs.core.model.enums.GenderEnum;
+import com.mimiter.mgs.model.enums.AgeEnum;
+import com.mimiter.mgs.model.enums.GenderEnum;
 import lombok.Data;
 
 /**

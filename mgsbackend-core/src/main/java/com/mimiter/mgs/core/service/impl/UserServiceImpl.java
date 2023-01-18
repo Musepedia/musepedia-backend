@@ -1,7 +1,7 @@
 package com.mimiter.mgs.core.service.impl;
 
 import com.mimiter.mgs.common.exception.BadRequestException;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.entity.UserWxOpenid;
 import com.mimiter.mgs.core.model.param.PhoneLoginParam;
 import com.mimiter.mgs.core.model.param.WxLoginParam;
@@ -153,20 +153,6 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
     public List<User> ageWithLabels(Long museumId) {
         return baseMapper.ageWithLabels(museumId);
-    }
-
-    @Override
-    public int getNewUserCount(Long museumId, LocalDate date) {
-        return baseMapper.getNewUserCount(museumId, date);
-    }
-
-    @Override
-    public Map<LocalDate, Integer> getNewUserCount(Long museumId, LocalDate beginDate, LocalDate endDate) {
-        Map<LocalDate, Integer> dateWithNewUserCount = new HashMap<>();
-        for (LocalDate date = beginDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
-            dateWithNewUserCount.put(date, baseMapper.getNewUserCount(museumId, date));
-        }
-        return dateWithNewUserCount;
     }
 
 }

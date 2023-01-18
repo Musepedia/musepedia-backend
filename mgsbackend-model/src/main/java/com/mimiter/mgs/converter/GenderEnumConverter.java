@@ -1,7 +1,8 @@
-package com.mimiter.mgs.core.config.converter;
+package com.mimiter.mgs.converter;
+
 
 import com.mimiter.mgs.common.converter.EnumConverter;
-import com.mimiter.mgs.core.model.enums.GenderEnum;
+import com.mimiter.mgs.model.enums.GenderEnum;
 
 /**
  * 性别枚举转换器

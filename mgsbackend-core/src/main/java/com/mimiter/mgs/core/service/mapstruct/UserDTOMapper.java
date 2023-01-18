@@ -2,7 +2,7 @@ package com.mimiter.mgs.core.service.mapstruct;
 
 import com.mimiter.mgs.common.mapstruct.BaseDTOMapper;
 import com.mimiter.mgs.core.model.dto.UserDTO;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

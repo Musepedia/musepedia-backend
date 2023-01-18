@@ -1,7 +1,8 @@
-package com.mimiter.mgs.core.config.converter;
+package com.mimiter.mgs.converter;
+
 
 import com.mimiter.mgs.common.converter.EnumConverter;
-import com.mimiter.mgs.core.model.enums.AgeEnum;
+import com.mimiter.mgs.model.enums.AgeEnum;
 
 /**
  * 年龄枚举{@link AgeEnum}类转换器。

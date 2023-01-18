@@ -1,7 +1,7 @@
 package user;
 
 import com.mimiter.mgs.core.App;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.entity.UserWxOpenid;
 import com.mimiter.mgs.core.repository.UserRepository;
 import com.mimiter.mgs.core.repository.UserWxOpenidRepository;
@@ -14,9 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -85,11 +83,4 @@ public class UserTest {
         System.out.println(userService.getUserRecommendStatus(10000L));
     }
 
-    @Test
-    public void testNewUserCount() {
-        Map<LocalDate, Integer> map = userService.getNewUserCount(1L, LocalDate.parse("2022-10-21"), LocalDate.parse("2022-11-30"));
-        for (Map.Entry<LocalDate, Integer> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + "\t" + entry.getValue());
-        }
-    }
 }

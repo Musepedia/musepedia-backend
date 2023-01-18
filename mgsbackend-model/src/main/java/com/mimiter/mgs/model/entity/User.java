@@ -1,8 +1,8 @@
-package com.mimiter.mgs.core.model.entity;
+package com.mimiter.mgs.model.entity;
 
 import com.mimiter.mgs.common.model.BaseEntity;
-import com.mimiter.mgs.core.model.enums.AgeEnum;
-import com.mimiter.mgs.core.model.enums.GenderEnum;
+import com.mimiter.mgs.model.enums.AgeEnum;
+import com.mimiter.mgs.model.enums.GenderEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

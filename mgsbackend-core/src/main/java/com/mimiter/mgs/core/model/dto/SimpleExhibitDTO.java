@@ -2,6 +2,8 @@ package com.mimiter.mgs.core.model.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 展品DTO。
  */
@@ -13,6 +15,8 @@ public class SimpleExhibitDTO {
     private String label;
 
     private String figureUrl;
+
+    private List<String> figureUrlList;
 
     private Boolean hot;
 

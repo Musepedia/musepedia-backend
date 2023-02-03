@@ -4,6 +4,7 @@ import com.mimiter.mgs.model.entity.Exhibit;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 展品Service
@@ -29,4 +30,5 @@ public interface ExhibitService extends IService<Exhibit> {
     List<Exhibit> selectPreviousAndNextExhibitById(Long id);
 
     List<Exhibit> getMostFrequentExhibits(int count, Long museumId);
+
 }

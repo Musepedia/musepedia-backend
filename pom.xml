@@ -140,6 +140,11 @@
                 <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
                 <version>3.1.611</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>1.6.2</version>
+            </dependency>
             <!-- utils -->
             <!-- test -->
             <dependency>
@@ -157,6 +162,18 @@
                 <groupId>io.cucumber</groupId>
                 <artifactId>cucumber-spring</artifactId>
                 <version>7.1.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>1.35</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>1.35</version>
                 <scope>test</scope>
             </dependency>
             <!-- test -->

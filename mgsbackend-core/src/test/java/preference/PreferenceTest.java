@@ -4,7 +4,7 @@ import com.mimiter.mgs.core.App;
 import com.mimiter.mgs.core.controller.ExhibitController;
 import com.mimiter.mgs.model.entity.Exhibit;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.repository.ExhibitRepository;
 import com.mimiter.mgs.core.repository.ExhibitionHallRepository;
 import com.mimiter.mgs.core.repository.UserRepository;

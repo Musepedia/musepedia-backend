@@ -8,14 +8,15 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ExhibitionHallRepository extends BaseMapper<ExhibitionHall> {
 
     @ResultMap("mybatis-plus_ExhibitionHall")
-    @Select("select * from tbl_exhibition_hall where museum_id = #{id}")
+    @Select("select * from tbl_exhibition_hall " +
+            "where museum_id = #{id} " +
+            "   and is_enabled = true")
     List<ExhibitionHall> listByMuseumId(@Param("id") Long id);
 
-    @Select("select exhibition_hall_id from tbl_exhibition_hall where museum_id = #{id}")
-    List<Integer> selectExhibitionHallIds(@Param("id") Long id);
 }

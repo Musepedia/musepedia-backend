@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "userId", callSuper = false)
+@EqualsAndHashCode(of = "id", callSuper = false)
 @TableName(value = "sys_user", autoResultMap = true)
 public class AdminUser extends BaseEntity {
 
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Long userId;
+    private Long id;
+
+    private String username;
 
     private String password;
 
@@ -26,11 +28,9 @@ public class AdminUser extends BaseEntity {
 
     private String phone;
 
-    private String username;
+    private String nickname;
 
-    @JsonIgnore
-    @TableField("is_deleted")
-    @TableLogic
-    private Boolean deleted;
+    @TableField(value = "is_enabled")
+    private Boolean enabled;
 
 }

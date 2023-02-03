@@ -6,7 +6,7 @@ import com.mimiter.mgs.core.service.ExhibitionHallService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * {@inheritDoc}
@@ -15,8 +15,4 @@ import java.util.List;
 public class ExhibitionHallServiceImpl
         extends ServiceImpl<ExhibitionHallRepository, ExhibitionHall> implements ExhibitionHallService {
 
-    @Override
-    public List<Integer> selectExhibitionHallIds(Long id) {
-        return baseMapper.selectExhibitionHallIds(id);
-    }
 }

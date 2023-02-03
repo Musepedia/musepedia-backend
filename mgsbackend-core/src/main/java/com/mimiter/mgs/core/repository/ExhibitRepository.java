@@ -18,15 +18,17 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "where exhibit_id = #{id}")
     Exhibit selectInfoById(@Param("id") Long id);
 
+    // 随机选择每个展区下的limit个展品
     @Select("select substring_index(group_concat(t1.exhibit_id order by rand()), ',', #{limit}) " +
             "from tbl_exhibit t1 " +
             "where t1.exhibition_hall_id in ( " +
             "    select exhibition_hall_id from tbl_exhibition_hall t2 " +
-            "    where t2.museum_id = #{id} " +
+            "    where t2.museum_id = #{id} and t2.is_enabled = true " +
             ") " +
             "group by t1.exhibition_hall_id ")
     List<String> selectRandomExhibitId(@Param("limit") int limitPerExhibitionHall, @Param("id") Long museumId);
 
+    // 查询展品（包括展区信息）
     List<Exhibit> selectRandomExhibits(@Param("ids") List<Integer> ids);
 
     @Select("select exhibit_figure_url from tbl_exhibit where exhibit_label = #{label}")
@@ -82,8 +84,10 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "   and t1.answer_type != 0 " +
             "   and t1.exhibit_id is not null " +
             "   and t1.museum_id = #{museumId} " +
+            "   and t2.enabled = true" +
             "group by t1.exhibit_id " +
             "order by sum(t1.question_freq) desc " +
             "limit #{count}")
     List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("museumId") Long museumId);
+
 }

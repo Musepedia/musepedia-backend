@@ -1,9 +1,10 @@
 package com.mimiter.mgs.core.repository;
 
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -29,4 +30,5 @@ public interface UserRepository extends BaseMapper<User> {
             "t4.exhibition_hall_id in (select exhibition_hall_id from tbl_exhibition_hall" +
             "where museum_id = #{museumId})")
     List<User> ageWithLabels(@Param("museumId") Long museumId);
+
 }

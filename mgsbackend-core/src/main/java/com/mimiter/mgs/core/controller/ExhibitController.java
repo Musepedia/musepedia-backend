@@ -60,7 +60,6 @@ public class ExhibitController {
     @AnonymousAccess
     @GetMapping("/random")
     public BaseResponse<List<ExhibitDTO>> getRandomExhibitPreference() {
-
         List<Exhibit> exhibits = exhibitService.getRandomExhibits(
                 LIMIT_PER_EXHIBITION_HALL, ThreadContextHolder.getCurrentMuseumId());
         return BaseResponse.ok("ok", exhibitDTOMapper.toDto(exhibits));

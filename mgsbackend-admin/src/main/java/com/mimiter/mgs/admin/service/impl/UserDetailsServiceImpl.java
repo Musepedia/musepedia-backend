@@ -2,10 +2,11 @@ package com.mimiter.mgs.admin.service.impl;
 
 import com.mimiter.mgs.admin.model.entity.AdminUser;
 import com.mimiter.mgs.admin.model.entity.Role;
+import com.mimiter.mgs.admin.repository.AdminUserRepository;
 import com.mimiter.mgs.admin.repository.RoleRepository;
-import com.mimiter.mgs.admin.repository.UserRepository;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AdminUserRepository userRepository;
 
     private final RoleRepository roleRepository;
 
@@ -25,17 +26,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AdminUser user = userRepository.findByUsername(s);
 
         if (user == null) {
-            throw new UsernameNotFoundException(s + " not found");
+            throw new UsernameNotFoundException("找不到用户名" + s);
         }
 
-        SecurityUtil.setCurrentUser(user);
-        String[] roles = roleRepository.findByUserId(user.getUserId())
+        String[] roles = roleRepository.findByUserId(user.getId())
                 .stream().map(Role::getName).toArray(String[]::new);
+
+        SecurityUtil.setCurrentUserId(user.getId());
 
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(roles)
+                .accountLocked(BooleanUtils.isNotTrue(user.getEnabled()))
                 .build();
     }
 }

@@ -1,7 +1,7 @@
 package user;
 
 import com.mimiter.mgs.core.App;
-import com.mimiter.mgs.core.model.entity.User;
+import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.entity.UserWxOpenid;
 import com.mimiter.mgs.core.repository.UserRepository;
 import com.mimiter.mgs.core.repository.UserWxOpenidRepository;
@@ -9,14 +9,18 @@ import com.mimiter.mgs.core.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
+@ActiveProfiles("test")
 public class UserTest {
 
     @Resource
@@ -78,4 +82,5 @@ public class UserTest {
         userService.setUserLocation(10000L, 2L);
         System.out.println(userService.getUserRecommendStatus(10000L));
     }
+
 }

@@ -6,8 +6,8 @@ import com.mimiter.mgs.core.service.ExhibitService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * {@inheritDoc}
@@ -79,6 +79,5 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     public List<Exhibit> getMostFrequentExhibits(int count, Long museumId) {
         return baseMapper.selectMostFrequentExhibits(count, museumId);
     }
-
 
 }

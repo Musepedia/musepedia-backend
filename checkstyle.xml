@@ -316,7 +316,7 @@
     <module name="CustomImportOrder">
       <property name="sortImportsInGroupAlphabetically" value="false"/>
       <property name="separateLineBetweenGroups" value="false"/>
-      <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
+      <property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###STATIC"/>
       <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
     </module>
     <module name="MethodParamPad">

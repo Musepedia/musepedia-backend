@@ -22,6 +22,15 @@
 
 ## 开发说明
 
-- 需要IDEA插件：lombok，checkstyle
+- 需要IDEA插件：lombok，CheckStyle
 - 使用IDEA第一次打开项目时会自动下载maven所有依赖
 - 点击**mgsbackend-admin/edu**/src/main/java/com.mimiter.mgs.admin/App.java main()函数旁边的<span style="color:green">▶</span>启动项目
+
+### 风格检查Checkstyle
+
+- Checkstyle参考了google的风格，并进行了部分调整，仍有很多不完善的地方，之后也会逐步修改。
+- Checkstyle的IDEA配置在Tools->Checkstyle，配置方法可参考[博客](https://blog.csdn.net/weixin_46565024/article/details/125798094)。
+  - checkstyle.xml地址为 https://static.musepedia.cn/common/checkstyle.xml
+  - checkstyle-suppressions.xml地址为 https://static.musepedia.cn/common/checkstyle-suppressions.xml
+- 提交之前先自行通过checkstyle检查，ci/cd也配有checkstyle的检查。
+- 因为仍是完善中的Checkstyle，也没有强制Checkstyle pass才能提交。不合理的地方可以通过@SuppressWarning("checkstyle:xxx")来忽略，并向我反馈，进行后续修改。

@@ -63,15 +63,19 @@ public class QAController {
         }
 
         ExhibitionHall recommendExhibitionHall = null;
-        if (recommendExhibitionHallService.isRecommendExhibitionHall(SecurityUtil.getCurrentUserId())) {
-            Long currentLocationId = userService.getUserLocation(userId);
-            ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
-            List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(userId, museumId);
-            recommendExhibitionHall = recommendExhibitionHallService
-                    .getRecommendExhibitionHall(museumId, userPref, currentLocation);
+        try {
+            if (recommendExhibitionHallService.isRecommendExhibitionHall(SecurityUtil.getCurrentUserId())) {
+                Long currentLocationId = userService.getUserLocation(userId);
+                ExhibitionHall currentLocation = exhibitionHallService.getById(currentLocationId);
+                List<ExhibitionHall> userPref = userPreferenceService.getPreferredHallByUserId(userId, museumId);
+                recommendExhibitionHall = recommendExhibitionHallService
+                        .getRecommendExhibitionHall(museumId, userPref, currentLocation);
 
-            // 直到用户位置发生变化为止，不再向该用户推荐展区
-            userService.setUserRecommendStatus(userId, false);
+                // 直到用户位置发生变化为止，不再向该用户推荐展区
+                userService.setUserRecommendStatus(userId, false);
+            }
+        } catch (Exception e) {
+            log.error("推荐展厅异常：", e);
         }
         return BaseResponse.ok(new AnswerDTO(
                 awt.getAnswerType(), awt.getQuestionId(), awt.getAnswer(), awt.getTextId(),

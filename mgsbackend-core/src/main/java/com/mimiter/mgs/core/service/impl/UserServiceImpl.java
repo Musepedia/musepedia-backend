@@ -121,7 +121,7 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
 
         int countOfExhibits = (int) Math.ceil(percentage * exhibits.size());
 
-        for (int i = exhibits.size() - 1; countOfExhibits >= 0; --i, --countOfExhibits) {
+        for (int i = exhibits.size() - 1; i >= 0 && countOfExhibits >= 0; --i, --countOfExhibits) {
             if (userLocation.equals(exhibits.get(i))) {
                 return true;
             }

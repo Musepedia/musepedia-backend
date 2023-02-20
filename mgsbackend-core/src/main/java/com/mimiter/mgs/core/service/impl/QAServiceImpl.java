@@ -89,7 +89,7 @@ public class QAServiceImpl implements QAService {
                     ? DEFAULT_ANSWER_TEXT
                     : recommendQuestion.getAnswerText();
             return new AnswerWithTextIdDTO(recommendQuestion.getId(), answerText,
-                    getAnswerType(answerText), recommendQuestion.getExhibitTextId());
+                    getAnswerType(answerText), recommendQuestion.getExhibitTextId(), recommendQuestion.getExhibitId());
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -105,7 +105,7 @@ public class QAServiceImpl implements QAService {
             recommendQuestionService.insertIrrelevantQuestion(question, museumId);
             // 写入缓存
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
-            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER, null);
+            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER, null, null);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
@@ -113,6 +113,7 @@ public class QAServiceImpl implements QAService {
         int questionType = nlpUtil.questionTypeRecognition(question);
         if (questionType == NLPUtil.OUTLOOK_QUESTION) {
             int answerType = TYPE_DEFAULT_ANSWER;
+            Long exhibitId = null;
             // 长什么样之类的问题 直接搜索数据库展品图片
             if (exhibitTexts.size() != 0) {
                 String figureUrl = exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
@@ -125,6 +126,7 @@ public class QAServiceImpl implements QAService {
                 newQuestion.setAnswerType(answerType);
                 newQuestion.setAnswerText(answer);
                 newQuestion.setExhibitId(exhibitTexts.get(0).getExhibitId());
+                exhibitId = newQuestion.getExhibitId();
                 newQuestion.setMuseumId(museumId);
                 recommendQuestionService.save(newQuestion);
             } else {
@@ -132,7 +134,7 @@ public class QAServiceImpl implements QAService {
             }
             // 写入缓存
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
-            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, null);
+            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, null, exhibitId);
         }
 
         Long textId = null;
@@ -196,6 +198,6 @@ public class QAServiceImpl implements QAService {
         recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
         feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
-        return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, textId);
+        return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, textId, newQuestion.getExhibitId());
     }
 }

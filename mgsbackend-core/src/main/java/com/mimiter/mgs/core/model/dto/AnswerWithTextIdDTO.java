@@ -19,4 +19,6 @@ public class AnswerWithTextIdDTO {
     private int answerType;
 
     private Long textId;
+
+    private Long exhibitId;
 }

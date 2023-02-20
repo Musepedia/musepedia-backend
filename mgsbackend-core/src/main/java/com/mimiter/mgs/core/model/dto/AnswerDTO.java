@@ -26,4 +26,6 @@ public class AnswerDTO {
     private List<String> recommendQuestions;
 
     private ExhibitionHall recommendExhibitionHall;
+
+    private Long exhibitId;
 }

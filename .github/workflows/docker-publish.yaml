@@ -6,8 +6,6 @@ on:
   push:
     branches: [ "master", "dev" ]
     tags: [ "v*" ]
-  pull_request:
-    branches: [ "master" ]
 
 env:
   REGISTRY: registry.musepedia.cn

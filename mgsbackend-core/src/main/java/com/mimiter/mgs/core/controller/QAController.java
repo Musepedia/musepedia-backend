@@ -79,6 +79,6 @@ public class QAController {
         }
         return BaseResponse.ok(new AnswerDTO(
                 awt.getAnswerType(), awt.getQuestionId(), awt.getAnswer(), awt.getTextId(),
-                recommendQuestions, recommendExhibitionHall));
+                recommendQuestions, recommendExhibitionHall, awt.getExhibitId()));
     }
 }

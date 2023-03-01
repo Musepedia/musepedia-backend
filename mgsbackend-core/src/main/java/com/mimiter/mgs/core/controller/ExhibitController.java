@@ -44,7 +44,7 @@ public class ExhibitController {
     @GetMapping("/info")
     public BaseResponse<ExhibitDTO> getExhibitInfo(@RequestParam Long id) {
         // no exhibition hall info
-        Exhibit exhibit = exhibitService.getExhibitInfoById(id);
+        Exhibit exhibit = exhibitService.getById(id);
 
         // 根据问题更新用户所在位置
         userService.setUserLocation(SecurityUtil.getCurrentUserId(), exhibit.getHallId());

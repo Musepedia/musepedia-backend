@@ -11,8 +11,6 @@ import java.util.Map;
  */
 public interface ExhibitService extends IService<Exhibit> {
 
-    Exhibit getExhibitInfoById(Long id);
-
     List<String> selectRandomExhibitId(int limitPerExhibitionHall, Long museumId);
 
     List<Exhibit> selectRandomExhibits(List<Integer> ids);

@@ -21,4 +21,6 @@ public class RecommendationDTO {
     private String answerText;
 
     private String exhibitFigureUrl;
+
+    private Long exhibitId;
 }

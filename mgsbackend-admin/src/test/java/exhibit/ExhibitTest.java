@@ -65,9 +65,6 @@ public class ExhibitTest {
     @Resource
     private ExhibitAliasRepository exhibitAliasRepository;
 
-    @Resource
-    private ExhibitTextRepository exhibitTextRepository;
-
     @Test
     public void getExhibitTest() {
         TestUtil.loginAs(72L, STR_SYS_ADMIN);
@@ -180,19 +177,6 @@ public class ExhibitTest {
         req.setExhibitAlias(text);
 
         assertThrows(IllegalArgumentException.class, () -> exhibitController.updateExhibitAlias(req));
-    }
-
-    @Test
-    public void updateExhibitTextRight() {
-        TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
-        UpdateExhibitTextReq req = new UpdateExhibitTextReq();
-        ArrayList<String> text = new ArrayList<>();
-        text.add("test1");
-        text.add("test2");
-        req.setExhibitId(99L);
-        req.setExhibitText(text);
-
-        assertNotNull(exhibitTextRepository.findByExhibitId(99L));
     }
 
     @Test

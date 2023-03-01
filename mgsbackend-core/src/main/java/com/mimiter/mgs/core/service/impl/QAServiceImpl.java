@@ -198,6 +198,7 @@ public class QAServiceImpl implements QAService {
         recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
         feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
-        return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, textId, newQuestion.getExhibitId());
+        return new AnswerWithTextIdDTO(
+                recommendQuestion.getId(), answer, answerType, textId, newQuestion.getExhibitId());
     }
 }

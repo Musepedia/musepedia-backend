@@ -47,3 +47,9 @@ mgs.admin:
     secret-key: ${env.cos.secret-key:WarningCosSecretKeyNotSet}
     region: ${env.cos.region:ap-shanghai}
     bucket: ${env.cos.bucket:image-1314089900}
+
+grpc:
+  client:
+    openDocumentService:
+      address: static://${env.grpc.host}
+      negotiationType: PLAINTEXT

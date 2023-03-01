@@ -12,12 +12,6 @@ import java.util.List;
 @Mapper
 public interface ExhibitRepository extends BaseMapper<Exhibit> {
 
-    @ResultMap("mybatis-plus_Exhibit")
-    @Select("select exhibition_hall_id, exhibit_label, exhibit_description, exhibit_url " +
-            "from tbl_exhibit " +
-            "where exhibit_id = #{id}")
-    Exhibit selectInfoById(@Param("id") Long id);
-
     // 随机选择每个展区下的limit个展品
     @Select("select substring_index(group_concat(t1.exhibit_id order by rand()), ',', #{limit}) " +
             "from tbl_exhibit t1 " +

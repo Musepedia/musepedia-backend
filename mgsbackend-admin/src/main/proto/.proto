@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.mimiter.mgs.admin";
+option java_outer_classname = "OpenDocumentProto";
+
+service OpenDocumentService {
+    rpc GetOpenDocument(OpenDocumentRequest) returns (google.protobuf.Empty) {}
+    rpc GetExhibitAlias(ExhibitLabelAliasRequest) returns (ExhibitLabelAliasReply) {}
+}
+
+message RpcExhibitText {
+    int64 id = 1;
+    string text = 2;
+}
+
+message OpenDocumentRequest {
+    string label = 1;
+    repeated RpcExhibitText texts = 2;
+}
+
+message ExhibitLabelAliasRequest {
+    repeated string texts = 1;
+}
+
+message ExhibitLabelAliasReply {
+    repeated string aliases = 1;
+}

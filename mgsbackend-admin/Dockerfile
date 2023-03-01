@@ -12,10 +12,11 @@ ENV ENV_REDIS_HOST=redis
 ENV ENV_REDIS_PORT=6379
 ENV ENV_REDIS_PASSWORD=k2tNrsL8vet
 ENV ENV_COS_SECRETKEY=''
+ENV ENV_GRPC_HOST=106.14.42.183:5555
 
 WORKDIR ${WORKDIR}
-COPY target/*.jar backend-admin.jar
 COPY target/lib ./lib
+COPY target/*.jar backend-admin.jar
 
 EXPOSE ${PORT}
 

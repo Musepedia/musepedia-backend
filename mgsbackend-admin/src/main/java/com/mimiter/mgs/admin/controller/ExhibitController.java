@@ -1,8 +1,9 @@
 package com.mimiter.mgs.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mimiter.mgs.admin.ExhibitLabelAliasRequest;
+import com.mimiter.mgs.admin.OpenDocumentServiceGrpc;
 import com.mimiter.mgs.admin.config.security.Permissions;
 import com.mimiter.mgs.admin.model.dto.ExhibitDTO;
 import com.mimiter.mgs.admin.model.dto.PageDTO;
@@ -15,21 +16,23 @@ import com.mimiter.mgs.admin.model.request.UpsertExhibitReq;
 import com.mimiter.mgs.admin.repository.ExhibitAliasRepository;
 import com.mimiter.mgs.admin.repository.ExhibitTextRepository;
 import com.mimiter.mgs.admin.repository.InstitutionAdminRepository;
-import com.mimiter.mgs.admin.repository.QuestionRepository;
-import com.mimiter.mgs.admin.service.*;
+import com.mimiter.mgs.admin.service.ExhibitAliasService;
+import com.mimiter.mgs.admin.service.ExhibitService;
+import com.mimiter.mgs.admin.service.ExhibitTextService;
+import com.mimiter.mgs.admin.service.ExhibitionHallService;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
-import com.mimiter.mgs.common.exception.BadRequestException;
 import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.model.entity.Exhibit;
 import com.mimiter.mgs.model.entity.ExhibitAlias;
-import com.mimiter.mgs.model.entity.ExhibitText;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.var;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +65,9 @@ public class ExhibitController {
     private final InstitutionAdminRepository institutionAdminRepository;
 
     private final ExhibitionHallService exhibitionHallService;
+
+    @GrpcClient("openDocumentService")
+    private OpenDocumentServiceGrpc.OpenDocumentServiceBlockingStub openDocumentService;
 
     //------------展品信息------------
 
@@ -153,6 +159,20 @@ public class ExhibitController {
         return BaseResponse.ok("ok", aliasList);
     }
 
+    @ApiOperation(value = "根据已存储的展品文本获取展品可能的别名", notes = "超级管理员和博物馆管理员可调用")
+    @GetMapping("/{id:\\d+}/possible-alias")
+    @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
+    public BaseResponse<List<String>> possibleAlias(@PathVariable("id") Long exhibitId) {
+        List<String> textList = exhibitTextService.listExhibitText(exhibitId);
+
+        var request = ExhibitLabelAliasRequest
+                .newBuilder()
+                .addAllTexts(textList).build();
+        var resp = openDocumentService.getExhibitAlias(request);
+
+        return BaseResponse.ok(resp.getAliasesList());
+    }
+
     @ApiOperation(value = "更新展品别名", notes = "超级管理员和博物馆管理员可调用")
     @PutMapping("/alias")
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
@@ -171,15 +191,7 @@ public class ExhibitController {
     @GetMapping("/{id:\\d+}/text")
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
     public BaseResponse<List<String>> getExhibitText(@PathVariable("id") Long exhibitId) {
-        ArrayList<String> textList = new ArrayList<>();
-        QueryWrapper<ExhibitText> et = new QueryWrapper<>();
-        et.eq("exhibit_id", exhibitId);
-
-        for (ExhibitText exhibitText : exhibitTextRepository.selectList(et)) {
-            String alias = exhibitText.getText();
-            textList.add(alias);
-        }
-        return BaseResponse.ok("ok", textList);
+        return BaseResponse.ok("ok", exhibitTextService.listExhibitText(exhibitId));
     }
 
     @ApiOperation(value = "更新展品文本", notes = "超级管理员和博物馆管理员可调用")
@@ -192,6 +204,15 @@ public class ExhibitController {
         }
 
         exhibitTextService.updateExhibitText(req);
+
+        return BaseResponse.ok();
+    }
+
+    // ------------------OpenDocument------------------
+    @ApiOperation(value = "请求获取OpenDocument", notes = "超级管理员和博物馆管理员可调用")
+    @PostMapping("/{{id:\\d+}}/open-document")
+    @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
+    public BaseResponse<?> fetchOpenDocument(@PathVariable("id") Long exhibitId) {
 
         return BaseResponse.ok();
     }

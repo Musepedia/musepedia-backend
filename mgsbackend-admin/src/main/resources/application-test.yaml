@@ -9,6 +9,8 @@ env:
     password: k2tNrsL8vet
   cos:
     secret-key:
+  grpc:
+    host: pt.musepedia.cn:5555
 
 logging:
   level:

@@ -14,8 +14,8 @@ ENV ENV_REDIS_PASSWORD=k2tNrsL8vet
 ENV ENV_GRPC_HOST=106.14.42.183:5555
 
 WORKDIR ${WORKDIR}
-COPY target/*.jar backend-core.jar
 COPY target/lib ./lib
+COPY target/*.jar backend-core.jar
 
 EXPOSE ${PORT}
 

@@ -27,11 +27,6 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
     }
 
     @Override
-    public Exhibit getExhibitInfoById(Long id) {
-        return baseMapper.selectInfoById(id);
-    }
-
-    @Override
     public List<String> selectRandomExhibitId(int limitPerExhibitionHall, Long museumId) {
         return baseMapper.selectRandomExhibitId(limitPerExhibitionHall, museumId);
     }

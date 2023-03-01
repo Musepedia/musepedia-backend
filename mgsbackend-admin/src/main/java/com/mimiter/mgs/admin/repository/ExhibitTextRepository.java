@@ -15,7 +15,4 @@ public interface ExhibitTextRepository extends BaseMapper<ExhibitText> {
     @Delete("DELETE FROM tbl_exhibit_text WHERE exhibit_id=#{exhibitId}")
     boolean deleteByExhibitId(Long exhibitId);
 
-    @ResultMap("mybatis-plus_ExhibitText")
-    @Select("SELECT * FROM tbl_exhibit_text WHERE exhibit_id = #{exhibitId}")
-    ExhibitText findByExhibitId(Long exhibitId);
 }

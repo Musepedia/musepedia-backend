@@ -220,14 +220,4 @@ public class RecommendQuestionServiceImpl
         return baseMapper.selectNonDislikeUserQuestion(userId, museumId);
     }
 
-
-    @Override
-    public List<RecommendQuestion> selectQuestionsWithFreqAndLabels(Long museumId) {
-        return baseMapper.selectQuestionsWithFreqAndLabels(museumId);
-    }
-
-    @Override
-    public List<RecommendQuestion> selectUserQuestionsWithLabels(Long museumId) {
-        return baseMapper.selectUserQuestionsWithLabels(museumId);
-    }
 }

@@ -1,18 +1,30 @@
 package com.mimiter.mgs.core.utils;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mimiter.mgs.core.config.WeixinMpConfig;
 import com.mimiter.mgs.core.model.response.Code2SessionResponse;
 import com.mimiter.mgs.core.model.param.WxLoginParam;
+import com.mimiter.mgs.model.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微信小程序相关工具类
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WxUtil {
@@ -33,4 +45,39 @@ public class WxUtil {
                 + "&grant_type=authorization_code";
         return restTemplate.getForObject(url, Code2SessionResponse.class, new HashMap<>());
     }
+
+
+    /**
+     * 处理小程序发送的encryptedData
+     *
+     * @param sessionKey    从code2session中获取的sessionKey
+     * @param encryptedData /
+     * @param iv            /
+     * @return /
+     */
+    public static User decryptData(String sessionKey, String encryptedData, String iv) {
+        if (sessionKey == null || encryptedData == null || iv == null) {
+            return null;
+        }
+        byte[] encData = Base64Utils.decodeFromString(encryptedData);
+        byte[] ivb = Base64Utils.decodeFromString(iv);
+        byte[] key = Base64Utils.decodeFromString(sessionKey);
+        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivb);
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            String userInfoJson = new String(cipher.doFinal(encData), StandardCharsets.UTF_8);
+            ObjectMapper mapper = new ObjectMapper();
+            Map userInfo = mapper.readValue(userInfoJson, Map.class);
+            User user = new User();
+            user.setAvatarUrl(userInfo.get("avatarUrl").toString());
+            user.setNickname(userInfo.get("nickName").toString());
+            return user;
+        } catch (Exception e) {
+            log.error("error in decryptPhoneNumber: ", e);
+        }
+        return null;
+    }
+
 }

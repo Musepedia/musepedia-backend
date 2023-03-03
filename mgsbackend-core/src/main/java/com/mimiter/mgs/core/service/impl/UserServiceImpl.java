@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service("userService")
@@ -57,6 +54,12 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         User wxUser = getByOpenId(openid);
         if (wxUser == null) {
             // 未绑定微信，验证短信并绑定微信
+            User userInfo = WxUtil.decryptData(resp.getSession_key(), param.getEncryptedData(), param.getIv());
+            if (userInfo != null) {
+                param.setNickname(userInfo.getNickname());
+                param.setAvatarUrl(userInfo.getAvatarUrl());
+            }
+
             wxUser = loginPhone(param);
             UserWxOpenid openid1 = new UserWxOpenid();
             openid1.setUserId(wxUser.getId());

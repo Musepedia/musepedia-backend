@@ -54,12 +54,6 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
         User wxUser = getByOpenId(openid);
         if (wxUser == null) {
             // 未绑定微信，验证短信并绑定微信
-            User userInfo = WxUtil.decryptData(resp.getSession_key(), param.getEncryptedData(), param.getIv());
-            if (userInfo != null) {
-                param.setNickname(userInfo.getNickname());
-                param.setAvatarUrl(userInfo.getAvatarUrl());
-            }
-
             wxUser = loginPhone(param);
             UserWxOpenid openid1 = new UserWxOpenid();
             openid1.setUserId(wxUser.getId());

@@ -3,6 +3,12 @@ FROM openjdk:8
 ARG PORT=16002
 ARG WORKDIR=/opt/mgsbackend-core
 
+WORKDIR ${WORKDIR}
+COPY target/lib ./lib
+COPY target/*.jar backend-core.jar
+
+EXPOSE ${PORT}
+
 ENV TZ=Asia/Shanghai
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV ENV_MYSQL_HOST=mysql:3306
@@ -12,11 +18,5 @@ ENV ENV_REDIS_HOST=redis
 ENV ENV_REDIS_PORT=6379
 ENV ENV_REDIS_PASSWORD=k2tNrsL8vet
 ENV ENV_GRPC_HOST=106.14.42.183:5555
-
-WORKDIR ${WORKDIR}
-COPY target/lib ./lib
-COPY target/*.jar backend-core.jar
-
-EXPOSE ${PORT}
 
 ENTRYPOINT java -jar backend-core.jar

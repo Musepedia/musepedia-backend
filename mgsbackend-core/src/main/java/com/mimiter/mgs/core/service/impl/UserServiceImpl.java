@@ -76,11 +76,10 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
             // 手机号未注册 通过手机号注册
             user = new User();
             user.setPhoneNumber(param.getPhoneNumber());
-            user.setNickname("umt_" + param.getPhoneNumber());
+            user.setNickname("pedia_" + param.getPhoneNumber());
             user.setAvatarUrl("");
             if (param instanceof WxLoginParam) {
                 WxLoginParam wxParam = (WxLoginParam) param;
-                user.setNickname(wxParam.getNickname());
                 user.setAvatarUrl(wxParam.getAvatarUrl());
             }
             getBaseMapper().insert(user);

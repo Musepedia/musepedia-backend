@@ -65,12 +65,13 @@ public class UserController {
 
     @ApiOperation("更新用户个人信息")
     @PutMapping("/profile")
-    public BaseResponse<?> updateProfile(@RequestBody UserDTO dto) {
+    public BaseResponse<?> updateProfile(@RequestBody @Validated UserDTO dto) {
         // 只更新性别和年龄信息
         User user = new User();
         user.setId(SecurityUtil.getCurrentUserId());
         user.setAge(dto.getAge());
         user.setGender(dto.getGender());
+        user.setNickname(dto.getNickname());
         userService.updateById(user);
 
         return BaseResponse.ok();

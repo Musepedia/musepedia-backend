@@ -4,7 +4,6 @@ import com.mimiter.mgs.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -14,8 +13,8 @@ public interface UserRepository extends BaseMapper<User> {
     @Select("select t1.* from tbl_user t1 " +
             "left join tbl_user_wx_openid t2 " +
             "on t1.user_id = t2.user_id " +
-            "where t2.wx_openid = #{openid}")
-    User getByOpenid(@Param("openid") String openid);
+            "where t2.wx_unionid = #{unionid}")
+    User getByUnionid(@Param("unionid") String unionid);
 
     @Select("select * from tbl_user where phone_number = #{phoneNumber}")
     User getByPhoneNumber(@Param("phoneNumber") String phoneNumber);

@@ -1,20 +1,27 @@
 package com.mimiter.mgs.core.service;
 
+import com.mimiter.mgs.core.model.entity.UserWxOpenid;
 import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.param.PhoneLoginParam;
 import com.mimiter.mgs.core.model.param.WxLoginParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户服务
  */
 public interface UserService extends IService<User> {
 
-    User getByOpenId(String openid);
+    User getByUnionid(String openid);
+
+    /**
+     * 获取用户openId
+     *
+     * @param code 小程序wx.login获取的code
+     * @return /
+     */
+    String getUserOpenId(String code);
 
     User loginWx(WxLoginParam param);
 

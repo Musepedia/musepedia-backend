@@ -1,6 +1,8 @@
 package com.mimiter.mgs.core.service.impl;
 
 import com.mimiter.mgs.common.exception.BadRequestException;
+import com.mimiter.mgs.common.model.BaseResponse;
+import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.entity.UserWxOpenid;
 import com.mimiter.mgs.core.model.param.PhoneLoginParam;
@@ -40,24 +42,62 @@ public class UserServiceImpl extends ServiceImpl<UserRepository, User> implement
     private final SMSService smsService;
 
     @Override
-    public User getByOpenId(String openid) {
-        return getBaseMapper().getByOpenid(openid);
+    public User getByUnionid(String openid) {
+        return getBaseMapper().getByUnionid(openid);
+    }
+
+    private UserWxOpenid getOpenIdFromCode2Session(String code) {
+        Code2SessionResponse resp = wxUtil.code2Session(code);
+        Assert.isTrue(resp != null && StringUtils.hasText(resp.getOpenid()), "获取openid失败");
+
+        UserWxOpenid res = new UserWxOpenid();
+        res.setWxOpenId(resp.getOpenid());
+        res.setWxUnionId(resp.getUnionid());
+        return res;
+    }
+
+    @Override
+    public String getUserOpenId(String code) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        Assert.notNull(userId, "未检测到登录用户");
+        QueryWrapper<UserWxOpenid> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        UserWxOpenid wxUser = openidRepository.selectOne(wrapper);
+        if (wxUser != null && wxUser.getWxOpenId() != null) {
+            // 之前只保存了unionId的用户
+            return wxUser.getWxOpenId();
+        }
+
+        // 没有UnionId/OpenId信息
+        Assert.hasText(code, "code不能为空");
+        UserWxOpenid idFromCode2Session = getOpenIdFromCode2Session(code);
+        if (wxUser == null) {
+            idFromCode2Session.setUserId(userId);
+            openidRepository.insert(idFromCode2Session);
+        } else {
+            wxUser.setWxOpenId(idFromCode2Session.getWxOpenId());
+            wxUser.setWxUnionId(idFromCode2Session.getWxUnionId());
+            openidRepository.updateById(wxUser);
+        }
+
+        return idFromCode2Session.getWxOpenId();
     }
 
     @Transactional
     @Override
     public User loginWx(WxLoginParam param) {
-        Code2SessionResponse resp = wxUtil.code2Session(param);
+        Code2SessionResponse resp = wxUtil.code2Session(param.getCode());
         Assert.isTrue(resp != null && StringUtils.hasText(resp.getOpenid()), "获取openid失败");
 
-        String openid = resp.getUnionid();
-        User wxUser = getByOpenId(openid);
+        String unionid = resp.getUnionid();
+        User wxUser = getByUnionid(unionid);
         if (wxUser == null) {
             // 未绑定微信，验证短信并绑定微信
             wxUser = loginPhone(param);
             UserWxOpenid openid1 = new UserWxOpenid();
             openid1.setUserId(wxUser.getId());
-            openid1.setWxOpenId(openid);
+            openid1.setWxOpenId(resp.getOpenid());
+            openid1.setWxUnionId(unionid);
             openidRepository.insert(openid1);
         }
 

@@ -36,12 +36,12 @@ public class WxUtil {
     /**
      * 通过小程序前端获取的jscode向微信请求Session相关信息
      */
-    public Code2SessionResponse code2Session(WxLoginParam param) {
-        Assert.notNull(param, "WxLoginParam不能为空");
+    public Code2SessionResponse code2Session(String code) {
+        Assert.notNull(code, "code不能为空");
         String url = "https://api.weixin.qq.com/sns/jscode2session?"
                 + "appid=" + config.getAppid()
                 + "&secret=" + config.getSecret()
-                + "&js_code=" + param.getCode()
+                + "&js_code=" + code
                 + "&grant_type=authorization_code";
         return restTemplate.getForObject(url, Code2SessionResponse.class, new HashMap<>());
     }

@@ -35,6 +35,12 @@ public class MuseEvent extends BaseEntity {
     @TableField(value = "link")
     private String link;
 
+    @TableField(value = "img")
+    private String img;
+
+    /**
+     * 1: 博物馆活动
+     */
     @TableField(value = "type")
     private Integer type;
 

@@ -1,16 +1,16 @@
 package com.mimiter.mgs.core.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mimiter.mgs.common.annotation.AnonymousAccess;
 import com.mimiter.mgs.common.model.BaseResponse;
+import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import com.mimiter.mgs.core.model.dto.UserDTO;
-import com.mimiter.mgs.model.entity.User;
 import com.mimiter.mgs.core.model.param.PhoneLoginParam;
 import com.mimiter.mgs.core.model.param.WxLoginParam;
 import com.mimiter.mgs.core.service.UserService;
 import com.mimiter.mgs.core.service.mapstruct.UserDTOMapper;
-import com.mimiter.mgs.common.utils.EnvironmentUtil;
 import com.mimiter.mgs.core.utils.SecurityUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mimiter.mgs.model.entity.User;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

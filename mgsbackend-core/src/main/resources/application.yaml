@@ -8,6 +8,7 @@ env:
     port: 6379
   grpc:
     host: 106.14.42.183:5555
+    payment: localhost:15016
 
 server:
   port: 16002
@@ -73,6 +74,9 @@ grpc:
     myService:
       address: static://${env.grpc.host}
       negotiationType=: PLAINTEXT
+    paymentService:
+      address: static://${env.grpc.payment}
+      negotiation-type: PLAINTEXT
 
 mgs:
   weixin:

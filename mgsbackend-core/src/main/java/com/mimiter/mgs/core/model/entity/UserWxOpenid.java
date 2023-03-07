@@ -29,4 +29,7 @@ public class UserWxOpenid extends BaseEntity {
 
     @TableField("wx_openid")
     private String wxOpenId;
+
+    @TableField("wx_unionid")
+    private String wxUnionId;
 }

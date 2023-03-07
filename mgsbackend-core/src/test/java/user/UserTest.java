@@ -14,9 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
@@ -50,7 +48,7 @@ public class UserTest {
     public void select(){
         User u = userRepository.selectById(10000L);
         List<User> uu = userRepository.listByNickname("nick");
-        User user = userRepository.getByOpenid("RANDOM");
+        User user = userRepository.getByUnionid("RANDOM");
     }
 
     @Test

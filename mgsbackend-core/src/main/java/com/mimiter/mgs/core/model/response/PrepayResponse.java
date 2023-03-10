@@ -15,4 +15,6 @@ public class PrepayResponse {
     private String paySign;
 
     private String nonceStr;
+
+    private String outTradeNo;
 }

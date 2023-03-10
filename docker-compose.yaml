@@ -168,6 +168,7 @@ services:
       ENV_REDIS_PORT: 6379
       ENV_REDIS_PASSWORD: ${REDIS_PASSWORD}
       ENV_GRPC_HOST: mgs-core:5555
+      ENV_GRPC_PAYMENT: mimiter-payment:15016
       SPRING_PROFILES_ACTIVE: test
   mgsbackend-admin:
     image: registry.musepedia.cn/mgs/backend-admin:dev

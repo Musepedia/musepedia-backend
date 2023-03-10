@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class FileController {
     @ApiOperation(value = "上传文件", notes = "登录用户均可调用")
     @PostMapping
     public BaseResponse<String> upload(@RequestBody MultipartFile file) {
+        Assert.notNull(file, "文件不能为空");
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         File localFile = new File(System.getProperty("java.io.tmpdir") + File.separator + fileName);
         try {

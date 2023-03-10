@@ -5,7 +5,6 @@ ARG WORKDIR=/opt/mgsbackend-core
 
 WORKDIR ${WORKDIR}
 COPY target/lib ./lib
-COPY target/*.jar backend-core.jar
 
 EXPOSE ${PORT}
 
@@ -18,5 +17,7 @@ ENV ENV_REDIS_HOST=redis
 ENV ENV_REDIS_PORT=6379
 ENV ENV_REDIS_PASSWORD=k2tNrsL8vet
 ENV ENV_GRPC_HOST=106.14.42.183:5555
+
+COPY target/*.jar backend-core.jar
 
 ENTRYPOINT java -jar backend-core.jar

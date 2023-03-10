@@ -47,6 +47,7 @@ public class PaymentController {
         resp.setTimestamp(rpcResp.getTimestamp());
         resp.setPaySign(rpcResp.getPaySign());
         resp.setPackageVal(rpcResp.getPackageVal());
+        resp.setOutTradeNo(rpcResp.getOutTradeNo());
 
         return BaseResponse.ok(resp);
     }

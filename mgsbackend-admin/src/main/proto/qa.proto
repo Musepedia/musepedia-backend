@@ -6,7 +6,7 @@ option java_multiple_files = true;
 option java_package = "com.mimiter.mgs.admin";
 option java_outer_classname = "OpenDocumentProto";
 
-service OpenDocumentService {
+service MyService {
     rpc GetOpenDocument(OpenDocumentRequest) returns (google.protobuf.Empty) {}
     rpc GetExhibitAlias(ExhibitLabelAliasRequest) returns (ExhibitLabelAliasReply) {}
 }

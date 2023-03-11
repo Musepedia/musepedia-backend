@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
-@TableName(value = "tbl_exhibit_text", autoResultMap = true)
+@TableName(value = "enrollment", autoResultMap = true)
 public class Enrollment extends BaseEntity {
 
     @TableId(value = "enrollment_id", type = IdType.AUTO)
@@ -33,5 +33,13 @@ public class Enrollment extends BaseEntity {
     @TableField("event_id")
     private Long eventId;
 
-    private Long orderId;
+    @TableField("out_trade_no")
+    private String outTradeNo;
+
+    /**
+     * 未付款
+     * 报名成功等
+     */
+    @TableField("state")
+    private Integer state;
 }

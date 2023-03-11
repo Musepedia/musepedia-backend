@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 活动信息，包括报名等
+ * 活动信息
  */
 @Data
 @NoArgsConstructor
@@ -49,4 +49,16 @@ public class MuseEvent extends BaseEntity {
 
     @TableField(value = "end_time")
     private Date endTime;
+
+    /**
+     * 活动报名费用，单位分
+     */
+    @TableField("price")
+    private Integer price;
+
+    /**
+     * 活动人数上限
+     */
+    @TableField("limit")
+    private Integer limit;
 }

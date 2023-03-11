@@ -3,6 +3,7 @@ package com.mimiter.mgs.admin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mimiter.mgs.admin.ExhibitLabelAliasRequest;
+import com.mimiter.mgs.admin.OpenDocumentRequest;
 import com.mimiter.mgs.admin.OpenDocumentServiceGrpc;
 import com.mimiter.mgs.admin.config.security.Permissions;
 import com.mimiter.mgs.admin.model.dto.ExhibitDTO;
@@ -202,17 +203,16 @@ public class ExhibitController {
         if (permissions.contains(STR_MUSEUM_ADMIN)) {
             assertExhibitManageable(req.getExhibitId());
         }
+        Exhibit exhibit = exhibitService.getNotNullById(req.getExhibitId());
 
         exhibitTextService.updateExhibitText(req);
 
-        return BaseResponse.ok();
-    }
-
-    // ------------------OpenDocument------------------
-    @ApiOperation(value = "请求获取OpenDocument", notes = "超级管理员和博物馆管理员可调用")
-    @PostMapping("/{{id:\\d+}}/open-document")
-    @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
-    public BaseResponse<?> fetchOpenDocument(@PathVariable("id") Long exhibitId) {
+        // 请求爬取OpenDocument
+        var openDocumentReq = OpenDocumentRequest.newBuilder()
+                .addAllTexts(req.getExhibitText())
+                .setLabel(exhibit.getLabel())
+                .build();
+        openDocumentService.getOpenDocument(openDocumentReq);
 
         return BaseResponse.ok();
     }

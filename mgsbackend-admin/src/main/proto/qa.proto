@@ -11,14 +11,9 @@ service OpenDocumentService {
     rpc GetExhibitAlias(ExhibitLabelAliasRequest) returns (ExhibitLabelAliasReply) {}
 }
 
-message RpcExhibitText {
-    int64 id = 1;
-    string text = 2;
-}
-
 message OpenDocumentRequest {
     string label = 1;
-    repeated RpcExhibitText texts = 2;
+    repeated string texts = 2;
 }
 
 message ExhibitLabelAliasRequest {

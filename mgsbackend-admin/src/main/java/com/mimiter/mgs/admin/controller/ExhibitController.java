@@ -3,8 +3,8 @@ package com.mimiter.mgs.admin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mimiter.mgs.admin.ExhibitLabelAliasRequest;
+import com.mimiter.mgs.admin.MyServiceGrpc;
 import com.mimiter.mgs.admin.OpenDocumentRequest;
-import com.mimiter.mgs.admin.OpenDocumentServiceGrpc;
 import com.mimiter.mgs.admin.config.security.Permissions;
 import com.mimiter.mgs.admin.model.dto.ExhibitDTO;
 import com.mimiter.mgs.admin.model.dto.PageDTO;
@@ -68,7 +68,10 @@ public class ExhibitController {
     private final ExhibitionHallService exhibitionHallService;
 
     @GrpcClient("openDocumentService")
-    private OpenDocumentServiceGrpc.OpenDocumentServiceBlockingStub openDocumentService;
+    private MyServiceGrpc.MyServiceBlockingStub openDocumentService;
+
+    @GrpcClient("openDocumentService")
+    private MyServiceGrpc.MyServiceFutureStub openDocumentServiceFutureStub;
 
     //------------展品信息------------
 
@@ -212,7 +215,7 @@ public class ExhibitController {
                 .addAllTexts(req.getExhibitText())
                 .setLabel(exhibit.getLabel())
                 .build();
-        openDocumentService.getOpenDocument(openDocumentReq);
+        openDocumentServiceFutureStub.getOpenDocument(openDocumentReq);
 
         return BaseResponse.ok();
     }

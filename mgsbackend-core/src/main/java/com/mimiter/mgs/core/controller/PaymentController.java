@@ -35,7 +35,7 @@ public class PaymentController {
 
         // example payment
         PrepayReq rpcReq = PrepayReq.newBuilder()
-                .setAmount(1)
+                .setAmount(100)
                 .setDescription("测试报名费用：1")
                 .setAppId(wxConfig.getAppid())
                 .setOpenId(openId)

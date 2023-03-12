@@ -169,6 +169,13 @@ services:
       ENV_REDIS_PASSWORD: ${REDIS_PASSWORD}
       ENV_GRPC_HOST: mgs-core:5555
       ENV_GRPC_PAYMENT: mimiter-payment:15016
+      MGS_WEIXIN_APPID: ${WX_APPID}
+      MGS_WEIXIN_SECRET: ${WX_SECRET}
+      MGS_SMS_SECRETID: ${SMS_SECRETID}
+      MGS_SMS_SECRETKEY: ${SMS_SECRETKEY}
+      MGS_SMS_SDKAPPIID: ${SMS_SDKAPPID}
+      MGS_SMS_SIGNNAME: ${SMS_SIGNNAME}
+      MGS_SMS_TEMPLATEID: ${SMS_TEMPLATEID}
       SPRING_PROFILES_ACTIVE: test
   mgsbackend-admin:
     image: registry.musepedia.cn/mgs/backend-admin:dev

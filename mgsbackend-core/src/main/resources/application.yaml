@@ -80,11 +80,11 @@ grpc:
 
 mgs:
   weixin:
-    appid: wxf2920630b976e003
-    secret: 2c8a3a5109c68d9f1a76bc906ee869da
+    appid:
+    secret:
   sms:
-    secretId: AKIDxmdMtFRhuxulT8yjItFRQCoMhogPxOgn
-    secretKey: 0sBIG5g6KK5f2MVZSCoPtHfu0ynSxMdj
-    sdkAppId: 1400746566
-    signName: 米弥特
-    templateId: 1580939
+    secretId:
+    secretKey:
+    sdkAppId:
+    signName:
+    templateId:

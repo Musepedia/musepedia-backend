@@ -38,4 +38,7 @@ public class CulturalCreative extends BaseEntity {
 
     @TableField(value = "museum_id")
     private Long museumId;
+
+    @TableField(value = "is_deleted")
+    private Boolean deleted;
 }

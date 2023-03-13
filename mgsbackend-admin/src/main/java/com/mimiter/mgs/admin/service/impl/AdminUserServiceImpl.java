@@ -171,7 +171,7 @@ public class AdminUserServiceImpl
         InstitutionAdmin admin = institutionAdminRepository.findById(user.getId());
         HashMap<String, Object> principal = new HashMap<>();
         principal.put("userId", user.getId());
-        principal.put("institutionId", admin.getInstitutionId());
+        principal.put("institutionId", admin == null ? null : admin.getInstitutionId());
         CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities, principal);
         successToken.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(successToken);

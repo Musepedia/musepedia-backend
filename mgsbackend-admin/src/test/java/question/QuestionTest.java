@@ -10,6 +10,7 @@ import com.mimiter.mgs.admin.repository.QuestionRepository;
 import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.model.entity.RecommendQuestion;
+import lombok.var;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,5 +170,17 @@ public class QuestionTest {
     public void museumAdminGetQuestionNotHisMuseumTest(){
         TestUtil.loginAs(72L, STR_MUSEUM_ADMIN);
         Assert.assertThrows(ResourceNotFoundException.class, () -> questionController.getQuestion(175L));
+    }
+
+    @Test
+    public void listQuestionTest(){
+        TestUtil.loginAs(72L, STR_SYS_ADMIN);
+        QuestionQuery query = new QuestionQuery();
+        query.setMuseumId(3L);
+        query.setAnswerType(1);
+        query.setSize(999);
+        var res = questionController.listQuestion(query);
+        Assert.assertTrue(res.getData().getData().stream().allMatch(e -> e.getAnswerType() == 1));
+        Assert.assertTrue(res.getData().getData().stream().allMatch(e -> e.getMuseumId().equals(3L)));
     }
 }

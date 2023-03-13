@@ -35,11 +35,7 @@ public class QuestionQuery extends BaseQuery<RecommendQuestion> {
             wrapper.eq("museum_id", museumId);
         }
         if (answerType != null) {
-            if (answerType.equals(0)) {
-                wrapper.isNull("answer_type");
-            } else {
-                wrapper.eq("answer_type", answerType);
-            }
+            wrapper.eq("answer_type", answerType);
         }
         if (exhibitId != null) {
             wrapper.eq("exhibit_id", exhibitId);

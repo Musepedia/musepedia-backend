@@ -28,6 +28,6 @@ public class CulturalCreativeDTO {
     @ApiModelProperty("文创对应博物馆id")
     private Long museumId;
 
-    @ApiModelProperty("是否已下架")
+    @ApiModelProperty("是否已下架，代替删除")
     private Boolean deleted;
 }

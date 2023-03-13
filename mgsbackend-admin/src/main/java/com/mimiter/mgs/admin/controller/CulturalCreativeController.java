@@ -79,7 +79,7 @@ public class CulturalCreativeController {
     }
 
     @ApiOperation(value = "更新文创", notes = "超级管理员和博物馆管理员可调用")
-    @PostMapping
+    @PutMapping
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
     public BaseResponse<?> updateCulturalCreative(@RequestBody @Validated CulturalCreativeDTO req) {
         Assert.notNull(req.getId(), "文创id不能为空");

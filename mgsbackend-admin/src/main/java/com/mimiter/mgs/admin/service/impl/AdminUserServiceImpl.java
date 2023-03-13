@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -167,7 +168,11 @@ public class AdminUserServiceImpl
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
-        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities, user.getId());
+        InstitutionAdmin admin = institutionAdminRepository.findById(user.getId());
+        HashMap<String, Object> principal = new HashMap<>();
+        principal.put("userId", user.getId());
+        principal.put("institutionId", admin.getInstitutionId());
+        CodeAuthenticationToken successToken = new CodeAuthenticationToken(authorities, principal);
         successToken.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(successToken);
 

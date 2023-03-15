@@ -12,11 +12,13 @@ import com.mimiter.mgs.admin.repository.InstitutionAdminRepository;
 import com.mimiter.mgs.admin.repository.QuestionRepository;
 import com.mimiter.mgs.admin.service.AdminMuseumService;
 import com.mimiter.mgs.admin.service.ExhibitService;
+import com.mimiter.mgs.admin.service.ExhibitionHallService;
 import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.model.entity.Exhibit;
+import com.mimiter.mgs.model.entity.ExhibitionHall;
 import com.mimiter.mgs.model.entity.Museum;
 import com.mimiter.mgs.model.entity.RecommendQuestion;
 import io.swagger.annotations.Api;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -44,6 +47,8 @@ public class QuestionController {
     private final QuestionRepository questionRepository;
 
     private final ExhibitService exhibitService;
+
+    private final ExhibitionHallService hallService;
 
     private final AdminMuseumService adminMuseumService;
 
@@ -94,7 +99,7 @@ public class QuestionController {
     @ApiOperation(value = "更新提问信息", notes = "博物馆管理员和超级管理员可调用")
     @PutMapping
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
-    public BaseResponse<?> updateQuestion(UpdateQuestionReq req) {
+    public BaseResponse<?> updateQuestion(@RequestBody @Validated UpdateQuestionReq req) {
         RecommendQuestion question = questionRepository.selectById(req.getId());
         Assert.notNull(question, "问题不存在");
         if (!permissions.contains(STR_SYS_ADMIN)) {
@@ -147,6 +152,11 @@ public class QuestionController {
             Exhibit exhibit = exhibitService.getById(exhibitId);
             if (exhibit != null) {
                 dto.setExhibitName(exhibit.getLabel());
+
+                Long hallId = exhibit.getHallId();
+                ExhibitionHall hall = hallService.getById(hallId);
+                dto.setHallId(hallId);
+                dto.setHallName(hall == null ? "" : hall.getName());
             } else {
                 log.warn("展品不存在，id={}", exhibitId);
             }

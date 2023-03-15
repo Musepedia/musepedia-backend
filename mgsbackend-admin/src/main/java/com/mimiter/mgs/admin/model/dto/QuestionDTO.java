@@ -33,4 +33,10 @@ public class QuestionDTO {
 
     @ApiModelProperty(value = "问题被提问的次数")
     private Long questionFreq;
+
+    @ApiModelProperty(value = "展品所在展区ID")
+    private Long hallId;
+
+    @ApiModelProperty(value = "展品所在展区名")
+    private String hallName;
 }

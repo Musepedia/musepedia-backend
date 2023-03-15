@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.mimiter.mgs.core.service.impl.QAServiceImpl.TYPE_DEFAULT_ANSWER;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/qa")
@@ -51,6 +53,11 @@ public class QAController {
         Long userId = SecurityUtil.getCurrentUserId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
 
+        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER) {
+            // todo use gpt
+
+        }
+
         List<String> recommendQuestions;
         try {
             recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, museumId);
@@ -79,6 +86,6 @@ public class QAController {
         }
         return BaseResponse.ok(new AnswerDTO(
                 awt.getAnswerType(), awt.getQuestionId(), awt.getAnswer(), awt.getTextId(),
-                recommendQuestions, recommendExhibitionHall, awt.getExhibitId()));
+                recommendQuestions, recommendExhibitionHall, awt.getExhibitId(), awt.getQaType()));
     }
 }

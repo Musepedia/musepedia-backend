@@ -28,4 +28,6 @@ public class AnswerDTO {
     private ExhibitionHall recommendExhibitionHall;
 
     private Long exhibitId;
+
+    private Integer qaType;
 }

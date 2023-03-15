@@ -15,4 +15,6 @@ public interface MuseumService extends IService<Museum> {
     List<Museum> selectAllServicedMuseums();
 
     Museum selectCurrentMuseum();
+
+    boolean hasPermission(Long museumId, int permission);
 }

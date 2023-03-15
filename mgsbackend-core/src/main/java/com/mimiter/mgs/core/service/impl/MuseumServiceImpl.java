@@ -26,4 +26,13 @@ public class MuseumServiceImpl extends ServiceImpl<MuseumRepository, Museum> imp
     public Museum selectCurrentMuseum() {
         return getById(ThreadContextHolder.getCurrentMuseumId());
     }
+
+    @Override
+    public boolean hasPermission(Long museumId, int permission) {
+        if (museumId == null) {
+            return false;
+        }
+        Museum museum = getById(museumId);
+        return museum != null && museum.hasPermission(permission);
+    }
 }

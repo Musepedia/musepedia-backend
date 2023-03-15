@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @TableName(value = "tbl_museum", autoResultMap = true)
 public class Museum extends BaseEntity {
 
+    public static final int PERMISSION_OPEN_QA = 1 << 0;
+    public static final int PERMISSION_GPT = 1 << 1;
+
     @TableId(value = "museum_id", type = IdType.AUTO)
     private Long id;
 
@@ -49,4 +52,19 @@ public class Museum extends BaseEntity {
 
     @TableField(value = "latitude")
     private Double latitude;
+
+    /**
+     * QA的权限，默认只允许robert(0)，还有OpenQA以及ChatGPT可选
+     */
+    @TableField(value = "permission")
+    private int permission;
+
+    public void setPermission(int flag, boolean allow) {
+        this.permission = allow ? this.permission | flag : this.permission & (~flag);
+    }
+
+    public boolean hasPermission(int flag) {
+        return (permission & flag) > 0;
+    }
+
 }

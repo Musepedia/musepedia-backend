@@ -21,4 +21,6 @@ public class AnswerWithTextIdDTO {
     private Long textId;
 
     private Long exhibitId;
+
+    private int qaType;
 }

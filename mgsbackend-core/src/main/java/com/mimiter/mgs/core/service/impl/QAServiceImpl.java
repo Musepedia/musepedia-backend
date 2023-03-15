@@ -1,11 +1,13 @@
 package com.mimiter.mgs.core.service.impl;
 
-import com.mimiter.mgs.core.AnswerWithTextId;
-import com.mimiter.mgs.core.HelloRequest;
 import com.mimiter.mgs.core.MyServiceGrpc;
+import com.mimiter.mgs.core.QAReply;
+import com.mimiter.mgs.core.QARequest;
 import com.mimiter.mgs.core.RpcExhibitText;
 import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
+import com.mimiter.mgs.core.repository.OpenQAQuestionRepository;
 import com.mimiter.mgs.model.entity.ExhibitText;
+import com.mimiter.mgs.model.entity.OpenQAQuestion;
 import com.mimiter.mgs.model.entity.RecommendQuestion;
 import com.mimiter.mgs.core.service.*;
 import com.mimiter.mgs.core.utils.NLPUtil;
@@ -19,6 +21,8 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.mimiter.mgs.model.entity.Museum.PERMISSION_OPEN_QA;
 
 @Slf4j
 @Service("qaService")
@@ -37,10 +41,12 @@ public class QAServiceImpl implements QAService {
 
     private final NLPUtil nlpUtil;
 
-    @GrpcClient("myService")
-    private MyServiceGrpc.MyServiceBlockingStub myServiceBlockingStub;
+    private final MuseumService museumService;
 
-    public static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[\\[A-Z\\]]");
+    private final OpenQAQuestionRepository openQAQuestionRepository;
+
+    @GrpcClient("myService")
+    private MyServiceGrpc.MyServiceBlockingStub qaRpcService;
 
     public static final Pattern URL_PATTERN = Pattern.compile(
             "https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(.*)");
@@ -52,6 +58,10 @@ public class QAServiceImpl implements QAService {
     public static final int TYPE_TEXT_ANSWER = 1;
 
     public static final int TYPE_IMAGE_ANSWER = 2;
+
+    public static final int QA_TYPE_DEFAULT = 0;
+    public static final int QA_TYPE_OPEN_QA = 1;
+    public static final int QA_TYPE_GPT = 2;
 
     private int getAnswerType(String answer) {
         if (answer.equals(DEFAULT_ANSWER_TEXT)) {
@@ -88,8 +98,10 @@ public class QAServiceImpl implements QAService {
             String answerText = recommendQuestion.getAnswerType() == 0
                     ? DEFAULT_ANSWER_TEXT
                     : recommendQuestion.getAnswerText();
-            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answerText,
-                    getAnswerType(answerText), recommendQuestion.getExhibitTextId(), recommendQuestion.getExhibitId());
+            return new AnswerWithTextIdDTO(
+                    recommendQuestion.getId(), answerText,
+                    getAnswerType(answerText), recommendQuestion.getExhibitTextId(),
+                    recommendQuestion.getExhibitId(), QA_TYPE_DEFAULT);
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -105,7 +117,9 @@ public class QAServiceImpl implements QAService {
             recommendQuestionService.insertIrrelevantQuestion(question, museumId);
             // 写入缓存
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
-            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER, null, null);
+            return new AnswerWithTextIdDTO(
+                    recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER,
+                    null, null, QA_TYPE_DEFAULT);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
@@ -134,7 +148,9 @@ public class QAServiceImpl implements QAService {
             }
             // 写入缓存
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
-            return new AnswerWithTextIdDTO(recommendQuestion.getId(), answer, answerType, null, exhibitId);
+            return new AnswerWithTextIdDTO(
+                    recommendQuestion.getId(), answer, answerType,
+                    null, exhibitId, QA_TYPE_DEFAULT);
         }
 
         Long textId = null;
@@ -146,10 +162,11 @@ public class QAServiceImpl implements QAService {
                                 .setId(e.getId())
                                 .build())
                         .collect(Collectors.toList());
+        boolean useOpenQA = museumService.hasPermission(museumId, PERMISSION_OPEN_QA);
 
         log.debug("Question: {}, rpcTexts size: {}", question, rpcTexts.size());
         if (rpcTexts.size() != 0) {
-            HelloRequest helloRequest = HelloRequest
+            QARequest qaRequest = QARequest
                     .newBuilder()
                     .setQuestion(question)
                     .addAllTexts(rpcTexts)
@@ -157,17 +174,16 @@ public class QAServiceImpl implements QAService {
                     .build();
 
             try {
-                AnswerWithTextId answerWithTextId = myServiceBlockingStub
-                        .sayHello(helloRequest)
-                        .getAnswerWithTextId();
-                String resp = answerWithTextId.getAnswer();
+                // 根据博物馆是否有OpenQA权限决定
+                QAReply qaReply = useOpenQA
+                        ? qaRpcService.getAnswer(qaRequest)
+                        : qaRpcService.getAnswerWithOpenQA(qaRequest);
+                String resp = qaReply.getAnswer();
                 log.debug("grpc response for question {}, {}", question, resp);
-                // 替换grpc返回的所有包含[CLS]的占位符，如果仅包含占位符则返回"无法回答"
-                resp = PLACEHOLDER_PATTERN.matcher(resp).replaceAll("");
                 if (resp.length() != 0) {
                     // has exact answer
                     answer = resp;
-                    textId = answerWithTextId.getTextId();
+                    textId = qaReply.getTextId();
                 }
             } catch (Exception e) {
                 // rpc error
@@ -184,21 +200,33 @@ public class QAServiceImpl implements QAService {
         }
 
         int answerType = getAnswerType(answer);
+        Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         // 将答案写入数据库中
-        RecommendQuestion newQuestion = new RecommendQuestion();
-        newQuestion.setQuestionText(question);
-        newQuestion.setAnswerType(answerType);
-        newQuestion.setAnswerText(answerType == TYPE_DEFAULT_ANSWER ? null : answer);
-        newQuestion.setExhibitId(exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId());
-        newQuestion.setExhibitTextId(textId);
-        newQuestion.setMuseumId(museumId);
-        recommendQuestionService.save(newQuestion);
+        if (useOpenQA) {
+            OpenQAQuestion qaQuestion = new OpenQAQuestion();
+            qaQuestion.setAnswer(answerType == TYPE_DEFAULT_ANSWER ? null : answer);
+            qaQuestion.setQuestion(question);
+            qaQuestion.setOpenDocumentId(textId);
+            qaQuestion.setUserId(userId);
+            openQAQuestionRepository.insert(qaQuestion);
+        } else {
+            RecommendQuestion newQuestion = new RecommendQuestion();
+            newQuestion.setQuestionText(question);
+            newQuestion.setAnswerType(answerType);
+            newQuestion.setAnswerText(answerType == TYPE_DEFAULT_ANSWER ? null : answer);
+            newQuestion.setExhibitId(exhibitId);
+            newQuestion.setExhibitTextId(textId);
+            newQuestion.setMuseumId(museumId);
+            recommendQuestionService.save(newQuestion);
+        }
+
 
         // 写入缓存后，更新用户历史提问
         recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
         feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
         return new AnswerWithTextIdDTO(
-                recommendQuestion.getId(), answer, answerType, textId, newQuestion.getExhibitId());
+                recommendQuestion.getId(), answer, answerType, textId, exhibitId,
+                useOpenQA ? QA_TYPE_OPEN_QA : QA_TYPE_DEFAULT);
     }
 }

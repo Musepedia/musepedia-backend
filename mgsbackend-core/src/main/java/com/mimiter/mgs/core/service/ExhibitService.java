@@ -23,6 +23,8 @@ public interface ExhibitService extends IService<Exhibit> {
 
     Long selectExhibitIdByLabelAndMuseumId(String label, Long museumId);
 
+    Exhibit selectExhibitByLabelAndMuseumId(String label, Long museumId);
+
     boolean isSameExhibitionHall(int id1, int id2);
 
     List<Exhibit> selectPreviousAndNextExhibitById(Long id);

@@ -9,6 +9,7 @@ env:
   grpc:
     host: 106.14.42.183:5555
     payment: localhost:15016
+    gpt: localhost:15017
 
 server:
   port: 16002
@@ -73,9 +74,12 @@ grpc:
   client:
     myService:
       address: static://${env.grpc.host}
-      negotiationType=: PLAINTEXT
+      negotiation-type: PLAINTEXT
     paymentService:
       address: static://${env.grpc.payment}
+      negotiation-type: PLAINTEXT
+    gptService:
+      address: static://${env.grpc.gpt}
       negotiation-type: PLAINTEXT
 
 mgs:

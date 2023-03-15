@@ -169,5 +169,23 @@ CREATE TABLE tbl_user_question
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+DROP TABLE IF EXISTS tbl_gpt_completion;
+
+CREATE TABLE tbl_gpt_completion
+(
+    gpt_completion_id BIGINT(20) AUTO_INCREMENT,
+    user_question VARCHAR(255) NOT NULL,
+    gpt_prompt VARCHAR(4095) NOT NULL,
+    gpt_completion VARCHAR(4095) NOT NULL,
+    prompt_tokens INT NOT NULL,
+    completion_tokens INT NOT NULL,
+    user_id BIGINT(20) NOT NULL,
+    feedback BOOL DEFAULT NULL,
+    create_time       DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`gpt_completion_id`) USING BTREE,
+    FOREIGN KEY fk_user_id (`user_id`) REFERENCES tbl_user (`user_id`)
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -78,6 +78,7 @@ public class QAServiceImpl implements QAService {
     public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
+        int qaType = QA_TYPE_DEFAULT;
 
         Long userId = SecurityUtil.getCurrentUserId();
 
@@ -101,7 +102,7 @@ public class QAServiceImpl implements QAService {
             return new AnswerWithTextIdDTO(
                     recommendQuestion.getId(), answerText,
                     getAnswerType(answerText), recommendQuestion.getExhibitTextId(),
-                    recommendQuestion.getExhibitId(), QA_TYPE_DEFAULT);
+                    recommendQuestion.getExhibitId(), qaType);
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -119,7 +120,7 @@ public class QAServiceImpl implements QAService {
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
             return new AnswerWithTextIdDTO(
                     recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER,
-                    null, null, QA_TYPE_DEFAULT);
+                    null, null, qaType);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
@@ -150,7 +151,7 @@ public class QAServiceImpl implements QAService {
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
             return new AnswerWithTextIdDTO(
                     recommendQuestion.getId(), answer, answerType,
-                    null, exhibitId, QA_TYPE_DEFAULT);
+                    null, exhibitId, qaType);
         }
 
         Long textId = null;
@@ -178,6 +179,7 @@ public class QAServiceImpl implements QAService {
                 QAReply qaReply = useOpenQA
                         ? qaRpcService.getAnswer(qaRequest)
                         : qaRpcService.getAnswerWithOpenQA(qaRequest);
+                qaType = qaReply.getFromOpenQa() ? QA_TYPE_OPEN_QA : QA_TYPE_DEFAULT;
                 String resp = qaReply.getAnswer();
                 log.debug("grpc response for question {}, {}", question, resp);
                 if (resp.length() != 0) {
@@ -226,7 +228,6 @@ public class QAServiceImpl implements QAService {
         feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
         return new AnswerWithTextIdDTO(
-                recommendQuestion.getId(), answer, answerType, textId, exhibitId,
-                useOpenQA ? QA_TYPE_OPEN_QA : QA_TYPE_DEFAULT);
+                recommendQuestion.getId(), answer, answerType, textId, exhibitId, qaType);
     }
 }

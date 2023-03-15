@@ -10,6 +10,7 @@ import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.core.utils.ThreadContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mimiter.mgs.core.service.*;
+import com.mimiter.mgs.model.entity.GPTCompletion;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.mimiter.mgs.core.service.impl.QAServiceImpl.TYPE_DEFAULT_ANSWER;
+import static com.mimiter.mgs.core.service.impl.QAServiceImpl.*;
 
 @Slf4j
 @RestController
@@ -44,6 +45,8 @@ public class QAController {
 
     private final UserService userService;
 
+    private final GPTService gptService;
+
     private static final int DEFAULT_RECOMMENDATION_COUNT = 2;
 
     @ApiOperation("QA提问接口，获取问题的回答")
@@ -54,8 +57,16 @@ public class QAController {
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
 
         if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER) {
-            // todo use gpt
-
+            GPTCompletion completion = gptService.getGPTCompletion(question, museumId);
+            if (completion != null) {
+                completion.setUserId(userId);
+                gptService.save(completion);
+                awt.setAnswerType(TYPE_TEXT_ANSWER);
+                awt.setQuestionId(completion.getId());
+                awt.setQaType(QA_TYPE_GPT);
+                awt.setAnswer(completion.getCompletion());
+                awt.setTextId(null);
+            }
         }
 
         List<String> recommendQuestions;

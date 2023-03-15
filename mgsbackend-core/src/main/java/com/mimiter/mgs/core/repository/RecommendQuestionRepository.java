@@ -36,7 +36,8 @@ public interface RecommendQuestionRepository extends BaseMapper<RecommendQuestio
             "order by rand() limit 1 ")
     RecommendQuestion selectRandomQuestionWithSameExhibitId(@Param("id") Long exhibitId);
 
-    @Select("select t1.question_text, t1.answer_type, t1.answer_text, t2.exhibit_figure_url " +
+    @ResultMap("mybatis-plus_RecommendQuestion")
+    @Select("select t1.question_id, t1.question_text, t1.answer_type, t1.answer_text, t2.exhibit_figure_url " +
             "from tbl_recommend_question t1, tbl_exhibit t2 " +
             "where t1.exhibit_id = t2.exhibit_id and t1.exhibit_id = #{id} " +
             "   and t1.answer_type != 0 " +

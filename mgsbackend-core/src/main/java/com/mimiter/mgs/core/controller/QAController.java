@@ -69,6 +69,7 @@ public class QAController {
             }
         }
 
+        // 推荐问题
         List<String> recommendQuestions;
         try {
             recommendQuestions = recommendQuestionService.selectRecommendQuestions(question, museumId);
@@ -80,6 +81,7 @@ public class QAController {
                     ThreadContextHolder.getCurrentMuseumId());
         }
 
+        // 推荐展厅
         ExhibitionHall recommendExhibitionHall = null;
         try {
             if (recommendExhibitionHallService.isRecommendExhibitionHall(SecurityUtil.getCurrentUserId())) {

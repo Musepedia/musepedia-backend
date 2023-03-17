@@ -48,8 +48,13 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
             // 问题中没有相关的展品
             return null;
         }
+
         Exhibit exhibit = exhibitService.selectExhibitByLabelAndMuseumId(labels.get(0), museumId);
         Museum museum = museumService.getById(museumId);
+        if (exhibit == null || museum == null) {
+            log.warn("exhibit {} or museum {} not found", exhibit, museum);
+            return null;
+        }
 
         GPTRequest request = GPTRequest
                 .newBuilder()
@@ -59,8 +64,8 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
                 .setMuseumName(museum.getName())
                 .setMuseumDescription(museum.getDescription())
                 .build();
-
         try {
+
             GPTReply reply = stub.getAnswerWithGPT(request);
             GPTCompletion completion = new GPTCompletion();
             completion.setUserQuestion(question);
@@ -70,9 +75,19 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
             completion.setCompletionTokens(reply.getCompletionTokens());
             return completion;
         } catch (Exception e) {
-            log.error("gpt error: ", e);
+            log.error("gpt error: {} \n request is {}", e.getMessage(), requestToString(request));
         }
 
         return null;
+    }
+
+    private String requestToString(GPTRequest request) {
+        return "{\n" +
+                "\tuserQuestion: \"" + request.getUserQuestion() + "\",\n" +
+                "\texhibitLabel: \"" + request.getExhibitLabel() + "\",\n" +
+                "\texhibitDescription: \"" + request.getExhibitDescription() + "\",\n" +
+                "\tmuseumDescription: \"" + request.getMuseumDescription() + "\",\n" +
+                "\tmuseumName: \"" + request.getMuseumName() + "\"\n" +
+                "}";
     }
 }

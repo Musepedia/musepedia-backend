@@ -204,7 +204,7 @@ public class QAServiceImpl implements QAService {
         int answerType = getAnswerType(answer);
         Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         // 将答案写入数据库中
-        if (useOpenQA) {
+        if (qaType == QA_TYPE_OPEN_QA) {
             OpenQAQuestion qaQuestion = new OpenQAQuestion();
             qaQuestion.setAnswer(answerType == TYPE_DEFAULT_ANSWER ? null : answer);
             qaQuestion.setQuestion(question);

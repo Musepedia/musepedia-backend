@@ -81,6 +81,7 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
         return null;
     }
 
+    @SuppressWarnings("All")
     private String requestToString(GPTRequest request) {
         return "{\n" +
                 "\tuserQuestion: \"" + request.getUserQuestion() + "\",\n" +

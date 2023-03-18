@@ -4,12 +4,11 @@ import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.core.MyServiceGrpc;
 import com.mimiter.mgs.core.model.dto.AnswerDTO;
 import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
-import com.mimiter.mgs.model.entity.ExhibitionHall;
 import com.mimiter.mgs.core.recommend.RecommendExhibitionHallService;
+import com.mimiter.mgs.core.service.*;
 import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.core.utils.ThreadContextHolder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mimiter.mgs.core.service.*;
+import com.mimiter.mgs.model.entity.ExhibitionHall;
 import com.mimiter.mgs.model.entity.GPTCompletion;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.mimiter.mgs.core.service.impl.QAServiceImpl.*;
+import static java.lang.Boolean.TRUE;
 
 @Slf4j
 @RestController
@@ -51,15 +51,17 @@ public class QAController {
 
     @ApiOperation("QA提问接口，获取问题的回答")
     @GetMapping
-    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question) throws JsonProcessingException {
+    public BaseResponse<AnswerDTO> getAnswer(@RequestParam String question,
+                                             @RequestParam(defaultValue = "false") Boolean gpt) {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
         Long userId = SecurityUtil.getCurrentUserId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
 
-        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER) {
+        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)) {
             GPTCompletion completion = gptService.getGPTCompletion(question, museumId);
             if (completion != null) {
                 completion.setUserId(userId);
+                completion.setMuseumId(museumId);
                 gptService.save(completion);
                 awt.setAnswerType(TYPE_TEXT_ANSWER);
                 awt.setQuestionId(completion.getId());

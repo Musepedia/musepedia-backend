@@ -177,8 +177,8 @@ public class QAServiceImpl implements QAService {
             try {
                 // 根据博物馆是否有OpenQA权限决定
                 QAReply qaReply = useOpenQA
-                        ? qaRpcService.getAnswer(qaRequest)
-                        : qaRpcService.getAnswerWithOpenQA(qaRequest);
+                        ? qaRpcService.getAnswerWithOpenQA(qaRequest)
+                        : qaRpcService.getAnswer(qaRequest);
                 qaType = qaReply.getFromOpenQa() ? QA_TYPE_OPEN_QA : QA_TYPE_DEFAULT;
                 String resp = qaReply.getAnswer();
                 log.debug("grpc response for question {}, {}", question, resp);
@@ -203,6 +203,7 @@ public class QAServiceImpl implements QAService {
 
         int answerType = getAnswerType(answer);
         Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
+        Long questionId = null;
         // 将答案写入数据库中
         if (qaType == QA_TYPE_OPEN_QA) {
             OpenQAQuestion qaQuestion = new OpenQAQuestion();
@@ -210,7 +211,9 @@ public class QAServiceImpl implements QAService {
             qaQuestion.setQuestion(question);
             qaQuestion.setOpenDocumentId(textId);
             qaQuestion.setUserId(userId);
+            qaQuestion.setMuseumId(museumId);
             openQAQuestionRepository.insert(qaQuestion);
+            questionId = qaQuestion.getId();
         } else {
             RecommendQuestion newQuestion = new RecommendQuestion();
             newQuestion.setQuestionText(question);
@@ -220,14 +223,12 @@ public class QAServiceImpl implements QAService {
             newQuestion.setExhibitTextId(textId);
             newQuestion.setMuseumId(museumId);
             recommendQuestionService.save(newQuestion);
+            questionId = newQuestion.getId();
+            // 写入缓存后，更新用户历史提问
+            feedbackService.insertUserQuestion(userId, questionId);
         }
 
-
-        // 写入缓存后，更新用户历史提问
-        recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
-        feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
-
         return new AnswerWithTextIdDTO(
-                recommendQuestion.getId(), answer, answerType, textId, exhibitId, qaType);
+                questionId, answer, answerType, textId, exhibitId, qaType);
     }
 }

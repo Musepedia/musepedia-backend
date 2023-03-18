@@ -35,6 +35,9 @@ public class OpenQAQuestion extends BaseEntity {
     @TableField(value = "user_id")
     private Long userId;
 
+    @TableField(value = "museum_id")
+    private Long museumId;
+
     @TableField(value = "feedback")
     private Boolean feedback;
 

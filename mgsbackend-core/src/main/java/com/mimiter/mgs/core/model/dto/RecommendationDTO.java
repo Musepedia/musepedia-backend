@@ -23,4 +23,6 @@ public class RecommendationDTO {
     private String exhibitFigureUrl;
 
     private Long exhibitId;
+
+    private int qaType;
 }

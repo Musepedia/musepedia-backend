@@ -7,11 +7,14 @@ import com.mimiter.mgs.admin.model.request.UpsertExhibitReq;
 import com.mimiter.mgs.admin.repository.ExhibitRepository;
 import com.mimiter.mgs.admin.repository.ExhibitionHallRepository;
 import com.mimiter.mgs.admin.service.ExhibitService;
+import com.mimiter.mgs.admin.service.ExhibitTextService;
 import com.mimiter.mgs.admin.service.base.AbstractCrudService;
 import com.mimiter.mgs.model.entity.Exhibit;
+import com.mimiter.mgs.model.entity.ExhibitText;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Comparator;
@@ -29,9 +32,12 @@ public class ExhibitServiceImpl extends
 
     private final ExhibitionHallRepository exhibitionHallRepository;
 
+    private final ExhibitTextService exhibitTextService;
+
     private final ExhibitDTOMapper exhibitDTOMapper;
 
     @Override
+    @Transactional
     public Exhibit addExhibit(UpsertExhibitReq req) {
         Assert.isNull(getBaseMapper().findByLabel(req.getLabel()), "展品已存在");
 
@@ -51,6 +57,12 @@ public class ExhibitServiceImpl extends
         exhibit.setNextId(req.getNextId());
         exhibit.setMuseumId(exhibitionHall.getMuseumId());
         save(exhibit);
+
+        // 将描述保存到exhibit_text表中
+        ExhibitText text = new ExhibitText();
+        text.setExhibitId(exhibit.getId());
+        text.setText(exhibit.getDescription());
+        exhibitTextService.save(text);
 
         return exhibit;
     }

@@ -5,5 +5,5 @@ import com.mimiter.mgs.model.entity.GPTCompletion;
 
 public interface GPTService extends IService<GPTCompletion> {
 
-    GPTCompletion getGPTCompletion(String question, Long museumId);
+    GPTCompletion getGPTCompletion(String question, Long museumId, Long exhibitId);
 }

@@ -61,8 +61,9 @@ public class QAController {
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
 
         if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)
+                && awt.getExhibitId() != null
                 && museumService.hasPermission(museumId, Museum.PERMISSION_GPT)) {
-            GPTCompletion completion = gptService.getGPTCompletion(question, museumId);
+            GPTCompletion completion = gptService.getGPTCompletion(question, museumId, awt.getExhibitId());
             if (completion != null) {
                 completion.setUserId(userId);
                 completion.setMuseumId(museumId);

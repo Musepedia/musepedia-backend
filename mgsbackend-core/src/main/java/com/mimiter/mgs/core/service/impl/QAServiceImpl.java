@@ -81,7 +81,7 @@ public class QAServiceImpl implements QAService {
         int qaType = QA_TYPE_DEFAULT;
 
         Long userId = SecurityUtil.getCurrentUserId();
-
+        boolean hasOpenQAPermission = museumService.hasPermission(museumId, PERMISSION_OPEN_QA);
         if (recommendQuestion != null) {
             log.debug("getAnswer: recommend question exist {}", recommendQuestion);
             // 在数据库中更新question_freq
@@ -96,13 +96,13 @@ public class QAServiceImpl implements QAService {
             // 更新用户历史提问
             feedbackService.insertUserQuestion(userId, recommendQuestion.getId());
 
-            String answerText = recommendQuestion.getAnswerType() == 0
-                    ? DEFAULT_ANSWER_TEXT
-                    : recommendQuestion.getAnswerText();
-            return new AnswerWithTextIdDTO(
-                    recommendQuestion.getId(), answerText,
-                    getAnswerType(answerText), recommendQuestion.getExhibitTextId(),
-                    recommendQuestion.getExhibitId(), qaType);
+            // 如果已有相同问题且能够回答，或者博物馆无OPENQA权限，直接返回
+            if (recommendQuestion.getAnswerType() != 0 || !hasOpenQAPermission) {
+                return new AnswerWithTextIdDTO(
+                        recommendQuestion.getId(), recommendQuestion.getAnswerText(),
+                        recommendQuestion.getAnswerType(), recommendQuestion.getExhibitTextId(),
+                        recommendQuestion.getExhibitId(), qaType);
+            }
         }
 
         // 回答类型识别与关键词分析，当回答类型=3时直接返回展品对应的图片，其余情况在分词后获取对应的text
@@ -163,7 +163,6 @@ public class QAServiceImpl implements QAService {
                                 .setId(e.getId())
                                 .build())
                         .collect(Collectors.toList());
-        boolean useOpenQA = museumService.hasPermission(museumId, PERMISSION_OPEN_QA);
 
         log.debug("Question: {}, rpcTexts size: {}", question, rpcTexts.size());
         if (rpcTexts.size() != 0) {
@@ -176,7 +175,7 @@ public class QAServiceImpl implements QAService {
 
             try {
                 // 根据博物馆是否有OpenQA权限决定
-                QAReply qaReply = useOpenQA
+                QAReply qaReply = hasOpenQAPermission
                         ? qaRpcService.getAnswerWithOpenQA(qaRequest)
                         : qaRpcService.getAnswer(qaRequest);
                 qaType = qaReply.getFromOpenQa() ? QA_TYPE_OPEN_QA : QA_TYPE_DEFAULT;

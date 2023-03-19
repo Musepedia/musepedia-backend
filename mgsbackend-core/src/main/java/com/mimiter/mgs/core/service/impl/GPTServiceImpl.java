@@ -40,16 +40,9 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
     private GPTServiceGrpc.GPTServiceBlockingStub stub;
 
     @Override
-    public GPTCompletion getGPTCompletion(String question, Long museumId) {
-        List<String> labels = exhibitTextService.getLabel(question, museumId);
-
+    public GPTCompletion getGPTCompletion(String question, Long museumId, Long exhibitId) {
         // todo 这里只使用第一个相关展品，后续支持多个展品
-        if (labels.size() == 0) {
-            // 问题中没有相关的展品
-            return null;
-        }
-
-        Exhibit exhibit = exhibitService.selectExhibitByLabelAndMuseumId(labels.get(0), museumId);
+        Exhibit exhibit = exhibitService.getById(exhibitId);
         Museum museum = museumService.getById(museumId);
         if (exhibit == null || museum == null) {
             log.warn("exhibit {} or museum {} not found", exhibit, museum);

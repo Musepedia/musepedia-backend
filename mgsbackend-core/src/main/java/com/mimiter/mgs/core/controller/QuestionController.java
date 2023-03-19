@@ -52,14 +52,20 @@ public class QuestionController {
         QueryWrapper<OpenQAQuestion> q1 = new QueryWrapper<>();
         q1.eq("user_id", useId);
         q1.eq("museum_id", museumId);
-        q1.ne("feedback", 0);
+        q1.and(w -> {
+            w.isNull("feedback");
+            w.or().eq("feedback", 0);
+        });
         var qa = openQAQuestionRepository.selectList(q1);
         res.addAll(openQAToDto(qa));
 
         QueryWrapper<GPTCompletion> q2 = new QueryWrapper<>();
         q2.eq("user_id", useId);
         q2.eq("museum_id", museumId);
-        q2.ne("feedback", 0);
+        q2.and(w -> {
+            w.isNull("feedback");
+            w.or().eq("feedback", 0);
+        });
         var gpt = gptCompletionRepository.selectList(q2);
         res.addAll(gptToDto(gpt));
 

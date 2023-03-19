@@ -10,6 +10,7 @@ import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.core.utils.ThreadContextHolder;
 import com.mimiter.mgs.model.entity.ExhibitionHall;
 import com.mimiter.mgs.model.entity.GPTCompletion;
+import com.mimiter.mgs.model.entity.Museum;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,8 @@ public class QAController {
 
     private final GPTService gptService;
 
+    private final MuseumService museumService;
+
     private static final int DEFAULT_RECOMMENDATION_COUNT = 2;
 
     @ApiOperation("QA提问接口，获取问题的回答")
@@ -57,7 +60,8 @@ public class QAController {
         Long userId = SecurityUtil.getCurrentUserId();
         AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
 
-        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)) {
+        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)
+                && museumService.hasPermission(museumId, Museum.PERMISSION_GPT)) {
             GPTCompletion completion = gptService.getGPTCompletion(question, museumId);
             if (completion != null) {
                 completion.setUserId(userId);

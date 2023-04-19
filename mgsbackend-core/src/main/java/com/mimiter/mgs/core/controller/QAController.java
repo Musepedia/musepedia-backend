@@ -14,6 +14,7 @@ import com.mimiter.mgs.model.entity.Museum;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,8 @@ public class QAController {
 
     private final GPTService gptService;
 
+    private final ExhibitTextService exhibitTextService;
+
     private final MuseumService museumService;
 
     private static final int DEFAULT_RECOMMENDATION_COUNT = 2;
@@ -63,7 +66,13 @@ public class QAController {
         if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)
                 && awt.getExhibitId() != null
                 && museumService.hasPermission(museumId, Museum.PERMISSION_GPT)) {
-            GPTCompletion completion = gptService.getGPTCompletion(question, museumId, awt.getExhibitId());
+            var texts = awt.getTexts();
+            if (texts == null) {
+                // 文本为空，exhibitId不为空
+                // 命中无法回答但存在展品的缓存的场景
+                texts = exhibitTextService.getAllTexts(question, museumId);
+            }
+            GPTCompletion completion = gptService.getGPTCompletion(question, museumId, texts);
             if (completion != null) {
                 completion.setUserId(userId);
                 completion.setMuseumId(museumId);
@@ -74,6 +83,9 @@ public class QAController {
                 awt.setAnswer(completion.getCompletion());
                 awt.setTextId(null);
             }
+        }
+        if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && awt.getExhibitId() == null) {
+            awt.setAnswer("拒绝回答无关问题");
         }
 
         // 推荐问题

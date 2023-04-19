@@ -10,11 +10,7 @@ import java.util.List;
  */
 public interface MuseumService extends IService<Museum> {
 
-    List<Museum> selectAllMuseums();
-
     List<Museum> selectAllServicedMuseums();
-
-    Museum selectCurrentMuseum();
 
     boolean hasPermission(Long museumId, int permission);
 }

@@ -26,6 +26,7 @@ public class CulturalCreativeController {
     public BaseResponse<CulturalCreative> random(@RequestParam Long museumId) {
         QueryWrapper<CulturalCreative> wrapper = new QueryWrapper<>();
         wrapper.eq("museum_id", museumId);
+        wrapper.eq("is_deleted", false);
         wrapper.orderByDesc("rand()");
         wrapper.last("limit 1");
         CulturalCreative culturalCreative = culturalCreativeRepository.selectOne(wrapper);

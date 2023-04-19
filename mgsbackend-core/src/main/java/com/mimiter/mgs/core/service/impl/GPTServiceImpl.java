@@ -1,26 +1,29 @@
 package com.mimiter.mgs.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.mimiter.mgs.common.exception.InternalException;
 import com.mimiter.mgs.core.repository.GPTCompletionRepository;
 import com.mimiter.mgs.core.service.ExhibitService;
 import com.mimiter.mgs.core.service.ExhibitTextService;
 import com.mimiter.mgs.core.service.GPTService;
 import com.mimiter.mgs.core.service.MuseumService;
-import com.mimiter.mgs.core.utils.SecurityUtil;
 import com.mimiter.mgs.gpt.GPTReply;
 import com.mimiter.mgs.gpt.GPTRequest;
 import com.mimiter.mgs.gpt.GPTServiceGrpc;
 import com.mimiter.mgs.model.entity.Exhibit;
+import com.mimiter.mgs.model.entity.ExhibitText;
 import com.mimiter.mgs.model.entity.GPTCompletion;
 import com.mimiter.mgs.model.entity.Museum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("gptService")
@@ -40,22 +43,37 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
     private GPTServiceGrpc.GPTServiceBlockingStub stub;
 
     @Override
-    public GPTCompletion getGPTCompletion(String question, Long museumId, Long exhibitId) {
-        // todo 这里只使用第一个相关展品，后续支持多个展品
-        Exhibit exhibit = exhibitService.getById(exhibitId);
+    public GPTCompletion getGPTCompletion(String question, Long museumId, List<ExhibitText> exhibits) {
+        var labelMap = new HashMap<Long, String>();
+        var textMap = new HashMap<Long, List<String>>();
         Museum museum = museumService.getById(museumId);
-        if (exhibit == null || museum == null) {
-            log.warn("exhibit {} or museum {} not found", exhibit, museum);
+        if (exhibits == null || exhibits.isEmpty() || museum == null) {
+            log.warn("exhibits {} or museum {} not found", exhibits, museum);
             return null;
         }
+
+        for (ExhibitText e : exhibits) {
+            var id = e.getExhibitId();
+            labelMap.computeIfAbsent(id, id2 -> {
+                Exhibit ex = exhibitService.getById(id2);
+                return ex == null ? "" : ex.getLabel();
+            });
+
+            List<String> texts = textMap.computeIfAbsent(id, k -> new ArrayList<>());
+            texts.add(e.getText());
+        }
+        var rpcExhibits = exhibits.stream().map(e ->
+                com.mimiter.mgs.gpt.Exhibit.newBuilder()
+                        .setLabel(labelMap.get(e.getExhibitId()))
+                        .addAllDescriptions(textMap.get(e.getExhibitId()))
+                        .build()
+        ).collect(Collectors.toList());
 
         GPTRequest request = GPTRequest
                 .newBuilder()
                 .setUserQuestion(question)
-                .setExhibitLabel(exhibit.getLabel())
-                .setExhibitDescription(exhibit.getDescription())
+                .addAllExhibits(rpcExhibits)
                 .setMuseumName(museum.getName())
-                .setMuseumDescription(museum.getDescription())
                 .build();
         try {
 
@@ -78,9 +96,7 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
     private String requestToString(GPTRequest request) {
         return "{\n" +
                 "\tuserQuestion: \"" + request.getUserQuestion() + "\",\n" +
-                "\texhibitLabel: \"" + request.getExhibitLabel() + "\",\n" +
-                "\texhibitDescription: \"" + request.getExhibitDescription() + "\",\n" +
-                "\tmuseumDescription: \"" + request.getMuseumDescription() + "\",\n" +
+                "\texhibits: \"" + request.getExhibitsList() + "\",\n" +
                 "\tmuseumName: \"" + request.getMuseumName() + "\"\n" +
                 "}";
     }

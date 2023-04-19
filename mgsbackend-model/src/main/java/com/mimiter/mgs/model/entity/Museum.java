@@ -22,6 +22,8 @@ public class Museum extends BaseEntity {
 
     public static final int PERMISSION_OPEN_QA = 1 << 0;
     public static final int PERMISSION_GPT = 1 << 1;
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static final int PERMISSION_QA = 1 << 2;
 
     @TableId(value = "museum_id", type = IdType.AUTO)
     private Long id;
@@ -54,7 +56,7 @@ public class Museum extends BaseEntity {
     private Double latitude;
 
     /**
-     * QA的权限，默认只允许robert(0)，还有OpenQA以及ChatGPT可选
+     * QA的权限，默认只允许robert(PERMISSION_QA)，还有OpenQA以及ChatGPT可选
      */
     @TableField(value = "permission")
     private int permission;

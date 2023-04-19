@@ -13,18 +13,8 @@ import java.util.List;
 public class MuseumServiceImpl extends ServiceImpl<MuseumRepository, Museum> implements MuseumService {
 
     @Override
-    public List<Museum> selectAllMuseums() {
-        return baseMapper.selectAllMuseums();
-    }
-
-    @Override
     public List<Museum> selectAllServicedMuseums() {
         return baseMapper.selectAllServicedMuseums();
-    }
-
-    @Override
-    public Museum selectCurrentMuseum() {
-        return getById(ThreadContextHolder.getCurrentMuseumId());
     }
 
     @Override

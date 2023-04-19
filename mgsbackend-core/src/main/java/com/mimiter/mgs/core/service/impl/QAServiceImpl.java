@@ -7,6 +7,7 @@ import com.mimiter.mgs.core.RpcExhibitText;
 import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
 import com.mimiter.mgs.core.repository.OpenQAQuestionRepository;
 import com.mimiter.mgs.model.entity.ExhibitText;
+import com.mimiter.mgs.model.entity.Museum;
 import com.mimiter.mgs.model.entity.OpenQAQuestion;
 import com.mimiter.mgs.model.entity.RecommendQuestion;
 import com.mimiter.mgs.core.service.*;
@@ -18,11 +19,11 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.mimiter.mgs.model.entity.Museum.PERMISSION_OPEN_QA;
+import static com.mimiter.mgs.model.entity.Museum.*;
 
 @Slf4j
 @Service("qaService")
@@ -81,7 +82,8 @@ public class QAServiceImpl implements QAService {
         int qaType = QA_TYPE_DEFAULT;
 
         Long userId = SecurityUtil.getCurrentUserId();
-        boolean hasOpenQAPermission = museumService.hasPermission(museumId, PERMISSION_OPEN_QA);
+        Museum museum = museumService.getById(museumId);
+        boolean hasOpenQAPermission = museum.hasPermission(PERMISSION_OPEN_QA);
         if (recommendQuestion != null) {
             log.debug("getAnswer: recommend question exist {}", recommendQuestion);
             // 在数据库中更新question_freq
@@ -101,7 +103,7 @@ public class QAServiceImpl implements QAService {
                 return new AnswerWithTextIdDTO(
                         recommendQuestion.getId(), recommendQuestion.getAnswerText(),
                         recommendQuestion.getAnswerType(), recommendQuestion.getExhibitTextId(),
-                        recommendQuestion.getExhibitId(), qaType);
+                        recommendQuestion.getExhibitId(), qaType, null);
             }
         }
 
@@ -120,15 +122,14 @@ public class QAServiceImpl implements QAService {
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
             return new AnswerWithTextIdDTO(
                     recommendQuestion.getId(), answer, TYPE_DEFAULT_ANSWER,
-                    null, null, qaType);
+                    null, null, qaType, null);
         }
 
         List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
-
+        Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         int questionType = nlpUtil.questionTypeRecognition(question);
         if (questionType == NLPUtil.OUTLOOK_QUESTION) {
             int answerType = TYPE_DEFAULT_ANSWER;
-            Long exhibitId = null;
             // 长什么样之类的问题 直接搜索数据库展品图片
             if (exhibitTexts.size() != 0) {
                 String figureUrl = exhibitService.selectExhibitFigureUrlByLabel(label.get(0));
@@ -140,8 +141,7 @@ public class QAServiceImpl implements QAService {
                 newQuestion.setQuestionText(question);
                 newQuestion.setAnswerType(answerType);
                 newQuestion.setAnswerText(answer);
-                newQuestion.setExhibitId(exhibitTexts.get(0).getExhibitId());
-                exhibitId = newQuestion.getExhibitId();
+                newQuestion.setExhibitId(exhibitId);
                 newQuestion.setMuseumId(museumId);
                 recommendQuestionService.save(newQuestion);
             } else {
@@ -151,7 +151,15 @@ public class QAServiceImpl implements QAService {
             recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
             return new AnswerWithTextIdDTO(
                     recommendQuestion.getId(), answer, answerType,
-                    null, exhibitId, qaType);
+                    null, exhibitId, qaType, exhibitTexts);
+        }
+
+        // No QA & No OpenQA
+        boolean hasQAPermission = museum.hasPermission(PERMISSION_QA);
+        if (!hasOpenQAPermission && !hasQAPermission) {
+            return new AnswerWithTextIdDTO(
+                    null, answer, TYPE_DEFAULT_ANSWER,
+                    null, exhibitId, qaType, exhibitTexts);
         }
 
         Long textId = null;
@@ -201,7 +209,6 @@ public class QAServiceImpl implements QAService {
         }
 
         int answerType = getAnswerType(answer);
-        Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         Long questionId = null;
         // 将答案写入数据库中
         if (qaType == QA_TYPE_OPEN_QA) {
@@ -228,6 +235,6 @@ public class QAServiceImpl implements QAService {
         }
 
         return new AnswerWithTextIdDTO(
-                questionId, answer, answerType, textId, exhibitId, qaType);
+                questionId, answer, answerType, textId, exhibitId, qaType, exhibitTexts);
     }
 }

@@ -5,6 +5,7 @@ import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.core.model.dto.MuseumDTO;
 import com.mimiter.mgs.core.service.MuseumService;
 import com.mimiter.mgs.core.service.mapstruct.MuseumDTOMapper;
+import com.mimiter.mgs.core.utils.ThreadContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class MuseumController {
     @AnonymousAccess
     @GetMapping("/current")
     public BaseResponse<MuseumDTO> getCurrentMuseum() {
-        return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.selectCurrentMuseum()));
+        Long museumId = ThreadContextHolder.getCurrentMuseumId();
+        return BaseResponse.ok("ok", museumDTOMapper.toDto(museumService.getById(museumId)));
     }
 }

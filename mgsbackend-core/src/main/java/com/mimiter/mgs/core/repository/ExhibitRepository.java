@@ -88,4 +88,13 @@ public interface ExhibitRepository extends BaseMapper<Exhibit> {
             "limit #{count}")
     List<Exhibit> selectMostFrequentExhibits(@Param("count") int count, @Param("museumId") Long museumId);
 
+    // 获取所有label信息，为创建lucene索引
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select("select exhibit_id, exhibit_label from tbl_exhibit")
+    List<Exhibit> getAllLabels();
+
+    // 根据exhibitId获取展品所属博物馆馆号
+    @ResultMap("mybatis-plus_Exhibit")
+    @Select(("select museum_id from tbl_exhibit where exhibit_id=#{exhibitID}"))
+    Exhibit getMuseumIdByExhibitId(@Param("exhibitID")Long exhibitID);
 }

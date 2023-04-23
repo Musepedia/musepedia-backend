@@ -2,6 +2,7 @@ package com.mimiter.mgs.core.repository;
 
 import com.mimiter.mgs.model.entity.ExhibitText;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.cucumber.java.eo.Se;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -30,4 +31,14 @@ public interface ExhibitTextRepository extends BaseMapper<ExhibitText> {
             "    ) " +
             ")")
     List<String> selectAllLabelsWithAliases(@Param("id") Long museumId);
+
+    // 获取所有text，为创建lucene索引
+    @ResultMap("mybatis-plus_ExhibitText")
+    @Select("select exhibit_id, exhibit_text_id, exhibit_text from tbl_exhibit_text")
+    List<ExhibitText> getAllTexts();
+
+    // 根据exhibitId获取该展品所有的text
+    @ResultMap(("mybatis-plus_ExhibitText"))
+    @Select("select exhibit_text_id, exhibit_text from tbl_exhibit_text where exhibit_id = #{exhibitId}")
+    List<ExhibitText> getTextsByExhibitId(@Param("exhibitId") Long exhibitId);
 }

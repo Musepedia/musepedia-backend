@@ -80,4 +80,13 @@ public class ExhibitServiceImpl extends ServiceImpl<ExhibitRepository, Exhibit> 
         return baseMapper.selectMostFrequentExhibits(count, museumId);
     }
 
+    @Override
+    public List<Exhibit> getAllLabels(){
+        return baseMapper.getAllLabels();
+    }
+
+    @Override
+    public Long getMuseumByExhibitId(Long exhibitId){
+        return baseMapper.getMuseumIdByExhibitId(exhibitId).getMuseumId();
+    }
 }

@@ -31,4 +31,7 @@ public interface ExhibitService extends IService<Exhibit> {
 
     List<Exhibit> getMostFrequentExhibits(int count, Long museumId);
 
+    List<Exhibit> getAllLabels();
+
+    Long getMuseumByExhibitId(Long exhibitId);
 }

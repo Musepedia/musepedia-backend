@@ -58,4 +58,17 @@ public class ExhibitTextServiceImpl
                 ? new ArrayList<>()
                 : exhibitTexts;
     }
+
+    @Override
+    public List<ExhibitText> getAllTextsForLucene() {
+        return baseMapper.getAllTexts();
+    }
+
+    public List<String> getTextsByExhibitId(Long exhibitId){
+        List<String> result=new ArrayList<>();
+        for (ExhibitText text: baseMapper.getTextsByExhibitId(exhibitId)){
+            result.add(text.getText());
+        }
+        return result;
+    }
 }

@@ -34,7 +34,7 @@ import java.util.List;
 @Service("luceneSearchService")
 public class LuceneSearchServiceImpl implements LuceneSearchService {
 
-    private final List<String> fileDirectory= Arrays.asList("luceneForText","luceneForLabel","luceneForAlias");
+    private final List<String> fileDirectory = Arrays.asList("luceneForText", "luceneForLabel", "luceneForAlias");
 
     @Resource
     private ExhibitTextService exhibitTextService;
@@ -50,17 +50,17 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
      */
     public void updateIndex() throws IOException {
 
-        for(String fileD: fileDirectory) {
+        for (String fileD : fileDirectory) {
             Directory indexDirectory = MMapDirectory.open(new File(fileD).toPath());
             IndexWriterConfig config = new IndexWriterConfig(new IKAnalyzer());
             IndexWriter indexWriter = new IndexWriter(indexDirectory, config);
 
             //构造索引
             try {
-                switch (fileD){
-                    case("luceneForText"):{
-                        List<ExhibitText> allTexts=exhibitTextService.getAllTextsForLucene();
-                        for(ExhibitText text: allTexts){
+                switch (fileD) {
+                    case ("luceneForText"): {
+                        List<ExhibitText> allTexts = exhibitTextService.getAllTextsForLucene();
+                        for (ExhibitText text : allTexts) {
                             Document doc = new Document();
                             doc.add(new StringField("exhibit_id", String.valueOf(text.getExhibitId()), Field.Store.YES));
                             doc.add(new StringField("exhibit_text_id", String.valueOf(text.getId()), Field.Store.YES));
@@ -69,9 +69,9 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
                         }
                         break;
                     }
-                    case("luceneForAlias"):{
-                        List<ExhibitAlias> allAlias=exhibitAliasService.getAllAliases();
-                        for(ExhibitAlias alias: allAlias){
+                    case ("luceneForAlias"): {
+                        List<ExhibitAlias> allAlias = exhibitAliasService.getAllAliases();
+                        for (ExhibitAlias alias : allAlias) {
                             Document doc = new Document();
                             doc.add(new StringField("exhibit_id", String.valueOf(alias.getExhibitId()), Field.Store.YES));
                             doc.add(new TextField("exhibit_alias", alias.getAlias(), Field.Store.YES));
@@ -79,9 +79,9 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
                         }
                         break;
                     }
-                    case("luceneForLabel"):{
-                        List<Exhibit> allLabel=exhibitService.getAllLabels();
-                        for(Exhibit label: allLabel){
+                    case ("luceneForLabel"): {
+                        List<Exhibit> allLabel = exhibitService.getAllLabels();
+                        for (Exhibit label : allLabel) {
                             Document doc = new Document();
                             doc.add(new StringField("exhibit_id", String.valueOf(label.getId()), Field.Store.YES));
                             doc.add(new TextField("exhibit_label", label.getLabel(), Field.Store.YES));
@@ -106,13 +106,13 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
         HashSet<Long> docIds = new HashSet<>();
         List<String> result = new ArrayList<>();
 
-        TopDocs topDocs = indexSearcher.search(parserForAlias.parse(question), 15);
+        TopDocs topDocs = indexSearcher.search(parserForAlias.parse(question), 10);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             Document document = indexSearcher.doc(scoreDoc.doc);
 
             Long docId = Long.valueOf(document.get("exhibit_id"));
             // 去重并判断是否在当前博物馆
-            if (!docIds.contains(docId) && (museumId == exhibitService.getMuseumByExhibitId(docId))){
+            if (!docIds.contains(docId) && (museumId == exhibitService.getMuseumByExhibitId(docId))) {
                 docIds.add(docId);
                 result.addAll(exhibitTextService.getTextsByExhibitId(docId));
             }
@@ -134,13 +134,13 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
         HashSet<Long> docIds = new HashSet<>();
         List<String> result = new ArrayList<>();
 
-        TopDocs topDocs = indexSearcher.search(parserForLabel.parse(question), 15);
+        TopDocs topDocs = indexSearcher.search(parserForLabel.parse(question), 10);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             Document document = indexSearcher.doc(scoreDoc.doc);
 
             Long docId = Long.valueOf(document.get("exhibit_id"));
             // 去重并判断是否在当前博物馆
-            if (!docIds.contains(docId) && (museumId == exhibitService.getMuseumByExhibitId(docId))){
+            if (!docIds.contains(docId) && (museumId == exhibitService.getMuseumByExhibitId(docId))) {
                 docIds.add(docId);
                 result.addAll(exhibitTextService.getTextsByExhibitId(docId));
             }
@@ -162,14 +162,14 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
         HashSet<Long> docIds = new HashSet<>();
         List<String> result = new ArrayList<>();
 
-        TopDocs topDocs = indexSearcher.search(query, 50);
+        TopDocs topDocs = indexSearcher.search(query, 30);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             Document document = indexSearcher.doc(scoreDoc.doc);
 
             System.out.println(document.get("exhibit_text_id"));
             Long docId = Long.valueOf(document.get("exhibit_text_id"));
             // 去重并判断是否在当前博物馆
-            if (!docIds.contains(docId) && museumId==exhibitService.getMuseumByExhibitId(Long.valueOf(document.get("exhibit_id")))){
+            if (!docIds.contains(docId) && museumId == exhibitService.getMuseumByExhibitId(Long.valueOf(document.get("exhibit_id")))) {
                 docIds.add(docId);
                 result.add(document.get("exhibit_text"));
             }
@@ -179,4 +179,33 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
         return result;
     }
 
+    @Override
+    public List<String> getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException {
+        List<String> textOnText = this.queryOnText(question, museumId);
+        List<String> textOnAlias = this.queryOnAlias(question, museumId);
+        List<String> textOnLabel = this.queryOnLabel(question, museumId);
+
+        List<String> result = new ArrayList<>(textOnText);
+
+        // 如果text中可以检索到相关文本，则进行Label或Alias的精确定位
+        if (textOnText.size() > 0) {
+            // 优先进行Label上的定位
+            result.retainAll(textOnLabel);
+            // 如果在Label上不存在交集，那么可能在Alias上可以定位
+            if (result.size() == 0) {
+                result = textOnText;
+                result.retainAll(textOnAlias);
+            }
+        }
+        // text中无法检索到，则直接通过Label或Alias进行定位
+        else {
+            if (textOnLabel.size() > 0) {
+                result = textOnLabel;
+            } else {
+                result = textOnAlias;
+            }
+        }
+
+        return result.subList(0, k);
+    }
 }

@@ -20,4 +20,5 @@ public interface LuceneSearchService {
 
     List<String>queryOnText(String question, Long museumId) throws IOException, ParseException;
 
+    List<String>getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException;
 }

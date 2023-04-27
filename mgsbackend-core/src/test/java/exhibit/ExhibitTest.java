@@ -40,31 +40,43 @@ public class ExhibitTest {
     @Test
     public void testSearchOnText() throws IOException, ParseException {
         // 取交集，加强约束
-        List<String> texts=new ArrayList<>(luceneSearchService.queryOnText("狼分布在哪里",1L));
-        for (String text:texts){
+        List<String> texts = new ArrayList<>(luceneSearchService.queryOnText("狼分布在哪里", 1L));
+        for (String text : texts) {
             System.out.println(text);
         }
-
-        texts.retainAll(luceneSearchService.queryOnLabel("狼分布在哪里",1L));
+        System.out.println(texts.size());
+        texts.retainAll(luceneSearchService.queryOnLabel("狼分布在哪里", 1L));
 
         System.out.println("****************   加强约束的结果   *****************");
 
-        for (String text:texts){
+        for (String text : texts) {
             System.out.println(text);
         }
     }
 
     @Test
     public void testSearchOnAlias() throws IOException, ParseException {
-        for(String text: luceneSearchService.queryOnAlias("钱学森是谁",4L)){
+        for (String text : luceneSearchService.queryOnAlias("钱学森是谁", 4L)) {
             System.out.println(text);
         }
     }
 
     @Test
     public void testSearchOnLabel() throws IOException, ParseException {
-        for(String text: luceneSearchService.queryOnLabel("火花是什么",3L)){
+        for (String text : luceneSearchService.queryOnLabel("火花是什么", 3L)) {
             System.out.println(text);
         }
+    }
+
+    @Test
+    public void testGetTopKTexts() throws IOException, ParseException {
+        long millis1 = System.currentTimeMillis();
+
+        for (String text : luceneSearchService.getTopKTexts("狼分布在哪里", 1L, 5)) {
+            System.out.println(text);
+        }
+
+        long millis2 = System.currentTimeMillis();
+        System.out.println(millis2 - millis1);//经过的毫秒数
     }
 }

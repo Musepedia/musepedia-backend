@@ -3,6 +3,7 @@ package exhibit;
 import com.mimiter.mgs.core.App;
 import com.mimiter.mgs.core.service.ExhibitService;
 import com.mimiter.mgs.core.service.LuceneSearchService;
+import com.mimiter.mgs.model.entity.ExhibitText;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +41,8 @@ public class ExhibitTest {
     @Test
     public void testSearchOnText() throws IOException, ParseException {
         // 取交集，加强约束
-        List<String> texts = new ArrayList<>(luceneSearchService.queryOnText("狼分布在哪里", 1L));
-        for (String text : texts) {
+        List<ExhibitText> texts = new ArrayList<>(luceneSearchService.queryOnText("狼分布在哪里", 1L));
+        for (ExhibitText text : texts) {
             System.out.println(text);
         }
         System.out.println(texts.size());
@@ -49,21 +50,21 @@ public class ExhibitTest {
 
         System.out.println("****************   加强约束的结果   *****************");
 
-        for (String text : texts) {
+        for (ExhibitText text : texts) {
             System.out.println(text);
         }
     }
 
     @Test
     public void testSearchOnAlias() throws IOException, ParseException {
-        for (String text : luceneSearchService.queryOnAlias("钱学森是谁", 4L)) {
+        for (ExhibitText text : luceneSearchService.queryOnAlias("钱学森是谁", 4L)) {
             System.out.println(text);
         }
     }
 
     @Test
     public void testSearchOnLabel() throws IOException, ParseException {
-        for (String text : luceneSearchService.queryOnLabel("火花是什么", 3L)) {
+        for (ExhibitText text : luceneSearchService.queryOnLabel("火花是什么", 3L)) {
             System.out.println(text);
         }
     }
@@ -72,7 +73,7 @@ public class ExhibitTest {
     public void testGetTopKTexts() throws IOException, ParseException {
         long millis1 = System.currentTimeMillis();
 
-        for (String text : luceneSearchService.getTopKTexts("狼分布在哪里", 1L, 5)) {
+        for (ExhibitText text : luceneSearchService.getTopKTexts("钱学森是谁", 4L, 5)) {
             System.out.println(text);
         }
 

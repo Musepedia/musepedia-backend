@@ -98,13 +98,13 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
     }
 
     @Override
-    public List<String> queryOnAlias(String question, Long museumId) throws IOException, ParseException {
+    public List<ExhibitText> queryOnAlias(String question, Long museumId) throws IOException, ParseException {
         IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(MMapDirectory.open(new File(fileDirectory.get(2)).toPath())));
         // 在Alias字段上搜索
         QueryParser parserForAlias = new QueryParser("exhibit_alias", new IKAnalyzer());
 
         HashSet<Long> docIds = new HashSet<>();
-        List<String> result = new ArrayList<>();
+        List<ExhibitText> result = new ArrayList<>();
 
         TopDocs topDocs = indexSearcher.search(parserForAlias.parse(question), 10);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -125,14 +125,14 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
     }
 
     @Override
-    public List<String> queryOnLabel(String question, Long museumId) throws IOException, ParseException {
+    public List<ExhibitText> queryOnLabel(String question, Long museumId) throws IOException, ParseException {
         IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(MMapDirectory.open(new File(fileDirectory.get(1)).toPath())));
 
         // 在Label字段上搜索
         QueryParser parserForLabel = new QueryParser("exhibit_label", new IKAnalyzer());
 
         HashSet<Long> docIds = new HashSet<>();
-        List<String> result = new ArrayList<>();
+        List<ExhibitText> result = new ArrayList<>();
 
         TopDocs topDocs = indexSearcher.search(parserForLabel.parse(question), 10);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -152,7 +152,7 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
     }
 
     @Override
-    public List<String> queryOnText(String question, Long museumId) throws IOException, ParseException {
+    public List<ExhibitText> queryOnText(String question, Long museumId) throws IOException, ParseException {
         IndexSearcher indexSearcher = new IndexSearcher(DirectoryReader.open(MMapDirectory.open(new File(fileDirectory.get(0)).toPath())));
 
         // 在Text字段上搜索
@@ -160,18 +160,18 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
         Query query = parserForText.parse(question);
 
         HashSet<Long> docIds = new HashSet<>();
-        List<String> result = new ArrayList<>();
+        List<ExhibitText> result = new ArrayList<>();
 
         TopDocs topDocs = indexSearcher.search(query, 30);
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             Document document = indexSearcher.doc(scoreDoc.doc);
 
-            System.out.println(document.get("exhibit_text_id"));
+            // System.out.println(document.get("exhibit_text_id"));
             Long docId = Long.valueOf(document.get("exhibit_text_id"));
             // 去重并判断是否在当前博物馆
             if (!docIds.contains(docId) && museumId == exhibitService.getMuseumByExhibitId(Long.valueOf(document.get("exhibit_id")))) {
                 docIds.add(docId);
-                result.add(document.get("exhibit_text"));
+                result.add(exhibitTextService.getTextByTextId(docId));
             }
         }
         indexSearcher.getIndexReader().close();
@@ -180,12 +180,12 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
     }
 
     @Override
-    public List<String> getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException {
-        List<String> textOnText = this.queryOnText(question, museumId);
-        List<String> textOnAlias = this.queryOnAlias(question, museumId);
-        List<String> textOnLabel = this.queryOnLabel(question, museumId);
+    public List<ExhibitText> getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException {
+        List<ExhibitText> textOnText = this.queryOnText(question, museumId);
+        List<ExhibitText> textOnAlias = this.queryOnAlias(question, museumId);
+        List<ExhibitText> textOnLabel = this.queryOnLabel(question, museumId);
 
-        List<String> result = new ArrayList<>(textOnText);
+        List<ExhibitText> result = new ArrayList<>(textOnText);
 
         // 如果text中可以检索到相关文本，则进行Label或Alias的精确定位
         if (textOnText.size() > 0) {
@@ -206,6 +206,6 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
             }
         }
 
-        return result.subList(0, k);
+        return result.subList(0, result.size() >= k ? k : result.size());
     }
 }

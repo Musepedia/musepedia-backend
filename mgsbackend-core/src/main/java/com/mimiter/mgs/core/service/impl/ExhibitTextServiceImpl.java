@@ -64,11 +64,17 @@ public class ExhibitTextServiceImpl
         return baseMapper.getAllTexts();
     }
 
-    public List<String> getTextsByExhibitId(Long exhibitId){
-        List<String> result=new ArrayList<>();
+    @Override
+    public List<ExhibitText> getTextsByExhibitId(Long exhibitId){
+        List<ExhibitText> result=new ArrayList<>();
         for (ExhibitText text: baseMapper.getTextsByExhibitId(exhibitId)){
-            result.add(text.getText());
+            result.add(text);
         }
         return result;
+    }
+
+    @Override
+    public ExhibitText getTextByTextId(Long exhibitTextId){
+        return baseMapper.getTextByTextId(exhibitTextId);
     }
 }

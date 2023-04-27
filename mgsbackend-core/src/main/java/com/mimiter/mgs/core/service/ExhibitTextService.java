@@ -24,5 +24,7 @@ public interface ExhibitTextService extends IService<ExhibitText> {
 
     List<ExhibitText> getAllTextsForLucene();
 
-    List<String> getTextsByExhibitId(Long exhibitId);
+    List<ExhibitText> getTextsByExhibitId(Long exhibitId);
+
+    ExhibitText getTextByTextId(Long exhibitTextId);
 }

@@ -39,6 +39,10 @@ public interface ExhibitTextRepository extends BaseMapper<ExhibitText> {
 
     // 根据exhibitId获取该展品所有的text
     @ResultMap(("mybatis-plus_ExhibitText"))
-    @Select("select exhibit_text_id, exhibit_text from tbl_exhibit_text where exhibit_id = #{exhibitId}")
+    @Select("select * from tbl_exhibit_text where exhibit_id = #{exhibitId}")
     List<ExhibitText> getTextsByExhibitId(@Param("exhibitId") Long exhibitId);
+
+    @ResultMap(("mybatis-plus_ExhibitText"))
+    @Select("select * from tbl_exhibit_text where exhibit_text_id = #{exhibitTextId}")
+    ExhibitText getTextByTextId(@Param("exhibitTextId") Long exhibitTextId);
 }

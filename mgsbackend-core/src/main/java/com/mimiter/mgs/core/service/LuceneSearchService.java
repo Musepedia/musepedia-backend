@@ -1,5 +1,6 @@
 package com.mimiter.mgs.core.service;
 
+import com.mimiter.mgs.model.entity.ExhibitText;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import java.io.IOException;
@@ -14,11 +15,11 @@ import java.util.List;
 public interface LuceneSearchService {
     void updateIndex() throws IOException, SQLException;
 
-    List<String> queryOnAlias(String question, Long museumId) throws IOException, ParseException;
+    List<ExhibitText> queryOnAlias(String question, Long museumId) throws IOException, ParseException;
 
-    List<String> queryOnLabel(String question, Long museumId) throws IOException, ParseException;
+    List<ExhibitText> queryOnLabel(String question, Long museumId) throws IOException, ParseException;
 
-    List<String>queryOnText(String question, Long museumId) throws IOException, ParseException;
+    List<ExhibitText>queryOnText(String question, Long museumId) throws IOException, ParseException;
 
-    List<String>getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException;
+    List<ExhibitText>getTopKTexts(String question, Long museumId, int k) throws IOException, ParseException;
 }

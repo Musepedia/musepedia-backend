@@ -4,6 +4,7 @@ import com.mimiter.mgs.core.App;
 import com.mimiter.mgs.core.model.dto.AnswerWithTextIdDTO;
 import com.mimiter.mgs.core.service.*;
 import com.mimiter.mgs.core.utils.SecurityUtil;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
@@ -50,7 +52,7 @@ public class RecommendQuestionTest {
 
     @Test
     @Transactional
-    public void test2() {
+    public void test2() throws IOException, ParseException {
         SecurityUtil.setCurrentUserId(10000L);
 
         String question = "狼和狗有什么关系";

@@ -96,7 +96,6 @@ public class GPTServiceImpl extends ServiceImpl<GPTCompletionRepository, GPTComp
     private String requestToString(GPTRequest request) {
         return "{\n" +
                 "\tuserQuestion: \"" + request.getUserQuestion() + "\",\n" +
-                "\texhibits: \"" + request.getExhibitsList() + "\",\n" +
                 "\tmuseumName: \"" + request.getMuseumName() + "\"\n" +
                 "}";
     }

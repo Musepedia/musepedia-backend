@@ -128,7 +128,7 @@ public class QAServiceImpl implements QAService {
                     null, null, qaType, null);
         }
 
-        List<ExhibitText> exhibitTexts = luceneSearchService.getTopKTexts(question, museumId, 5);
+        List<ExhibitText> exhibitTexts = luceneSearchService.getTopKTexts(question, museumId, 3);
         Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         int questionType = nlpUtil.questionTypeRecognition(question);
         if (questionType == NLPUtil.OUTLOOK_QUESTION) {

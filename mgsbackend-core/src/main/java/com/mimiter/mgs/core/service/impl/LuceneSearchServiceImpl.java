@@ -19,6 +19,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
@@ -32,7 +33,7 @@ import java.util.List;
 
 
 @Service("luceneSearchService")
-public class LuceneSearchServiceImpl implements LuceneSearchService {
+public class LuceneSearchServiceImpl implements LuceneSearchService, InitializingBean {
 
     private final List<String> fileDirectory = Arrays.asList("luceneForText", "luceneForLabel", "luceneForAlias");
 
@@ -44,6 +45,11 @@ public class LuceneSearchServiceImpl implements LuceneSearchService {
 
     @Resource
     private ExhibitService exhibitService;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        updateIndex();
+    }
 
     /**
      * 使用query功能前需要使用updateIndex()创建索引

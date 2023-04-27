@@ -1,5 +1,6 @@
 package com.mimiter.mgs.core.controller;
 
+import com.mimiter.mgs.common.exception.InternalException;
 import com.mimiter.mgs.common.model.BaseResponse;
 import com.mimiter.mgs.core.MyServiceGrpc;
 import com.mimiter.mgs.core.model.dto.AnswerDTO;
@@ -16,11 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.mimiter.mgs.core.service.impl.QAServiceImpl.*;
@@ -61,7 +64,12 @@ public class QAController {
                                              @RequestParam(defaultValue = "false") Boolean gpt) {
         Long museumId = ThreadContextHolder.getCurrentMuseumId();
         Long userId = SecurityUtil.getCurrentUserId();
-        AnswerWithTextIdDTO awt = qaService.getAnswer(question, museumId);
+        AnswerWithTextIdDTO awt = null;
+        try {
+            awt = qaService.getAnswer(question, museumId);
+        } catch (IOException | ParseException e) {
+            throw new InternalException(e.getMessage());
+        }
 
         if (awt.getAnswerType() == TYPE_DEFAULT_ANSWER && TRUE.equals(gpt)
                 && awt.getExhibitId() != null

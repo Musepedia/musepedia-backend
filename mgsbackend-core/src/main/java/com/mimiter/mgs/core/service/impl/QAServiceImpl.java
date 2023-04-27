@@ -16,9 +16,11 @@ import com.mimiter.mgs.core.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,6 +48,7 @@ public class QAServiceImpl implements QAService {
 
     private final OpenQAQuestionRepository openQAQuestionRepository;
 
+    private  final LuceneSearchService luceneSearchService;
     @GrpcClient("myService")
     private MyServiceGrpc.MyServiceBlockingStub qaRpcService;
 
@@ -76,7 +79,7 @@ public class QAServiceImpl implements QAService {
 
     @Override
     @SuppressWarnings("MethodLength") // 历史遗留问题
-    public AnswerWithTextIdDTO getAnswer(String question, Long museumId) {
+    public AnswerWithTextIdDTO getAnswer(String question, Long museumId) throws IOException, ParseException {
         // 尝试从缓存中和数据库中获取答案
         RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
         int qaType = QA_TYPE_DEFAULT;
@@ -125,7 +128,7 @@ public class QAServiceImpl implements QAService {
                     null, null, qaType, null);
         }
 
-        List<ExhibitText> exhibitTexts = exhibitTextService.getAllTexts(question, museumId);
+        List<ExhibitText> exhibitTexts = luceneSearchService.getTopKTexts(question, museumId, 5);
         Long exhibitId = exhibitTexts.size() == 0 ? null : exhibitTexts.get(0).getExhibitId();
         int questionType = nlpUtil.questionTypeRecognition(question);
         if (questionType == NLPUtil.OUTLOOK_QUESTION) {

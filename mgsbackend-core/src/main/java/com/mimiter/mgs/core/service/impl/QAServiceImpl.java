@@ -80,13 +80,19 @@ public class QAServiceImpl implements QAService {
     @Override
     @SuppressWarnings("MethodLength") // 历史遗留问题
     public AnswerWithTextIdDTO getAnswer(String question, Long museumId) throws IOException, ParseException {
-        // 尝试从缓存中和数据库中获取答案
-        RecommendQuestion recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
+        RecommendQuestion recommendQuestion = null;
         int qaType = QA_TYPE_DEFAULT;
 
         Long userId = SecurityUtil.getCurrentUserId();
         Museum museum = museumService.getById(museumId);
         boolean hasOpenQAPermission = museum.hasPermission(PERMISSION_OPEN_QA);
+        boolean hasQAPermission = museum.hasPermission(PERMISSION_QA);
+
+        // 尝试从缓存中和数据库中获取答案
+        if (hasOpenQAPermission || hasQAPermission) {
+            recommendQuestion = recommendQuestionService.getRecommendQuestion(question, museumId);
+        }
+
         if (recommendQuestion != null) {
             log.debug("getAnswer: recommend question exist {}", recommendQuestion);
             // 在数据库中更新question_freq
@@ -158,7 +164,6 @@ public class QAServiceImpl implements QAService {
         }
 
         // No QA & No OpenQA
-        boolean hasQAPermission = museum.hasPermission(PERMISSION_QA);
         if (!hasOpenQAPermission && !hasQAPermission) {
             return new AnswerWithTextIdDTO(
                     null, answer, TYPE_DEFAULT_ANSWER,

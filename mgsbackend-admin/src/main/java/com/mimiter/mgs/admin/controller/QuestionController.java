@@ -6,8 +6,10 @@ import com.mimiter.mgs.admin.mapstruct.QuestionDTOMapper;
 import com.mimiter.mgs.admin.model.dto.PageDTO;
 import com.mimiter.mgs.admin.model.dto.QuestionDTO;
 import com.mimiter.mgs.admin.model.entity.InstitutionAdmin;
+import com.mimiter.mgs.admin.model.query.GPTCompletionQuery;
 import com.mimiter.mgs.admin.model.query.QuestionQuery;
 import com.mimiter.mgs.admin.model.request.UpdateQuestionReq;
+import com.mimiter.mgs.admin.repository.GPTCompletionRepository;
 import com.mimiter.mgs.admin.repository.InstitutionAdminRepository;
 import com.mimiter.mgs.admin.repository.QuestionRepository;
 import com.mimiter.mgs.admin.service.AdminMuseumService;
@@ -17,10 +19,7 @@ import com.mimiter.mgs.admin.utils.SecurityUtil;
 import com.mimiter.mgs.common.exception.ForbiddenException;
 import com.mimiter.mgs.common.exception.ResourceNotFoundException;
 import com.mimiter.mgs.common.model.BaseResponse;
-import com.mimiter.mgs.model.entity.Exhibit;
-import com.mimiter.mgs.model.entity.ExhibitionHall;
-import com.mimiter.mgs.model.entity.Museum;
-import com.mimiter.mgs.model.entity.RecommendQuestion;
+import com.mimiter.mgs.model.entity.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +56,8 @@ public class QuestionController {
     private final Permissions permissions;
 
     private final InstitutionAdminRepository institutionAdminRepository;
+
+    private final GPTCompletionRepository gptCompletionRepository;
 
     @ApiOperation(value = "获取提问信息", notes = "博物馆管理员和超级管理员可调用")
     @GetMapping("/{id:\\d+}")
@@ -96,6 +97,23 @@ public class QuestionController {
         return BaseResponse.ok(new PageDTO<>(questions, page.getTotal()));
     }
 
+    @ApiOperation(value = "获取GPT提问列表", notes = "博物馆管理员和超级管理员可调用")
+    @GetMapping("/list-gpt")
+    @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
+    public BaseResponse<PageDTO<QuestionDTO>> listQuestion(GPTCompletionQuery query) {
+        if (!permissions.contains(STR_SYS_ADMIN)) {
+            // 非超级管理员，只能查询自己博物馆
+            Long userId = SecurityUtil.getCurrentUserId();
+            InstitutionAdmin admin = institutionAdminRepository.selectById(userId);
+            Assert.notNull(admin, "管理员不存在");
+            query.setMuseumId(admin.getInstitutionId());
+        }
+
+        Page<GPTCompletion> page = gptCompletionRepository.selectPage(query.toPage(), query.toQueryWrapper());
+        List<QuestionDTO> questions = toDtoGpt(page.getRecords());
+        return BaseResponse.ok(new PageDTO<>(questions, page.getTotal()));
+    }
+
     @ApiOperation(value = "更新提问信息", notes = "博物馆管理员和超级管理员可调用")
     @PutMapping
     @PreAuthorize("@pm.check('" + STR_MUSEUM_ADMIN + "','" + STR_SYS_ADMIN + "')")
@@ -129,6 +147,39 @@ public class QuestionController {
         questionRepository.updateById(question);
 
         return BaseResponse.ok();
+    }
+
+    private QuestionDTO toDto(GPTCompletion question) {
+        if (question == null) {
+            return null;
+        }
+        QuestionDTO dto = new QuestionDTO();
+        dto.setAnswerText(question.getCompletion());
+        dto.setId(question.getId());
+        dto.setQuestionText(question.getUserQuestion());
+
+        Long museumId = question.getMuseumId();
+        if (museumId != null) {
+            Museum museum = adminMuseumService.getById(museumId);
+            if (museum != null) {
+                dto.setMuseumName(museum.getName());
+            } else {
+                log.warn("博物馆不存在，id={}", museumId);
+            }
+        }
+
+        return dto;
+    }
+
+    private List<QuestionDTO> toDtoGpt(Collection<GPTCompletion> questions) {
+        if (questions == null) {
+            return null;
+        }
+        List<QuestionDTO> dtos = new ArrayList<>(questions.size());
+        for (GPTCompletion question : questions) {
+            dtos.add(toDto(question));
+        }
+        return dtos;
     }
 
     private QuestionDTO toDto(RecommendQuestion question) {
